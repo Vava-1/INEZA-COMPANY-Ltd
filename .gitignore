@@ -1,0 +1,46 @@
+# Dependencies
+backend/node_modules/
+node_modules/
+
+# Environment variables — NEVER commit
+.env
+backend/.env
+*.env.local
+
+# Logs
+backend/logs/
+*.log
+npm-debug.log*
+
+# Build outputs
+dist/
+build/
+.next/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Uploads (use Cloudinary in production)
+backend/uploads/
+
+# SSL certificates
+*.pem
+*.key
+*.crt
+ssl/
+
+# Database dumps
+*.sql.gz
+*.dump
+
+# Coverage
+coverage/
+.nyc_output/

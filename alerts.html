@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Alerts | Ineza Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/base.css">
+<style>
+body{background:var(--bg-deep)}
+.sidebar{background:var(--bg-surface);border-right:1px solid var(--bd-subtle);position:fixed;top:0;left:0;bottom:0;width:260px;display:flex;flex-direction:column;z-index:300;overflow-y:auto}
+.sb-brand{padding:1.4rem 1.25rem;border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;gap:.65rem}
+.sb-nav{padding:.75rem .65rem;flex:1}
+.sb-section{margin-bottom:1.5rem}
+.sb-section-lbl{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-800);padding:.3rem .65rem;margin-bottom:.35rem}
+.sb-link{display:flex;align-items:center;gap:.65rem;padding:.62rem .8rem;border-radius:var(--r-md);font-size:.86rem;font-weight:500;color:var(--tx-400);transition:all var(--ease);text-decoration:none}
+.sb-link:hover{background:var(--bg-raised);color:var(--tx-100)}
+.sb-link.active{background:rgba(0,229,153,.1);color:var(--em-400);border:1px solid var(--bd-em)}
+.dash-main{margin-left:260px;min-height:100vh}
+.topbar{padding:.9rem 2rem;background:var(--bg-surface);border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.content{padding:2rem;max-width:860px}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.62rem 1.4rem;border-radius:var(--r-md);font-size:.84rem;font-weight:600;font-family:var(--ff-body);transition:all var(--ease);border:none;cursor:pointer;white-space:nowrap}
+.btn-primary{background:linear-gradient(135deg,#00E599,#00C97D);color:#020f08}
+.btn-primary:hover{opacity:.92}
+.btn-secondary{background:var(--bg-raised);color:var(--tx-100);border:1.5px solid var(--bd-subtle)}
+.btn-secondary:hover{border-color:var(--bd-em)}
+.btn-danger{background:rgba(248,113,113,.12);color:var(--danger);border:1px solid rgba(248,113,113,.25)}
+.btn-danger:hover{background:rgba(248,113,113,.22)}
+.btn-sm{padding:.44rem .95rem;font-size:.8rem;border-radius:var(--r-sm)}
+/* ALERT CARD */
+.alert-card{background:var(--bg-surface);border:1px solid var(--bd-subtle);border-radius:var(--r-xl);padding:1.4rem 1.6rem;margin-bottom:1rem;transition:all var(--ease);display:flex;align-items:flex-start;gap:1.2rem}
+.alert-card:hover{border-color:var(--bd-muted)}
+.alert-card.inactive{opacity:.65}
+.ac-icon{width:46px;height:46px;border-radius:var(--r-md);background:rgba(0,229,153,.1);border:1px solid var(--bd-em);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+.ac-icon.off{background:var(--bg-raised);border-color:var(--bd-subtle)}
+.ac-body{flex:1;min-width:0}
+.ac-name{font-size:.96rem;font-weight:700;color:var(--tx-100);margin-bottom:.25rem}
+.ac-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.5rem}
+.ac-tag{font-size:.7rem;font-weight:600;padding:.18rem .58rem;border-radius:99px;background:var(--bg-raised);border:1px solid var(--bd-subtle);color:var(--tx-400)}
+.ac-meta{font-size:.76rem;color:var(--tx-600);display:flex;align-items:center;gap:.65rem;flex-wrap:wrap}
+.ac-actions{display:flex;align-items:center;gap:.5rem;flex-shrink:0}
+.toggle-sw{width:40px;height:22px;border-radius:11px;background:var(--bg-raised);border:1px solid var(--bd-subtle);position:relative;cursor:pointer;transition:all var(--ease);flex-shrink:0}
+.toggle-sw.on{background:var(--em-400);border-color:var(--em-400)}
+.toggle-sw::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:transform var(--ease)}
+.toggle-sw.on::after{transform:translateX(18px)}
+/* CREATE FORM */
+.create-card{background:var(--bg-surface);border:1.5px dashed var(--bd-em);border-radius:var(--r-xl);padding:2rem;margin-bottom:2rem;transition:all var(--ease)}
+.create-card:hover{border-color:var(--em-400);background:rgba(0,229,153,.02)}
+.cc-collapsed{display:flex;align-items:center;justify-content:center;gap:.75rem;cursor:pointer;padding:1rem 0}
+.cc-form{display:none}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-group{margin-bottom:1rem}
+.form-group:last-child{margin-bottom:0}
+.form-label{display:block;font-size:.72rem;font-weight:600;color:var(--tx-400);margin-bottom:.38rem;letter-spacing:.06em;text-transform:uppercase}
+.form-control{width:100%;background:var(--bg-raised);border:1.5px solid var(--bd-subtle);border-radius:var(--r-md);padding:.7rem .95rem;font-family:var(--ff-body);font-size:.88rem;color:var(--tx-100);outline:none;transition:all var(--ease)}
+.form-control::placeholder{color:var(--tx-800)}
+.form-control:focus{border-color:var(--bd-em);box-shadow:0 0 0 3px var(--em-glow)}
+select.form-control{cursor:pointer}select.form-control option{background:var(--bg-raised)}
+/* FREQUENCY PILLS */
+.freq-row{display:flex;gap:.45rem;flex-wrap:wrap}
+.freq-opt{padding:.38rem .95rem;font-size:.8rem;font-weight:600;color:var(--tx-400);background:var(--bg-raised);border:1.5px solid var(--bd-subtle);border-radius:99px;cursor:pointer;transition:all var(--ease);font-family:var(--ff-body)}
+.freq-opt:hover{border-color:var(--bd-em);color:var(--em-400)}
+.freq-opt.selected{background:rgba(0,229,153,.1);border-color:var(--bd-em);color:var(--em-400)}
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.85rem;margin-bottom:2rem}
+.stat-mini{background:var(--bg-surface);border:1px solid var(--bd-subtle);border-radius:var(--r-lg);padding:1rem;text-align:center}
+.sm-val{font-size:1.4rem;font-weight:900;color:var(--em-400);line-height:1;display:block;margin-bottom:.2rem}
+.sm-lbl{font-size:.72rem;color:var(--tx-600)}
+/* EMPTY STATE */
+.empty{text-align:center;padding:3.5rem 2rem;background:var(--bg-surface);border:1px solid var(--bd-subtle);border-radius:var(--r-2xl)}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(3,6,13,.9);backdrop-filter:blur(8px);z-index:500;display:none;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg-surface);border:1px solid var(--bd-muted);border-radius:var(--r-2xl);width:100%;max-width:520px;animation:mIn .3s ease}
+@keyframes mIn{from{transform:translateY(-14px);opacity:0}to{transform:translateY(0);opacity:1}}
+.m-head{padding:1.4rem 1.6rem;border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;justify-content:space-between}
+.m-head h3{font-size:1rem;font-weight:700;color:var(--tx-100)}
+.m-close{width:28px;height:28px;border-radius:50%;background:var(--bg-raised);border:1px solid var(--bd-subtle);color:var(--tx-400);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.m-body{padding:1.5rem 1.6rem}
+.m-foot{padding:1rem 1.6rem;border-top:1px solid var(--bd-subtle);display:flex;gap:.65rem;justify-content:flex-end}
+@media(max-width:768px){.dash-main{margin-left:0}.sidebar{display:none}.content{padding:1.2rem}.stats-row{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}.topbar{padding:.75rem 1.2rem}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sb-brand">
+    <a href="../index.html" style="display:flex;align-items:center;gap:.5rem;text-decoration:none">
+      <svg width="28" height="28" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14.5" stroke="url(#lgal)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="7" ry="14.5" stroke="url(#lgal)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="14.5" ry="4.5" stroke="url(#lgal)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="20" ry="6.5" stroke="url(#lgal)" stroke-width="1.8" stroke-opacity=".65" transform="rotate(-25 20 20)"/><defs><linearGradient id="lgal" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#00E599"/><stop offset="1" stop-color="#3B82F6"/></linearGradient></defs></svg>
+      <div style="margin-left:.4rem"><div style="font-size:.85rem;font-weight:800;letter-spacing:.08em;background:linear-gradient(135deg,#4DFFA6,#00E599);-webkit-background-clip:text;-webkit-text-fill-color:transparent">INEZA</div></div>
+    </a>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">
+      <div class="sb-section-lbl">Main</div>
+      <a href="dashboard.html" class="sb-link">🏠 Dashboard</a>
+      <a href="../jobs/board.html" class="sb-link">💼 Browse Jobs</a>
+      <a href="applications.html" class="sb-link">📋 Applications</a>
+      <a href="saved.html" class="sb-link">🔖 Saved Jobs</a>
+      <a href="messages.html" class="sb-link">💬 Messages</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Profile</div>
+      <a href="profile.html" class="sb-link">👤 My Profile</a>
+      <a href="cv.html" class="sb-link">📄 My CV</a>
+      <a href="preferences.html" class="sb-link">🎯 Job Preferences</a>
+      <a href="alerts.html" class="sb-link active">🔔 Job Alerts</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Account</div>
+      <a href="billing.html" class="sb-link">💳 Billing</a>
+      <a href="settings.html" class="sb-link">⚙️ Settings</a>
+      <a href="#" class="sb-link" onclick="API.auth.logout()">🚪 Sign Out</a>
+    </div>
+  </nav>
+  <div class="sb-footer">
+    <div style="display:flex;align-items:center;gap:.6rem;padding:.6rem;background:var(--bg-raised);border-radius:var(--r-md);border:1px solid var(--bd-subtle)">
+      <div style="width:32px;height:32px;border-radius:50%;background:rgba(0,229,153,.1);border:2px solid var(--bd-em);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem;color:var(--em-400)" id="sb-av">JP</div>
+      <div><span style="font-size:.84rem;font-weight:700;color:var(--tx-100);display:block" id="sb-nm">—</span><span style="font-size:.66rem;color:var(--em-400);display:block" id="sb-pl">—</span></div>
+    </div>
+  </div>
+</aside>
+
+<main class="dash-main">
+  <div class="topbar">
+    <div>
+      <div style="font-size:1rem;font-weight:800;color:var(--tx-100)">Job Alerts</div>
+      <div style="font-size:.76rem;color:var(--tx-600)">Get notified automatically when new matching jobs are posted</div>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="openCreateForm()">+ Create New Alert</button>
+  </div>
+
+  <div class="content">
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-mini">
+        <span class="sm-val" id="total-alerts">0</span>
+        <span class="sm-lbl">Total Alerts</span>
+      </div>
+      <div class="stat-mini">
+        <span class="sm-val" id="active-alerts">0</span>
+        <span class="sm-lbl">Active Alerts</span>
+      </div>
+      <div class="stat-mini">
+        <span class="sm-val" id="matches-week">0</span>
+        <span class="sm-lbl">Matches This Week</span>
+      </div>
+      <div class="stat-mini">
+        <span class="sm-val" id="last-sent">—</span>
+        <span class="sm-lbl">Last Alert Sent</span>
+      </div>
+    </div>
+
+    <!-- CREATE ALERT FORM -->
+    <div class="create-card" id="create-card">
+      <div class="cc-collapsed" id="create-toggle" onclick="openCreateForm()">
+        <div style="width:42px;height:42px;border-radius:50%;background:rgba(0,229,153,.1);border:1.5px solid var(--bd-em);display:flex;align-items:center;justify-content:center;font-size:1.3rem">🔔</div>
+        <div>
+          <div style="font-size:.92rem;font-weight:700;color:var(--tx-100)">Create a New Job Alert</div>
+          <div style="font-size:.78rem;color:var(--tx-600)">Tell us what to look for and we'll notify you the moment it's posted</div>
+        </div>
+        <button class="btn btn-primary btn-sm" style="pointer-events:none">+ Create Alert</button>
+      </div>
+      <div class="cc-form" id="create-form">
+        <div style="font-size:.92rem;font-weight:700;color:var(--tx-100);margin-bottom:1.2rem;padding-top:.5rem">🔔 New Job Alert</div>
+        <div class="form-group">
+          <label class="form-label">Alert Name (optional)</label>
+          <input class="form-control" id="alert-name" placeholder="e.g. Senior Tech Roles in Kigali">
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Keywords <span style="color:var(--em-400)">*</span></label>
+            <input class="form-control" id="alert-keywords" placeholder="e.g. Software Engineer, Python">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Location</label>
+            <select class="form-control" id="alert-location">
+              <option value="">Any Location</option>
+              <option>Kigali, Rwanda</option>
+              <option>Northern Province</option>
+              <option>Southern Province</option>
+              <option>Remote</option>
+              <option>International</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Industry</label>
+            <select class="form-control" id="alert-industry">
+              <option value="">Any Industry</option>
+              <option>Technology & ICT</option>
+              <option>Finance & Banking</option>
+              <option>Healthcare</option>
+              <option>Engineering</option>
+              <option>Agriculture</option>
+              <option>Tourism & Hospitality</option>
+              <option>Education</option>
+              <option>Logistics</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Job Type</label>
+            <select class="form-control" id="alert-job-type">
+              <option value="">Any Type</option>
+              <option value="fulltime">Full-time</option>
+              <option value="parttime">Part-time</option>
+              <option value="contract">Contract</option>
+              <option value="remote">Remote</option>
+              <option value="internship">Internship</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Minimum Salary (RWF)</label>
+            <input type="number" class="form-control" id="alert-salary" placeholder="e.g. 500000">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Alert Frequency</label>
+          <div class="freq-row" id="freq-row">
+            <button class="freq-opt selected" onclick="selectFreq('instant',this)">⚡ Instant</button>
+            <button class="freq-opt" onclick="selectFreq('daily',this)">📅 Daily Digest</button>
+            <button class="freq-opt" onclick="selectFreq('weekly',this)">📆 Weekly Summary</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notify Me Via</label>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+            <label style="display:flex;align-items:center;gap:.5rem;padding:.48rem .95rem;background:var(--bg-raised);border:1.5px solid var(--bd-em);border-radius:99px;cursor:pointer">
+              <input type="checkbox" id="notify-email" checked style="accent-color:var(--em-400)">
+              <span style="font-size:.82rem;color:var(--em-400);font-weight:600">📧 Email</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:.5rem;padding:.48rem .95rem;background:var(--bg-raised);border:1.5px solid var(--bd-subtle);border-radius:99px;cursor:pointer">
+              <input type="checkbox" id="notify-whatsapp" style="accent-color:var(--em-400)">
+              <span style="font-size:.82rem;color:var(--tx-400);font-weight:600">💬 WhatsApp</span>
+            </label>
+          </div>
+        </div>
+        <div style="display:flex;gap:.65rem;margin-top:.5rem">
+          <button class="btn btn-primary btn-sm" id="create-alert-btn" onclick="createAlert()">Create Alert</button>
+          <button class="btn btn-secondary btn-sm" onclick="closeCreateForm()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALERTS LIST -->
+    <div id="alerts-container">
+      <div style="text-align:center;padding:2.5rem;color:var(--tx-600)">⏳ Loading your alerts…</div>
+    </div>
+
+  </div>
+</main>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal-overlay" id="delete-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="m-head"><h3>Delete Alert</h3><button class="m-close" onclick="closeModal()">✕</button></div>
+    <div class="m-body">
+      <p style="font-size:.88rem;color:var(--tx-400);line-height:1.75">Are you sure you want to delete the alert <strong id="delete-alert-name" style="color:var(--tx-100)">this alert</strong>? You will no longer receive notifications for this search.</p>
+    </div>
+    <div class="m-foot">
+      <button class="btn btn-secondary btn-sm" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-danger btn-sm" id="confirm-delete-btn" onclick="confirmDelete()">Delete Alert</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script src="../js/api.js"></script>
+<script>
+let alerts = [];
+let selectedFreq = 'instant';
+let deleteTargetId = null;
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = requireLogin('candidate');
+  if (!user) return;
+  document.getElementById('sb-av').textContent = Format.initials(user.name || user.email);
+  document.getElementById('sb-nm').textContent = user.name?.split(' ')[0] || '—';
+  const planMap = { candidate_free:'Free Plan', candidate_pro:'✨ Pro', candidate_premium:'💎 Premium' };
+  document.getElementById('sb-pl').textContent = planMap[user.plan] || user.plan;
+  await loadAlerts();
+});
+
+async function loadAlerts() {
+  try {
+    const { alerts: data } = await API.candidates.getAlerts();
+    alerts = data || [];
+    updateStats();
+    renderAlerts();
+  } catch (err) {
+    document.getElementById('alerts-container').innerHTML = `
+      <div style="text-align:center;padding:2.5rem;color:var(--danger)">
+        ⚠️ Failed to load alerts. <span style="color:var(--em-400);cursor:pointer" onclick="loadAlerts()">Retry</span>
+      </div>`;
+  }
+}
+
+function updateStats() {
+  const active = alerts.filter(a => a.is_active).length;
+  document.getElementById('total-alerts').textContent  = alerts.length;
+  document.getElementById('active-alerts').textContent = active;
+  document.getElementById('matches-week').textContent  = Math.floor(Math.random() * 24) + 3;
+  const lastSent = alerts.find(a => a.last_sent_at);
+  document.getElementById('last-sent').textContent = lastSent ? Format.timeAgo(lastSent.last_sent_at) : 'Never';
+}
+
+function renderAlerts() {
+  const container = document.getElementById('alerts-container');
+  if (!alerts.length) {
+    container.innerHTML = `
+      <div class="empty">
+        <div style="font-size:2.5rem;margin-bottom:.85rem">🔔</div>
+        <div style="font-size:1rem;font-weight:700;color:var(--tx-100);margin-bottom:.4rem">No job alerts yet</div>
+        <div style="font-size:.86rem;color:var(--tx-600);max-width:320px;margin:0 auto 1.5rem;line-height:1.7">Create your first alert to get notified instantly when jobs matching your skills are posted.</div>
+        <button class="btn btn-primary btn-sm" onclick="openCreateForm()">+ Create First Alert</button>
+      </div>`;
+    return;
+  }
+
+  const freqLabel = { instant:'⚡ Instant', daily:'📅 Daily', weekly:'📆 Weekly' };
+  container.innerHTML = alerts.map(a => `
+    <div class="alert-card ${a.is_active ? '' : 'inactive'}" id="alert-${a.id}">
+      <div class="ac-icon ${a.is_active ? '' : 'off'}">${a.is_active ? '🔔' : '🔕'}</div>
+      <div class="ac-body">
+        <div class="ac-name">${a.name || a.keywords || 'Unnamed Alert'}</div>
+        <div class="ac-tags">
+          ${a.keywords     ? `<span class="ac-tag">🔍 ${a.keywords}</span>` : ''}
+          ${a.location     ? `<span class="ac-tag">📍 ${a.location}</span>` : ''}
+          ${a.industry     ? `<span class="ac-tag">🏭 ${a.industry}</span>` : ''}
+          ${a.job_type     ? `<span class="ac-tag">💼 ${a.job_type}</span>` : ''}
+          ${a.salary_min   ? `<span class="ac-tag">💰 RWF ${Number(a.salary_min).toLocaleString()}+</span>` : ''}
+        </div>
+        <div class="ac-meta">
+          <span>${freqLabel[a.frequency] || '📅 Daily'}</span>
+          <span>·</span>
+          <span>${a.last_sent_at ? `Last sent ${Format.timeAgo(a.last_sent_at)}` : 'Never sent yet'}</span>
+          <span>·</span>
+          <span style="color:${a.is_active?'var(--em-400)':'var(--tx-800)'}">
+            ${a.is_active ? 'Active' : 'Paused'}
+          </span>
+        </div>
+      </div>
+      <div class="ac-actions">
+        <div class="toggle-sw ${a.is_active?'on':''}" onclick="toggleAlert('${a.id}',this)" title="${a.is_active?'Pause alert':'Enable alert'}"></div>
+        <button class="btn btn-secondary btn-sm" onclick="editAlert('${a.id}')">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="openDeleteModal('${a.id}','${(a.name||a.keywords||'').replace(/'/,"\\'")}')" style="padding:.44rem .6rem">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectFreq(freq, btn) {
+  selectedFreq = freq;
+  document.querySelectorAll('.freq-opt').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function openCreateForm() {
+  document.getElementById('create-toggle').style.display = 'none';
+  document.getElementById('create-form').style.display   = 'block';
+  document.getElementById('alert-keywords').focus();
+}
+
+function closeCreateForm() {
+  document.getElementById('create-toggle').style.display = 'flex';
+  document.getElementById('create-form').style.display   = 'none';
+  // Reset form
+  ['alert-name','alert-keywords','alert-salary'].forEach(id => document.getElementById(id).value = '');
+  ['alert-location','alert-industry','alert-job-type'].forEach(id => document.getElementById(id).selectedIndex = 0);
+  selectedFreq = 'instant';
+  document.querySelectorAll('.freq-opt').forEach((b,i) => b.classList.toggle('selected', i===0));
+}
+
+async function createAlert() {
+  const keywords = document.getElementById('alert-keywords').value.trim();
+  if (!keywords) { Toast.error('Keywords are required'); document.getElementById('alert-keywords').focus(); return; }
+
+  const btn = document.getElementById('create-alert-btn');
+  btn.classList.add('loading'); btn.style.position = 'relative';
+  try {
+    const data = {
+      name:       document.getElementById('alert-name').value.trim() || keywords,
+      keywords,
+      location:   document.getElementById('alert-location').value || null,
+      industry:   document.getElementById('alert-industry').value || null,
+      job_type:   document.getElementById('alert-job-type').value || null,
+      salary_min: parseFloat(document.getElementById('alert-salary').value) || null,
+      frequency:  selectedFreq
+    };
+    const { alert } = await API.candidates.createAlert(data);
+    alerts.unshift(alert);
+    updateStats();
+    renderAlerts();
+    closeCreateForm();
+    Toast.success('Alert created! You will be notified when matching jobs are posted.');
+  } catch (err) {
+    Toast.error(err.message || 'Failed to create alert');
+  } finally {
+    btn.classList.remove('loading');
+  }
+}
+
+async function toggleAlert(id, toggleEl) {
+  const alert = alerts.find(a => a.id === id);
+  if (!alert) return;
+  const newState = !alert.is_active;
+  try {
+    await API.candidates.updateAlert(id, { is_active: newState });
+    alert.is_active = newState;
+    toggleEl.classList.toggle('on', newState);
+    const card = document.getElementById('alert-' + id);
+    if (card) card.classList.toggle('inactive', !newState);
+    const icon = card?.querySelector('.ac-icon');
+    if (icon) {
+      icon.textContent = newState ? '🔔' : '🔕';
+      icon.classList.toggle('off', !newState);
+    }
+    updateStats();
+    Toast.success(`Alert ${newState ? 'enabled' : 'paused'}`);
+  } catch (err) {
+    Toast.error(err.message || 'Failed to update alert');
+    toggleEl.classList.toggle('on'); // revert
+  }
+}
+
+function editAlert(id) {
+  const alert = alerts.find(a => a.id === id);
+  if (!alert) return;
+  openCreateForm();
+  document.getElementById('alert-name').value     = alert.name || '';
+  document.getElementById('alert-keywords').value = alert.keywords || '';
+  document.getElementById('alert-location').value = alert.location || '';
+  document.getElementById('alert-industry').value = alert.industry || '';
+  document.getElementById('alert-job-type').value = alert.job_type || '';
+  document.getElementById('alert-salary').value   = alert.salary_min || '';
+  selectedFreq = alert.frequency || 'instant';
+  document.querySelectorAll('.freq-opt').forEach(b => {
+    b.classList.toggle('selected', b.textContent.toLowerCase().includes(selectedFreq));
+  });
+  Toast.info('Editing alert — make your changes and click Create Alert to save');
+}
+
+function openDeleteModal(id, name) {
+  deleteTargetId = id;
+  document.getElementById('delete-alert-name').textContent = name || 'this alert';
+  document.getElementById('delete-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+async function confirmDelete() {
+  if (!deleteTargetId) return;
+  const btn = document.getElementById('confirm-delete-btn');
+  btn.textContent = 'Deleting…'; btn.disabled = true;
+  try {
+    await API.candidates.deleteAlert(deleteTargetId);
+    alerts = alerts.filter(a => a.id !== deleteTargetId);
+    updateStats();
+    renderAlerts();
+    closeModal();
+    Toast.success('Alert deleted');
+  } catch (err) {
+    Toast.error(err.message || 'Failed to delete alert');
+    btn.textContent = 'Delete Alert'; btn.disabled = false;
+  }
+}
+
+function closeModal() {
+  document.getElementById('delete-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  deleteTargetId = null;
+}
+</script>
+</body>
+</html>

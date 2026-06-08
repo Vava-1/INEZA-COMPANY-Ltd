@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In | Ineza Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/base.css">
+<style>
+.auth-wrap { display:grid; grid-template-columns:1fr 1fr; min-height:100vh; }
+.auth-left {
+  background:var(--bg-deep); padding:3rem;
+  display:flex; flex-direction:column; justify-content:space-between;
+  border-right:1px solid var(--bd-subtle); position:relative; overflow:hidden;
+}
+.auth-left::before {
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 30% 40%, rgba(0,229,153,.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(59,130,246,.06) 0%, transparent 55%);
+}
+.auth-left-grid {
+  position:absolute; inset:0; opacity:.2;
+  background-image: linear-gradient(rgba(0,229,153,.1) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,153,.1) 1px,transparent 1px);
+  background-size:50px 50px;
+  mask-image:radial-gradient(ellipse at center,black 30%,transparent 75%);
+}
+.auth-brand { position:relative; z-index:1; }
+.auth-mid { position:relative; z-index:1; }
+.auth-left h2 { font-size:clamp(1.8rem,3vw,2.8rem); font-weight:900; line-height:1.1; margin-bottom:.9rem; }
+.auth-left p { color:var(--tx-400); line-height:1.78; margin-bottom:2rem; font-size:.95rem; }
+.auth-feature { display:flex; align-items:flex-start; gap:.75rem; margin-bottom:.85rem; }
+.af-ico { width:38px; height:38px; border-radius:var(--r-md); background:rgba(0,229,153,.1); border:1px solid var(--bd-em); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+.af-text h5 { font-size:.88rem; font-weight:700; color:var(--tx-100); margin-bottom:.1rem; }
+.af-text p  { font-size:.78rem; color:var(--tx-600); line-height:1.45; }
+.auth-testimonial { background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-xl); padding:1.4rem; }
+.at-quote { font-size:.88rem; color:var(--tx-200); line-height:1.7; font-style:italic; margin-bottom:.85rem; }
+.at-author { display:flex; align-items:center; gap:.65rem; }
+.at-name  { font-size:.84rem; font-weight:700; color:var(--tx-100); }
+.at-role  { font-size:.72rem; color:var(--tx-600); }
+
+/* RIGHT */
+.auth-right {
+  background:var(--bg-base); display:flex; align-items:center; justify-content:center;
+  padding:2rem; min-height:100vh;
+}
+.auth-box { width:100%; max-width:460px; }
+.auth-box-header { margin-bottom:2rem; }
+.auth-box-header h1 { font-size:1.8rem; font-weight:900; margin-bottom:.4rem; }
+.auth-box-header p { font-size:.88rem; color:var(--tx-400); }
+.auth-box-header a { color:var(--em-400); }
+
+.social-btns { display:grid; grid-template-columns:1fr 1fr; gap:.7rem; margin-bottom:1.4rem; }
+.social-btn {
+  padding:.72rem; background:var(--bg-surface); border:1.5px solid var(--bd-subtle);
+  border-radius:var(--r-md); display:flex; align-items:center; justify-content:center;
+  gap:.55rem; font-size:.86rem; font-weight:600; color:var(--tx-200);
+  cursor:pointer; transition:all var(--ease); font-family:var(--ff-body);
+}
+.social-btn:hover { border-color:var(--bd-em); color:var(--tx-100); }
+.social-ico { font-size:1.1rem; }
+
+.remember-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.4rem; }
+.checkbox-wrap { display:flex; align-items:center; gap:.5rem; cursor:pointer; }
+.checkbox-wrap input { accent-color:var(--em-400); width:14px; height:14px; cursor:pointer; }
+.checkbox-wrap span { font-size:.83rem; color:var(--tx-400); cursor:pointer; }
+.forgot-link { font-size:.83rem; color:var(--em-400); }
+.forgot-link:hover { text-decoration:underline; }
+
+.role-selector { display:grid; grid-template-columns:1fr 1fr; gap:.7rem; margin-bottom:1.4rem; }
+.role-opt {
+  padding:.85rem 1rem; background:var(--bg-surface); border:2px solid var(--bd-subtle);
+  border-radius:var(--r-lg); cursor:pointer; text-align:center; transition:all var(--ease);
+}
+.role-opt.selected { border-color:var(--bd-em); background:rgba(0,229,153,.06); }
+.role-opt .ro-icon { font-size:1.8rem; margin-bottom:.35rem; }
+.role-opt .ro-name { font-size:.86rem; font-weight:700; color:var(--tx-100); }
+.role-opt .ro-desc { font-size:.72rem; color:var(--tx-600); margin-top:.1rem; }
+
+.pass-wrap { position:relative; }
+.pass-wrap .form-control { padding-right:2.8rem; }
+.pass-toggle { position:absolute; right:.85rem; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--tx-600); cursor:pointer; font-size:1rem; transition:color var(--ease); }
+.pass-toggle:hover { color:var(--tx-100); }
+
+.auth-footer { text-align:center; margin-top:1.5rem; font-size:.82rem; color:var(--tx-600); }
+.auth-footer a { color:var(--em-400); }
+.auth-footer a:hover { text-decoration:underline; }
+
+.success-state { display:none; text-align:center; padding:2rem 0; }
+.success-state.show { display:block; }
+.success-state .ss-icon { font-size:3.5rem; margin-bottom:1rem; display:block; }
+.success-state h3 { font-size:1.4rem; font-weight:800; color:var(--tx-100); margin-bottom:.5rem; }
+.success-state p { font-size:.88rem; color:var(--tx-400); line-height:1.7; }
+
+@media(max-width:768px) {
+  .auth-wrap { grid-template-columns:1fr; }
+  .auth-left { display:none; }
+  .auth-right { padding:1.5rem; }
+  .auth-box { max-width:100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="auth-wrap">
+  <!-- LEFT -->
+  <div class="auth-left">
+    <div class="auth-left-grid"></div>
+    <div class="auth-brand" style="position:relative;z-index:1">
+      <a href="../index.html" style="display:inline-flex;align-items:center;gap:.65rem;text-decoration:none">
+        <svg width="36" height="36" viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="20" r="14.5" stroke="url(#lg)" stroke-width="1.4"/>
+          <ellipse cx="20" cy="20" rx="7" ry="14.5" stroke="url(#lg)" stroke-width="1.4"/>
+          <ellipse cx="20" cy="20" rx="14.5" ry="4.5" stroke="url(#lg)" stroke-width="1.4"/>
+          <ellipse cx="20" cy="20" rx="20" ry="6.5" stroke="url(#lg)" stroke-width="1.8" stroke-opacity=".65" transform="rotate(-25 20 20)"/>
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#00E599"/><stop offset="1" stop-color="#3B82F6"/></linearGradient></defs>
+        </svg>
+        <div>
+          <div style="font-size:.95rem;font-weight:800;letter-spacing:.08em;background:linear-gradient(135deg,#4DFFA6,#00E599);-webkit-background-clip:text;-webkit-text-fill-color:transparent">INEZA</div>
+          <div style="font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-800)">Company Ltd Agencies</div>
+        </div>
+      </a>
+    </div>
+    <div class="auth-mid">
+      <h2>Rwanda's Most Trusted <span style="background:linear-gradient(135deg,#4DFFA6,#00E599);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Employment Platform</span></h2>
+      <p>Join 15,000+ professionals and 850+ employers who use Ineza to find exceptional talent and life-changing opportunities.</p>
+      <div class="auth-feature">
+        <div class="af-ico">🚀</div>
+        <div class="af-text"><h5>Get matched in 48 hours</h5><p>Our recruiters work fast. Most candidates receive their first match within 2 business days.</p></div>
+      </div>
+      <div class="auth-feature">
+        <div class="af-ico">✅</div>
+        <div class="af-text"><h5>100% verified opportunities</h5><p>Every job posting is verified by our team. No scams, no ghost jobs — ever.</p></div>
+      </div>
+      <div class="auth-feature">
+        <div class="af-ico">🌍</div>
+        <div class="af-text"><h5>Local & global opportunities</h5><p>Kigali-based roles plus international placements across 12 countries.</p></div>
+      </div>
+    </div>
+    <div class="auth-testimonial">
+      <div class="at-quote">"I signed up on a Monday and had my first interview scheduled by Wednesday. Ineza's matching is genuinely impressive — they understood exactly what I was looking for."</div>
+      <div class="at-author">
+        <div class="avatar avatar-sm" style="color:var(--em-400);background:rgba(0,229,153,.1);border-color:var(--em-400)">JH</div>
+        <div><div class="at-name">Jean-Paul Habimana</div><div class="at-role">Senior Developer · Andela Rwanda</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="auth-right">
+    <div class="auth-box">
+      <div class="auth-box-header">
+        <h1>Welcome back 👋</h1>
+        <p>Don't have an account? <a href="signup.html">Create one free →</a></p>
+      </div>
+
+      <!-- FORM -->
+      <div id="signin-form">
+        <div class="social-btns">
+          <button class="social-btn" onclick="socialLogin('google')">
+            <span class="social-ico">G</span> Continue with Google
+          </button>
+          <button class="social-btn" onclick="socialLogin('linkedin')">
+            <span class="social-ico">in</span> Continue with LinkedIn
+          </button>
+        </div>
+
+        <div class="or-divider"><span>or sign in with email</span></div>
+
+        <form id="form" onsubmit="handleSignin(event)">
+          <div class="form-group" id="fg-email">
+            <label class="form-label">Email Address <span class="req">*</span></label>
+            <input type="email" class="form-control" id="email" placeholder="you@email.com"
+              data-validate="required|email" data-required-msg="Email is required"
+              data-email-msg="Please enter a valid email">
+            <div class="form-error"></div>
+          </div>
+
+          <div class="form-group" id="fg-password">
+            <label class="form-label">Password <span class="req">*</span></label>
+            <div class="pass-wrap">
+              <input type="password" class="form-control" id="password" placeholder="Enter your password"
+                data-validate="required" data-required-msg="Password is required">
+              <button type="button" class="pass-toggle" id="pass-toggle" onclick="togglePass()">👁</button>
+            </div>
+            <div class="form-error"></div>
+          </div>
+
+          <div class="remember-row">
+            <label class="checkbox-wrap">
+              <input type="checkbox" id="remember" checked>
+              <span>Remember me for 30 days</span>
+            </label>
+            <a href="forgot-password.html" class="forgot-link">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block btn-lg" id="signin-btn">
+            <span class="btn-text">Sign In →</span>
+          </button>
+        </form>
+
+        <div class="auth-footer">
+          <p>By signing in you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+        </div>
+      </div>
+
+      <!-- SUCCESS STATE -->
+      <div class="success-state" id="success-state">
+        <span class="ss-icon">🎉</span>
+        <h3>Welcome back!</h3>
+        <p>You've signed in successfully. Redirecting you to your dashboard…</p>
+        <div class="progress" style="margin-top:1.5rem">
+          <div class="progress-fill" id="progress-bar" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script>
+function togglePass() {
+  const p = document.getElementById('password');
+  const t = document.getElementById('pass-toggle');
+  p.type = p.type === 'password' ? 'text' : 'password';
+  t.textContent = p.type === 'password' ? '👁' : '🙈';
+}
+
+function socialLogin(provider) {
+  Toast.info(`Connecting to ${provider === 'google' ? 'Google' : 'LinkedIn'}…`);
+  setTimeout(() => {
+    fakeSignin({ name:'Demo User', email:'demo@ineza.rw', role:'candidate', plan:'free' });
+  }, 1500);
+}
+
+function handleSignin(e) {
+  e.preventDefault();
+  const form = document.getElementById('form');
+  if (!FormValidator.validate(form)) return;
+
+  const btn = document.getElementById('signin-btn');
+  btn.classList.add('loading');
+
+  // Simulate API call
+  setTimeout(() => {
+    btn.classList.remove('loading');
+    const email = document.getElementById('email').value;
+    const role = email.includes('employer') ? 'employer' : 'candidate';
+    fakeSignin({ name:'Demo User', email, role, plan:'pro' });
+  }, 1800);
+}
+
+function fakeSignin(userData) {
+  Auth.setUser(userData);
+  document.getElementById('signin-form').style.display = 'none';
+  document.getElementById('success-state').classList.add('show');
+
+  // Animate progress bar
+  let pct = 0;
+  const interval = setInterval(() => {
+    pct += 2;
+    document.getElementById('progress-bar').style.width = pct + '%';
+    if (pct >= 100) {
+      clearInterval(interval);
+      const dest = userData.role === 'employer'
+        ? '../employer/dashboard.html'
+        : '../candidate/dashboard.html';
+      window.location.href = dest;
+    }
+  }, 30);
+}
+
+// Check if already logged in
+const user = Auth.getUser();
+if (user) {
+  window.location.href = user.role === 'employer'
+    ? '../employer/dashboard.html'
+    : '../candidate/dashboard.html';
+}
+
+// Pre-fill from URL params
+const params = new URLSearchParams(window.location.search);
+if (params.get('email')) document.getElementById('email').value = params.get('email');
+</script>
+</body>
+</html>

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics | Ineza Employer Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/base.css">
+<style>
+body{background:var(--bg-deep)}
+.sidebar{background:var(--bg-surface);border-right:1px solid var(--bd-subtle);position:fixed;top:0;left:0;bottom:0;width:260px;display:flex;flex-direction:column;z-index:300;overflow-y:auto}
+.sb-brand{padding:1.4rem 1.25rem;border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;gap:.65rem}
+.sb-nav{padding:.75rem .65rem;flex:1}
+.sb-section{margin-bottom:1.5rem}
+.sb-section-lbl{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-800);padding:.3rem .65rem;margin-bottom:.35rem}
+.sb-link{display:flex;align-items:center;gap:.65rem;padding:.62rem .8rem;border-radius:var(--r-md);font-size:.86rem;font-weight:500;color:var(--tx-400);transition:all var(--ease);text-decoration:none}
+.sb-link:hover{background:var(--bg-raised);color:var(--tx-100)}
+.sb-link.active{background:rgba(251,191,36,.1);color:var(--gd-400);border:1px solid rgba(251,191,36,.25)}
+.dash-main{margin-left:260px;min-height:100vh}
+.topbar{padding:.9rem 2rem;background:var(--bg-surface);border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.content{padding:2rem;max-width:1200px}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.3rem;border-radius:var(--r-md);font-size:.84rem;font-weight:600;font-family:var(--ff-body);transition:all var(--ease);border:none;cursor:pointer;white-space:nowrap}
+.btn-gold{background:linear-gradient(135deg,#FCD34D,#F59E0B);color:#1a0d00}
+.btn-gold:hover{opacity:.92}
+.btn-secondary{background:var(--bg-raised);color:var(--tx-100);border:1.5px solid var(--bd-subtle)}
+.btn-secondary:hover{border-color:rgba(251,191,36,.3)}
+.btn-sm{padding:.44rem .95rem;font-size:.8rem;border-radius:var(--r-sm)}
+/* DATE RANGE */
+.date-range{display:flex;gap:.4rem;background:var(--bg-raised);border:1px solid var(--bd-subtle);border-radius:var(--r-lg);padding:.3rem}
+.dr-opt{padding:.38rem .9rem;font-size:.8rem;font-weight:600;color:var(--tx-400);border-radius:var(--r-sm);cursor:pointer;transition:all var(--ease);border:none;background:none;font-family:var(--ff-body)}
+.dr-opt.active{background:rgba(251,191,36,.12);color:var(--gd-400)}
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+.kpi{background:var(--bg-surface);border:1px solid var(--bd-subtle);border-radius:var(--r-xl);padding:1.5rem;position:relative;overflow:hidden;transition:all var(--ease)}
+.kpi:hover{border-color:rgba(251,191,36,.25);box-shadow:0 4px 24px rgba(251,191,36,.06)}
+.kpi-icon{font-size:1.5rem;margin-bottom:.75rem;display:block}
+.kpi-val{font-size:2rem;font-weight:900;line-height:1;margin-bottom:.25rem}
+.kpi-lbl{font-size:.78rem;color:var(--tx-400);margin-bottom:.3rem}
+.kpi-change{font-size:.74rem;font-weight:700}
+.kc-up{color:var(--em-400)} .kc-dn{color:var(--danger)}
+.kpi-sparkline{position:absolute;bottom:0;right:0;opacity:.15;font-size:2rem}
+/* CHARTS */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+.chart-card{background:var(--bg-surface);border:1px solid var(--bd-subtle);border-radius:var(--r-xl);overflow:hidden}
+.cc-head{padding:1.2rem 1.5rem;border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;justify-content:space-between}
+.cc-head h3{font-size:.92rem;font-weight:700;color:var(--tx-100)}
+.cc-body{padding:1.5rem}
+/* BAR CHART */
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:120px;margin-bottom:.6rem}
+.bc-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.bc-bar{width:100%;border-radius:4px 4px 0 0;transition:all var(--ease);cursor:pointer;position:relative;min-height:4px}
+.bc-bar:hover{opacity:.8}
+.bc-bar.gd{background:linear-gradient(to top,#F59E0B,#FCD34D)}
+.bc-bar.em{background:linear-gradient(to top,#00C97D,#00E599)}
+.bc-bar.bl{background:linear-gradient(to top,#2563EB,#60A5FA)}
+.bc-bar.rd{background:linear-gradient(to top,#DC2626,#F87171)}
+.bc-lbl{font-size:.62rem;color:var(--tx-800);text-align:center}
+.bc-val{font-size:.64rem;font-weight:700;color:var(--tx-600);text-align:center}
+/* FUNNEL */
+.funnel{display:flex;flex-direction:column;gap:.5rem}
+.funnel-step{display:flex;align-items:center;gap:.9rem}
+.fs-bar-wrap{flex:1;background:var(--bg-raised);border-radius:99px;height:28px;overflow:hidden;position:relative}
+.fs-bar{height:100%;border-radius:99px;display:flex;align-items:center;padding:0 .75rem;transition:width .8s ease}
+.fs-label{font-size:.78rem;font-weight:700;color:#fff;white-space:nowrap;position:relative;z-index:1}
+.fs-name{font-size:.8rem;color:var(--tx-200);min-width:130px;font-weight:500}
+.fs-pct{font-size:.76rem;font-weight:700;min-width:40px;text-align:right}
+/* DONUT */
+.donut-wrap{display:flex;align-items:center;gap:1.5rem}
+.donut-svg{width:120px;height:120px;flex-shrink:0}
+.donut-legend{display:flex;flex-direction:column;gap:.5rem;flex:1}
+.dl-item{display:flex;align-items:center;gap:.55rem}
+.dl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.dl-name{font-size:.8rem;color:var(--tx-200);flex:1}
+.dl-val{font-size:.82rem;font-weight:700;color:var(--tx-100)}
+/* TIME TO HIRE */
+.tth-item{display:flex;align-items:center;justify-content:space-between;padding:.7rem 0;border-bottom:1px solid var(--bd-subtle)}
+.tth-item:last-child{border-bottom:none}
+.tth-label{font-size:.84rem;color:var(--tx-200)}
+.tth-val{font-size:.88rem;font-weight:700;color:var(--tx-100)}
+.tth-bar{flex:1;margin:0 1rem;height:5px;background:var(--bg-raised);border-radius:99px;overflow:hidden}
+.tth-fill{height:100%;border-radius:99px;background:var(--grad-gd)}
+/* ROI CARD */
+.roi-card{background:linear-gradient(135deg,rgba(251,191,36,.08),rgba(251,191,36,.03));border:1px solid rgba(251,191,36,.25);border-radius:var(--r-xl);padding:1.8rem;margin-bottom:1.5rem}
+.roi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:1.2rem}
+.roi-item{text-align:center;padding:1rem;background:rgba(255,255,255,.03);border:1px solid rgba(251,191,36,.12);border-radius:var(--r-lg)}
+.roi-val{font-size:1.6rem;font-weight:900;color:var(--gd-400);display:block;line-height:1;margin-bottom:.2rem}
+.roi-lbl{font-size:.72rem;color:var(--tx-600);text-transform:uppercase;letter-spacing:.08em}
+/* JOB TABLE */
+.job-table-card{background:var(--bg-surface);border:1px solid var(--bd-subtle);border-radius:var(--r-xl);overflow:hidden;margin-bottom:1.5rem}
+table{width:100%;border-collapse:collapse}
+thead{background:var(--bg-raised)}
+thead th{padding:.8rem 1.2rem;text-align:left;font-size:.68rem;font-weight:700;color:var(--tx-600);letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--bd-subtle)}
+tbody tr{border-bottom:1px solid var(--bd-subtle);transition:background var(--ease)}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--bg-raised)}
+tbody td{padding:.85rem 1.2rem;font-size:.84rem;color:var(--tx-200);vertical-align:middle}
+.prog-mini{height:5px;background:var(--bg-raised);border-radius:99px;overflow:hidden;margin-top:.3rem;width:80px}
+.prog-fill-gd{height:100%;border-radius:99px;background:linear-gradient(90deg,#F59E0B,#FCD34D)}
+.prog-fill-em{height:100%;border-radius:99px;background:linear-gradient(90deg,#00C97D,#00E599)}
+.badge{display:inline-flex;align-items:center;padding:.18rem .58rem;border-radius:99px;font-size:.68rem;font-weight:700;white-space:nowrap}
+.b-em{background:rgba(0,229,153,.12);color:var(--em-400);border:1px solid rgba(0,229,153,.22)}
+.b-gd{background:rgba(251,191,36,.12);color:#FBBF24;border:1px solid rgba(251,191,36,.22)}
+.b-rd{background:rgba(248,113,113,.12);color:var(--danger);border:1px solid rgba(248,113,113,.22)}
+.b-gr{background:var(--bg-raised);color:var(--tx-400);border:1px solid var(--bd-subtle)}
+@media(max-width:1200px){.charts-grid{grid-template-columns:1fr}.roi-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:1024px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){.dash-main{margin-left:0}.sidebar{display:none}.content{padding:1.2rem}.kpi-grid{grid-template-columns:1fr 1fr}.topbar{padding:.75rem 1.2rem}.roi-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sb-brand">
+    <a href="../index.html" style="display:flex;align-items:center;gap:.55rem;text-decoration:none">
+      <svg width="28" height="28" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14.5" stroke="url(#lgan)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="7" ry="14.5" stroke="url(#lgan)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="14.5" ry="4.5" stroke="url(#lgan)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="20" ry="6.5" stroke="url(#lgan)" stroke-width="1.8" stroke-opacity=".65" transform="rotate(-25 20 20)"/><defs><linearGradient id="lgan" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#FBBF24"/><stop offset="1" stop-color="#F59E0B"/></linearGradient></defs></svg>
+      <div style="margin-left:.4rem"><div style="font-size:.85rem;font-weight:800;letter-spacing:.08em;background:linear-gradient(135deg,#FCD34D,#F59E0B);-webkit-background-clip:text;-webkit-text-fill-color:transparent">INEZA</div><div style="font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-800)">Employer Portal</div></div>
+    </a>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">
+      <div class="sb-section-lbl">Main</div>
+      <a href="dashboard.html" class="sb-link">🏠 Dashboard</a>
+      <a href="post-job.html" class="sb-link">➕ Post a Job</a>
+      <a href="jobs.html" class="sb-link">📋 My Job Postings</a>
+      <a href="candidates.html" class="sb-link">👥 Candidate Pool</a>
+      <a href="pipeline.html" class="sb-link">🔄 Hiring Pipeline</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Analytics</div>
+      <a href="analytics.html" class="sb-link active">📊 Analytics</a>
+      <a href="reports.html" class="sb-link">📈 Reports</a>
+      <a href="billing.html" class="sb-link">💳 Billing</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Company</div>
+      <a href="company-profile.html" class="sb-link">🏢 Company Profile</a>
+      <a href="settings.html" class="sb-link">⚙️ Settings</a>
+      <a href="#" class="sb-link" onclick="API?.auth?.logout()">🚪 Sign Out</a>
+    </div>
+  </nav>
+  <div class="sb-footer">
+    <div style="display:flex;align-items:center;gap:.6rem;padding:.6rem;background:var(--bg-raised);border-radius:var(--r-md);border:1px solid rgba(251,191,36,.2)">
+      <div style="width:32px;height:32px;border-radius:50%;background:rgba(251,191,36,.1);border:2px solid rgba(251,191,36,.4);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem;color:var(--gd-400)">TC</div>
+      <div><span style="font-size:.84rem;font-weight:700;color:var(--tx-100);display:block">TechCorp Rwanda</span><span style="font-size:.66rem;color:var(--gd-400);display:block">🏢 Business Plan</span></div>
+    </div>
+  </div>
+</aside>
+
+<main class="dash-main">
+  <div class="topbar">
+    <div>
+      <div style="font-size:1rem;font-weight:800;color:var(--tx-100)">Hiring Analytics</div>
+      <div style="font-size:.76rem;color:var(--tx-600)">Track your recruitment performance and ROI</div>
+    </div>
+    <div style="display:flex;gap:.65rem;align-items:center">
+      <div class="date-range">
+        <button class="dr-opt" onclick="setRange('7d',this)">7D</button>
+        <button class="dr-opt active" onclick="setRange('30d',this)">30D</button>
+        <button class="dr-opt" onclick="setRange('90d',this)">90D</button>
+        <button class="dr-opt" onclick="setRange('12m',this)">12M</button>
+      </div>
+      <button class="btn btn-gold btn-sm" onclick="exportReport()">↓ Export Report</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- KPI GRID -->
+    <div class="kpi-grid" id="kpi-grid">
+      <div class="kpi">
+        <span class="kpi-icon">📋</span>
+        <div class="kpi-val" style="color:var(--gd-400)">284</div>
+        <div class="kpi-lbl">Total Applications</div>
+        <div class="kpi-change kc-up">↑ +43 vs last period</div>
+        <span class="kpi-sparkline">📈</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-icon">🗓</span>
+        <div class="kpi-val" style="color:var(--em-400)">18</div>
+        <div class="kpi-lbl">Interviews Conducted</div>
+        <div class="kpi-change kc-up">↑ +5 vs last period</div>
+        <span class="kpi-sparkline">📊</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-icon">🤝</span>
+        <div class="kpi-val" style="color:#34D399">4</div>
+        <div class="kpi-lbl">Successful Hires</div>
+        <div class="kpi-change kc-up">↑ +2 this month</div>
+        <span class="kpi-sparkline">✨</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-icon">⏱</span>
+        <div class="kpi-val" style="color:var(--bl-400)">14</div>
+        <div class="kpi-lbl">Avg. Days to Hire</div>
+        <div class="kpi-change kc-up">↓ 6 days faster</div>
+        <span class="kpi-sparkline">⚡</span>
+      </div>
+    </div>
+
+    <!-- ROI CARD -->
+    <div class="roi-card">
+      <div>
+        <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:rgba(251,191,36,.7);margin-bottom:.4rem">Your Ineza ROI This Year</div>
+        <div style="font-size:1.6rem;font-weight:900;color:var(--gd-400);margin-bottom:.3rem">RWF 28,560,000 <span style="font-size:.9rem;font-weight:400;color:var(--tx-400)">saved vs traditional recruitment</span></div>
+        <div style="font-size:.82rem;color:var(--tx-400);line-height:1.65">Compared to a 20% agency fee on all 4 placements at average RWF 1.8M/mo salary. Ineza charged 18% placement fees only on confirmed hires.</div>
+      </div>
+      <div class="roi-grid">
+        <div class="roi-item"><span class="roi-val">RWF 120K</span><span class="roi-lbl">Monthly Plan Cost</span></div>
+        <div class="roi-item"><span class="roi-val">18%</span><span class="roi-lbl">Placement Fee Rate</span></div>
+        <div class="roi-item"><span class="roi-val">14 days</span><span class="roi-lbl">Average Time to Hire</span></div>
+        <div class="roi-item"><span class="roi-val">4.8/5</span><span class="roi-lbl">Candidate Quality Score</span></div>
+        <div class="roi-item"><span class="roi-val">92%</span><span class="roi-lbl">90-Day Retention Rate</span></div>
+        <div class="roi-item"><span class="roi-val">6.3×</span><span class="roi-lbl">Return on Investment</span></div>
+      </div>
+    </div>
+
+    <!-- CHARTS GRID -->
+    <div class="charts-grid">
+
+      <!-- APPLICATIONS OVER TIME -->
+      <div class="chart-card">
+        <div class="cc-head"><h3>📈 Applications Over Time</h3><span style="font-size:.72rem;color:var(--tx-600)">Last 30 days</span></div>
+        <div class="cc-body">
+          <div class="bar-chart" id="apps-chart"></div>
+          <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:.75rem">
+            <div style="display:flex;align-items:center;gap:.4rem;font-size:.76rem;color:var(--tx-400)"><span style="width:10px;height:10px;border-radius:2px;background:linear-gradient(to top,#F59E0B,#FCD34D);display:inline-block"></span>Applied</div>
+            <div style="display:flex;align-items:center;gap:.4rem;font-size:.76rem;color:var(--tx-400)"><span style="width:10px;height:10px;border-radius:2px;background:linear-gradient(to top,#00C97D,#00E599);display:inline-block"></span>Shortlisted</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HIRING FUNNEL -->
+      <div class="chart-card">
+        <div class="cc-head"><h3>🔽 Hiring Funnel</h3><span style="font-size:.72rem;color:var(--tx-600)">Conversion rates</span></div>
+        <div class="cc-body">
+          <div class="funnel">
+            <div class="funnel-step">
+              <span class="fs-name">Applied</span>
+              <div class="fs-bar-wrap"><div class="fs-bar" style="width:100%;background:linear-gradient(90deg,#2563EB,#60A5FA)"><span class="fs-label">284</span></div></div>
+              <span class="fs-pct" style="color:var(--bl-400)">100%</span>
+            </div>
+            <div class="funnel-step">
+              <span class="fs-name">Screened</span>
+              <div class="fs-bar-wrap"><div class="fs-bar" style="width:60%;background:linear-gradient(90deg,#F59E0B,#FCD34D)"><span class="fs-label">171</span></div></div>
+              <span class="fs-pct" style="color:var(--gd-400)">60%</span>
+            </div>
+            <div class="funnel-step">
+              <span class="fs-name">Shortlisted</span>
+              <div class="fs-bar-wrap"><div class="fs-bar" style="width:30%;background:linear-gradient(90deg,#7C3AED,#A78BFA)"><span class="fs-label">85</span></div></div>
+              <span class="fs-pct" style="color:#A78BFA">30%</span>
+            </div>
+            <div class="funnel-step">
+              <span class="fs-name">Interviewed</span>
+              <div class="fs-bar-wrap"><div class="fs-bar" style="width:13%;background:linear-gradient(90deg,#00C97D,#00E599)"><span class="fs-label">36</span></div></div>
+              <span class="fs-pct" style="color:var(--em-400)">13%</span>
+            </div>
+            <div class="funnel-step">
+              <span class="fs-name">Hired</span>
+              <div class="fs-bar-wrap"><div class="fs-bar" style="width:3%;background:linear-gradient(90deg,#059669,#34D399)"><span class="fs-label">4</span></div></div>
+              <span class="fs-pct" style="color:#34D399">1.4%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOURCE BREAKDOWN -->
+      <div class="chart-card">
+        <div class="cc-head"><h3>🎯 Application Sources</h3></div>
+        <div class="cc-body">
+          <div class="donut-wrap">
+            <svg class="donut-svg" viewBox="0 0 100 100">
+              <!-- SVG donut chart segments -->
+              <circle cx="50" cy="50" r="35" fill="none" stroke="#0C1525" stroke-width="18"/>
+              <circle cx="50" cy="50" r="35" fill="none" stroke="#F59E0B" stroke-width="18" stroke-dasharray="88 132" stroke-dashoffset="0" transform="rotate(-90 50 50)"/>
+              <circle cx="50" cy="50" r="35" fill="none" stroke="#00E599" stroke-width="18" stroke-dasharray="44 176" stroke-dashoffset="-88" transform="rotate(-90 50 50)"/>
+              <circle cx="50" cy="50" r="35" fill="none" stroke="#60A5FA" stroke-width="18" stroke-dasharray="26 194" stroke-dashoffset="-132" transform="rotate(-90 50 50)"/>
+              <circle cx="50" cy="50" r="35" fill="none" stroke="#A78BFA" stroke-width="18" stroke-dasharray="22 198" stroke-dashoffset="-158" transform="rotate(-90 50 50)"/>
+              <text x="50" y="48" text-anchor="middle" font-size="10" font-weight="800" fill="#F0F6FF">284</text>
+              <text x="50" y="58" text-anchor="middle" font-size="6" fill="#64748B">total</text>
+            </svg>
+            <div class="donut-legend">
+              <div class="dl-item"><div class="dl-dot" style="background:#F59E0B"></div><div class="dl-name">Ineza Platform</div><div class="dl-val">63%</div></div>
+              <div class="dl-item"><div class="dl-dot" style="background:#00E599"></div><div class="dl-name">Ineza Recruiter</div><div class="dl-val">31%</div></div>
+              <div class="dl-item"><div class="dl-dot" style="background:#60A5FA"></div><div class="dl-name">Direct Referral</div><div class="dl-val">9%</div></div>
+              <div class="dl-item"><div class="dl-dot" style="background:#A78BFA"></div><div class="dl-name">LinkedIn</div><div class="dl-val">8%</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TIME TO HIRE BY ROLE -->
+      <div class="chart-card">
+        <div class="cc-head"><h3>⏱ Time to Hire by Role</h3><span style="font-size:.72rem;color:var(--em-400)">Ineza avg: 14 days vs industry 42</span></div>
+        <div class="cc-body">
+          <div class="tth-item">
+            <span class="tth-label">Senior Software Engineer</span>
+            <div class="tth-bar"><div class="tth-fill" style="width:40%"></div></div>
+            <span class="tth-val">12 days</span>
+          </div>
+          <div class="tth-item">
+            <span class="tth-label">Product Manager</span>
+            <div class="tth-bar"><div class="tth-fill" style="width:55%"></div></div>
+            <span class="tth-val">16 days</span>
+          </div>
+          <div class="tth-item">
+            <span class="tth-label">UX Designer</span>
+            <div class="tth-bar"><div class="tth-fill" style="width:35%"></div></div>
+            <span class="tth-val">10 days</span>
+          </div>
+          <div class="tth-item">
+            <span class="tth-label">Data Analyst</span>
+            <div class="tth-bar"><div class="tth-fill" style="width:62%"></div></div>
+            <span class="tth-val">18 days</span>
+          </div>
+          <div class="tth-item">
+            <span class="tth-label">DevOps Engineer</span>
+            <div class="tth-bar"><div class="tth-fill" style="width:48%"></div></div>
+            <span class="tth-val">14 days</span>
+          </div>
+          <div class="tth-item">
+            <span class="tth-label">Finance Manager</span>
+            <div class="tth-bar"><div class="tth-fill" style="width:71%"></div></div>
+            <span class="tth-val">21 days</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JOB PERFORMANCE TABLE -->
+    <div class="job-table-card">
+      <div class="cc-head" style="padding:1.2rem 1.5rem;border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;justify-content:space-between">
+        <h3 style="font-size:.92rem;font-weight:700;color:var(--tx-100)">📋 Performance by Job Posting</h3>
+        <a href="post-job.html" class="btn btn-gold btn-sm">+ Post New Job</a>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Job Title</th>
+            <th>Views</th>
+            <th>Applications</th>
+            <th>Shortlisted</th>
+            <th>Conversion</th>
+            <th>Status</th>
+            <th>Time to Fill</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div style="font-weight:600;color:var(--tx-100)">Senior Software Engineer</div><div style="font-size:.72rem;color:var(--tx-600)">Posted Jun 1 · Kigali</div></td>
+            <td><div style="font-weight:600">1,240</div><div class="prog-mini"><div class="prog-fill-gd" style="width:82%"></div></div></td>
+            <td><div style="font-weight:700;color:var(--gd-400)">78</div></td>
+            <td><div style="font-weight:700;color:var(--em-400)">12</div></td>
+            <td>
+              <div style="font-size:.82rem;font-weight:700;color:var(--em-400)">15.4%</div>
+              <div class="prog-mini"><div class="prog-fill-em" style="width:77%"></div></div>
+            </td>
+            <td><span class="badge b-em">● Active</span></td>
+            <td><span style="font-size:.8rem;color:var(--tx-400)">12 days so far</span></td>
+          </tr>
+          <tr>
+            <td><div style="font-weight:600;color:var(--tx-100)">Product Manager</div><div style="font-size:.72rem;color:var(--tx-600)">Posted May 22 · Kigali</div></td>
+            <td><div style="font-weight:600">890</div><div class="prog-mini"><div class="prog-fill-gd" style="width:59%"></div></div></td>
+            <td><div style="font-weight:700;color:var(--gd-400)">45</div></td>
+            <td><div style="font-weight:700;color:var(--em-400)">8</div></td>
+            <td>
+              <div style="font-size:.82rem;font-weight:700;color:var(--em-400)">17.8%</div>
+              <div class="prog-mini"><div class="prog-fill-em" style="width:89%"></div></div>
+            </td>
+            <td><span class="badge b-em">● Active</span></td>
+            <td><span style="font-size:.8rem;color:var(--tx-400)">16 days so far</span></td>
+          </tr>
+          <tr>
+            <td><div style="font-weight:600;color:var(--tx-100)">UX/UI Designer</div><div style="font-size:.72rem;color:var(--tx-600)">Posted May 15 · Kigali</div></td>
+            <td><div style="font-weight:600">624</div><div class="prog-mini"><div class="prog-fill-gd" style="width:41%"></div></div></td>
+            <td><div style="font-weight:700;color:var(--gd-400)">32</div></td>
+            <td><div style="font-weight:700;color:var(--em-400)">5</div></td>
+            <td>
+              <div style="font-size:.82rem;font-weight:700;color:var(--gd-400)">15.6%</div>
+              <div class="prog-mini"><div class="prog-fill-em" style="width:78%"></div></div>
+            </td>
+            <td><span class="badge b-gd">⏸ Paused</span></td>
+            <td><span style="font-size:.8rem;color:var(--tx-400)">Paused</span></td>
+          </tr>
+          <tr>
+            <td><div style="font-weight:600;color:var(--tx-100)">Senior Data Analyst</div><div style="font-size:.72rem;color:var(--tx-600)">Posted Apr 28 · Closed</div></td>
+            <td><div style="font-weight:600">1,850</div><div class="prog-mini"><div class="prog-fill-gd" style="width:100%"></div></div></td>
+            <td><div style="font-weight:700;color:var(--gd-400)">129</div></td>
+            <td><div style="font-weight:700;color:var(--em-400)">18</div></td>
+            <td>
+              <div style="font-size:.82rem;font-weight:700;color:var(--em-400)">14.0%</div>
+              <div class="prog-mini"><div class="prog-fill-em" style="width:70%"></div></div>
+            </td>
+            <td><span class="badge b-gr">✓ Filled</span></td>
+            <td><span style="font-size:.8rem;color:var(--em-400);font-weight:600">10 days ✓</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</main>
+
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script src="../js/api.js"></script>
+<script>
+// Build applications bar chart
+function buildChart() {
+  const data = [6,4,9,12,8,5,11,7,14,10,8,6,9,13,11,7,5,8,12,9,6,10,14,11,8,6,9,12,10,7];
+  const max = Math.max(...data);
+  const chart = document.getElementById('apps-chart');
+  chart.innerHTML = data.map((v,i) => `
+    <div class="bc-col">
+      <div class="bc-val">${v}</div>
+      <div class="bc-bar ${i%3===0?'gd':i%3===1?'em':'gd'}" style="height:${Math.max(v/max*100,5)}%" title="Day ${i+1}: ${v} applications"></div>
+    </div>
+  `).join('');
+}
+
+function setRange(range, btn) {
+  document.querySelectorAll('.dr-opt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  Toast.info(`Showing data for: ${range === '7d' ? 'last 7 days' : range === '30d' ? 'last 30 days' : range === '90d' ? 'last 90 days' : 'last 12 months'}`);
+  buildChart();
+}
+
+function exportReport() {
+  Toast.info('Generating your analytics report PDF… Download will start shortly.');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildChart();
+});
+</script>
+</body>
+</html>

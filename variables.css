@@ -1,0 +1,105 @@
+/* ============================================================
+   INEZA PLATFORM — DESIGN TOKENS
+   Rwanda Night Theme: Midnight Blue × Emerald × Gold
+   ============================================================ */
+
+:root {
+
+  /* ── BACKGROUND SCALE ─────────────────────────────────── */
+  --bg-deep:    #03060D;   /* Deepest layer — page bg       */
+  --bg-base:    #070C18;   /* Base — most surfaces          */
+  --bg-surface: #0C1525;   /* Cards, panels                 */
+  --bg-raised:  #121E35;   /* Hover states, inputs          */
+  --bg-overlay: #19283F;   /* Modals, tooltips              */
+  --bg-top:     #223050;   /* Highlighted items             */
+
+  /* ── PRIMARY — Emerald Green (Rwanda hills) ───────────── */
+  --em-50:  #EDFFF7;
+  --em-100: #C6FFE9;
+  --em-300: #4DFFA6;
+  --em-400: #00E599;   /* Main primary                      */
+  --em-500: #00C97D;
+  --em-600: #00A364;
+  --em-700: #007A4D;
+  --em-glow: rgba(0,229,153,.18);
+
+  /* ── SECONDARY — Electric Blue (tech, trust) ─────────── */
+  --bl-300: #93C5FD;
+  --bl-400: #60A5FA;
+  --bl-500: #3B82F6;   /* Main secondary                    */
+  --bl-600: #2563EB;
+  --bl-glow: rgba(59,130,246,.18);
+
+  /* ── ACCENT — Warm Gold (premium, identity) ──────────── */
+  --gd-200: #FEF3C7;
+  --gd-300: #FCD34D;
+  --gd-400: #FBBF24;   /* Main accent                       */
+  --gd-500: #F59E0B;
+  --gd-600: #D97706;
+  --gd-glow: rgba(251,191,36,.18);
+
+  /* ── DANGER / SUCCESS / WARNING ──────────────────────── */
+  --danger:  #F87171;
+  --success: #34D399;
+  --warning: #FBBF24;
+  --info:    #60A5FA;
+
+  /* ── TEXT SCALE ───────────────────────────────────────── */
+  --tx-100: #F0F6FF;   /* Primary text                      */
+  --tx-200: #CBD5E1;   /* Secondary text                    */
+  --tx-400: #94A3B8;   /* Muted                             */
+  --tx-600: #64748B;   /* Very muted                        */
+  --tx-800: #334155;   /* Placeholder / disabled            */
+
+  /* ── BORDER SCALE ─────────────────────────────────────── */
+  --bd-subtle:  rgba(148,163,184,.08);
+  --bd-muted:   rgba(148,163,184,.15);
+  --bd-default: rgba(148,163,184,.25);
+  --bd-em:      rgba(0,229,153,.22);
+  --bd-em-l:    rgba(0,229,153,.42);
+  --bd-gd:      rgba(251,191,36,.22);
+
+  /* ── GRADIENTS ────────────────────────────────────────── */
+  --grad-em:   linear-gradient(135deg,#00E599,#00C97D);
+  --grad-bl:   linear-gradient(135deg,#60A5FA,#3B82F6);
+  --grad-gd:   linear-gradient(135deg,#FCD34D,#F59E0B);
+  --grad-hero: linear-gradient(135deg,#00E599 0%,#3B82F6 50%,#9333EA 100%);
+  --grad-text-em: linear-gradient(135deg,#4DFFA6,#00E599,#00C97D);
+  --grad-text-gd: linear-gradient(135deg,#FCD34D,#FBBF24,#F59E0B);
+  --grad-card: linear-gradient(145deg,rgba(12,21,37,.9),rgba(7,12,24,.95));
+
+  /* ── SHADOWS ──────────────────────────────────────────── */
+  --shadow-sm:  0 1px 3px rgba(0,0,0,.4);
+  --shadow-md:  0 4px 16px rgba(0,0,0,.4);
+  --shadow-lg:  0 8px 40px rgba(0,0,0,.5);
+  --shadow-em:  0 0 0 1px rgba(0,229,153,.3), 0 4px 24px rgba(0,229,153,.15);
+  --shadow-bl:  0 0 0 1px rgba(59,130,246,.3), 0 4px 24px rgba(59,130,246,.15);
+  --shadow-gd:  0 0 0 1px rgba(251,191,36,.3), 0 4px 24px rgba(251,191,36,.15);
+  --glow-em:    0 0 48px rgba(0,229,153,.22);
+  --glow-hero:  0 0 120px rgba(0,229,153,.1),0 0 60px rgba(59,130,246,.1);
+
+  /* ── TYPOGRAPHY ───────────────────────────────────────── */
+  --ff-display: 'Clash Display','Playfair Display',serif;
+  --ff-body:    'Inter','DM Sans',system-ui,sans-serif;
+  --ff-mono:    'JetBrains Mono','Fira Code',monospace;
+
+  /* ── RADII ────────────────────────────────────────────── */
+  --r-xs:  4px;
+  --r-sm:  8px;
+  --r-md:  12px;
+  --r-lg:  16px;
+  --r-xl:  20px;
+  --r-2xl: 28px;
+  --r-full: 9999px;
+
+  /* ── SPACING ──────────────────────────────────────────── */
+  --sp-1: .25rem;  --sp-2: .5rem;   --sp-3: .75rem;
+  --sp-4: 1rem;    --sp-5: 1.25rem; --sp-6: 1.5rem;
+  --sp-8: 2rem;    --sp-10: 2.5rem; --sp-12: 3rem;
+  --sp-16: 4rem;   --sp-20: 5rem;   --sp-24: 6rem;
+
+  /* ── TRANSITIONS ──────────────────────────────────────── */
+  --ease:      .28s cubic-bezier(.4,0,.2,1);
+  --ease-out:  .35s cubic-bezier(0,0,.2,1);
+  --ease-spring: .5s cubic-bezier(.34,1.56,.64,1);
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page Not Found | Ineza Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--em:#00E599;--bg:#03060D;--surface:#070C18;--tx:#F0F6FF;--tx4:#64748B}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.bg-glow{position:absolute;width:600px;height:600px;background:radial-gradient(ellipse,rgba(0,229,153,.07),transparent 65%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.content{text-align:center;position:relative;z-index:1;padding:2rem}
+.code{font-family:'Playfair Display',serif;font-size:clamp(6rem,20vw,12rem);font-weight:900;line-height:1;background:linear-gradient(135deg,rgba(0,229,153,.8),rgba(59,130,246,.6));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem;letter-spacing:-.02em}
+h1{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,4vw,2rem);font-weight:700;color:var(--tx);margin-bottom:.8rem}
+p{font-size:.95rem;color:var(--tx4);max-width:420px;margin:0 auto 2.5rem;line-height:1.75}
+.actions{display:flex;gap:.85rem;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.72rem 1.7rem;border-radius:10px;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:700;transition:all .2s ease;text-decoration:none;cursor:pointer;border:none}
+.btn-primary{background:linear-gradient(135deg,#00E599,#00C97D);color:#020f08}
+.btn-primary:hover{opacity:.92;transform:translateY(-1px)}
+.btn-secondary{background:rgba(255,255,255,.05);color:var(--tx);border:1.5px solid rgba(255,255,255,.1)}
+.btn-secondary:hover{border-color:rgba(0,229,153,.4);color:var(--em)}
+.links{margin-top:2.5rem;display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap}
+.links a{font-size:.82rem;color:var(--tx4);transition:color .2s;text-decoration:none}
+.links a:hover{color:var(--em)}
+.globe{font-size:4rem;margin-bottom:1rem;display:block;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<div class="content">
+  <span class="globe">🌍</span>
+  <div class="code">404</div>
+  <h1>This page went job hunting</h1>
+  <p>The page you're looking for doesn't exist or has been moved. Let's get you back to finding amazing opportunities.</p>
+  <div class="actions">
+    <a href="index.html" class="btn btn-primary">Go Home</a>
+    <a href="jobs/board.html" class="btn btn-secondary">Browse Jobs</a>
+  </div>
+  <div class="links">
+    <a href="candidate/dashboard.html">My Dashboard</a>
+    <a href="jobs/board.html">Find Jobs</a>
+    <a href="employer/dashboard.html">Post a Job</a>
+    <a href="contact.html">Contact Us</a>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Dashboard | Ineza Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/base.css">
+<style>
+body { background:var(--bg-deep); overflow-x:hidden; }
+
+/* SIDEBAR */
+.sidebar { background:var(--bg-surface); border-right:1px solid var(--bd-subtle); padding:0; position:fixed; top:0; left:0; bottom:0; width:260px; display:flex; flex-direction:column; z-index:300; overflow-y:auto; }
+.sb-brand { padding:1.4rem 1.25rem; border-bottom:1px solid var(--bd-subtle); display:flex; align-items:center; gap:.65rem; flex-shrink:0; }
+.sb-brand-name { font-size:.95rem; font-weight:800; letter-spacing:.08em; }
+.sb-nav { padding:.75rem .65rem; flex:1; overflow-y:auto; }
+.sb-section { margin-bottom:1.5rem; }
+.sb-section-lbl { font-size:.6rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--tx-800); padding:.3rem .65rem; margin-bottom:.35rem; }
+.sb-link { display:flex; align-items:center; gap:.65rem; padding:.62rem .8rem; border-radius:var(--r-md); font-size:.86rem; font-weight:500; color:var(--tx-400); transition:all var(--ease); cursor:pointer; text-decoration:none; }
+.sb-link:hover { background:var(--bg-raised); color:var(--tx-100); }
+.sb-link.active { background:rgba(0,229,153,.1); color:var(--em-400); border:1px solid var(--bd-em); }
+.sb-link .link-ico { width:18px; text-align:center; font-size:1.05rem; flex-shrink:0; }
+.sb-link .link-badge { margin-left:auto; background:var(--em-400); color:var(--bg-deep); font-size:.62rem; font-weight:800; padding:.1rem .42rem; border-radius:99px; }
+.sb-footer { padding:1rem .65rem; border-top:1px solid var(--bd-subtle); flex-shrink:0; }
+.sb-user { display:flex; align-items:center; gap:.65rem; padding:.65rem; border-radius:var(--r-md); background:var(--bg-raised); border:1px solid var(--bd-subtle); cursor:pointer; transition:all var(--ease); }
+.sb-user:hover { border-color:var(--bd-em); }
+.sb-user-info .su-name { font-size:.86rem; font-weight:700; color:var(--tx-100); display:block; }
+.sb-user-info .su-plan { font-size:.68rem; color:var(--em-400); display:block; }
+
+/* MAIN AREA */
+.dash-main { margin-left:260px; min-height:100vh; }
+.dash-topbar { padding:.9rem 2rem; background:var(--bg-surface); border-bottom:1px solid var(--bd-subtle); display:flex; align-items:center; justify-content:space-between; gap:1rem; position:sticky; top:0; z-index:200; }
+.topbar-search { display:flex; align-items:center; gap:.6rem; background:var(--bg-raised); border:1px solid var(--bd-subtle); border-radius:var(--r-md); padding:.45rem .85rem; transition:border-color var(--ease); }
+.topbar-search:focus-within { border-color:var(--bd-em); }
+.topbar-search input { background:none; border:none; outline:none; font-family:var(--ff-body); font-size:.86rem; color:var(--tx-100); width:220px; }
+.topbar-search input::placeholder { color:var(--tx-800); }
+.topbar-actions { display:flex; align-items:center; gap:.6rem; }
+.topbar-icon-btn { width:36px; height:36px; border-radius:var(--r-sm); background:var(--bg-raised); border:1px solid var(--bd-subtle); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1rem; color:var(--tx-400); transition:all var(--ease); position:relative; }
+.topbar-icon-btn:hover { border-color:var(--bd-em); color:var(--em-400); }
+.notif-dot { position:absolute; top:5px; right:5px; width:7px; height:7px; background:var(--em-400); border-radius:50%; border:1px solid var(--bg-surface); }
+
+/* CONTENT */
+.dash-content { padding:2rem; }
+.page-header { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:2rem; flex-wrap:wrap; }
+.ph-greeting { font-size:.82rem; color:var(--tx-600); margin-bottom:.2rem; }
+.ph-title { font-size:1.5rem; font-weight:800; color:var(--tx-100); }
+
+/* PROFILE COMPLETION BANNER */
+.completion-banner { background:linear-gradient(135deg,rgba(0,229,153,.08),rgba(59,130,246,.06)); border:1px solid var(--bd-em); border-radius:var(--r-xl); padding:1.4rem 1.6rem; margin-bottom:2rem; display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap; }
+.cb-left { flex:1; min-width:200px; }
+.cb-title { font-size:.95rem; font-weight:700; color:var(--tx-100); margin-bottom:.35rem; }
+.cb-desc  { font-size:.8rem; color:var(--tx-400); }
+.cb-progress { flex:1; min-width:180px; }
+.cb-prog-label { display:flex; justify-content:space-between; font-size:.72rem; color:var(--tx-600); margin-bottom:.4rem; }
+.cb-prog-pct { color:var(--em-400); font-weight:700; }
+.cb-items { display:flex; gap:.45rem; flex-wrap:wrap; margin-top:.75rem; }
+.cb-item { display:flex; align-items:center; gap:.3rem; font-size:.74rem; padding:.2rem .6rem; border-radius:99px; }
+.cb-item.done { background:rgba(0,229,153,.1); color:var(--em-400); border:1px solid var(--bd-em); }
+.cb-item.pending { background:var(--bg-raised); color:var(--tx-600); border:1px solid var(--bd-subtle); }
+
+/* STAT CARDS */
+.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:2rem; }
+.stat-card { background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-xl); padding:1.4rem; transition:all var(--ease); }
+.stat-card:hover { border-color:var(--bd-em); }
+.sc-icon { width:42px; height:42px; border-radius:var(--r-md); display:flex; align-items:center; justify-content:center; font-size:1.3rem; margin-bottom:.9rem; }
+.sc-icon.em { background:rgba(0,229,153,.1); border:1px solid var(--bd-em); }
+.sc-icon.bl { background:rgba(59,130,246,.1); border:1px solid rgba(59,130,246,.25); }
+.sc-icon.gd { background:rgba(251,191,36,.1); border:1px solid rgba(251,191,36,.25); }
+.sc-icon.pu { background:rgba(147,51,234,.1); border:1px solid rgba(147,51,234,.25); }
+.sc-val { font-size:1.8rem; font-weight:900; line-height:1; margin-bottom:.25rem; }
+.sc-lbl { font-size:.78rem; color:var(--tx-400); margin-bottom:.3rem; }
+.sc-change { font-size:.73rem; font-weight:600; }
+.sc-change.up { color:var(--em-400); } .sc-change.dn { color:var(--danger); }
+
+/* MAIN GRID */
+.main-grid { display:grid; grid-template-columns:1fr 340px; gap:1.5rem; }
+.main-col { display:flex; flex-direction:column; gap:1.5rem; }
+
+/* SECTION CARD */
+.sec-card { background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-xl); overflow:hidden; }
+.sec-card-header { padding:1.2rem 1.5rem; border-bottom:1px solid var(--bd-subtle); display:flex; align-items:center; justify-content:space-between; }
+.sec-card-header h3 { font-size:.95rem; font-weight:700; color:var(--tx-100); }
+.sec-card-header a { font-size:.8rem; color:var(--em-400); transition:color var(--ease); }
+.sec-card-header a:hover { color:var(--em-300); }
+.sec-card-body { padding:1.2rem 1.5rem; }
+
+/* APPLICATION ITEM */
+.app-item { display:flex; align-items:flex-start; gap:.9rem; padding:.9rem 0; border-bottom:1px solid var(--bd-subtle); }
+.app-item:last-child { border-bottom:none; }
+.app-logo { width:42px; height:42px; border-radius:var(--r-md); background:var(--bg-raised); border:1px solid var(--bd-subtle); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.85rem; color:var(--em-400); flex-shrink:0; }
+.app-info { flex:1; min-width:0; }
+.app-title { font-size:.9rem; font-weight:700; color:var(--tx-100); margin-bottom:.1rem; }
+.app-company { font-size:.78rem; color:var(--tx-400); margin-bottom:.35rem; }
+.app-meta { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+.app-date { font-size:.72rem; color:var(--tx-800); }
+.status-badge { font-size:.68rem; font-weight:700; padding:.16rem .55rem; border-radius:99px; }
+.status-applied   { background:rgba(96,165,250,.12);  color:var(--bl-400);  border:1px solid rgba(96,165,250,.25); }
+.status-review    { background:rgba(251,191,36,.12);  color:var(--gd-400);  border:1px solid rgba(251,191,36,.25); }
+.status-interview { background:rgba(0,229,153,.12);   color:var(--em-400);  border:1px solid var(--bd-em); }
+.status-offered   { background:rgba(52,211,153,.15);  color:#34D399;        border:1px solid rgba(52,211,153,.3); }
+.status-rejected  { background:rgba(248,113,113,.1);  color:var(--danger);  border:1px solid rgba(248,113,113,.25); }
+
+/* RECOMMENDED JOB */
+.rec-job { display:flex; gap:.85rem; padding:.9rem 0; border-bottom:1px solid var(--bd-subtle); cursor:pointer; transition:all var(--ease); }
+.rec-job:last-child { border-bottom:none; }
+.rec-job:hover .rj-title { color:var(--em-400); }
+.rec-job-logo { width:40px; height:40px; border-radius:var(--r-sm); background:var(--bg-raised); border:1px solid var(--bd-subtle); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.8rem; color:var(--em-400); flex-shrink:0; }
+.rj-title { font-size:.88rem; font-weight:700; color:var(--tx-100); transition:color var(--ease); margin-bottom:.1rem; }
+.rj-company { font-size:.76rem; color:var(--tx-400); margin-bottom:.3rem; }
+.rj-salary { font-size:.76rem; font-weight:700; color:var(--em-400); }
+.rj-match { font-size:.68rem; font-weight:700; padding:.14rem .5rem; background:rgba(0,229,153,.1); border:1px solid var(--bd-em); border-radius:99px; color:var(--em-400); margin-left:auto; flex-shrink:0; align-self:flex-start; }
+
+/* RECRUITER MESSAGE */
+.recruiter-msg { background:linear-gradient(135deg,rgba(0,229,153,.06),rgba(59,130,246,.04)); border:1px solid var(--bd-em); border-radius:var(--r-xl); padding:1.3rem; margin-bottom:1rem; }
+.rm-header { display:flex; align-items:center; gap:.7rem; margin-bottom:.75rem; }
+.rm-avatar { width:38px; height:38px; border-radius:50%; background:rgba(0,229,153,.15); border:2px solid var(--em-400); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.8rem; color:var(--em-400); }
+.rm-name  { font-size:.86rem; font-weight:700; color:var(--tx-100); }
+.rm-role  { font-size:.72rem; color:var(--tx-600); }
+.rm-new   { font-size:.65rem; font-weight:800; background:var(--em-400); color:var(--bg-deep); padding:.1rem .45rem; border-radius:99px; margin-left:auto; }
+.rm-body  { font-size:.84rem; color:var(--tx-300); line-height:1.7; margin-bottom:.9rem; }
+.rm-body span { color:var(--em-400); font-weight:600; }
+.rm-actions { display:flex; gap:.55rem; }
+
+/* PROFILE COMPLETENESS - RIGHT COL */
+.profile-score { text-align:center; padding:1.5rem; }
+.ps-circle { width:90px; height:90px; border-radius:50%; background:conic-gradient(var(--em-400) 0% 72%, var(--bg-raised) 72% 100%); display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; position:relative; }
+.ps-circle::before { content:''; position:absolute; inset:10px; background:var(--bg-surface); border-radius:50%; }
+.ps-pct { position:relative; z-index:1; font-size:1.2rem; font-weight:900; color:var(--tx-100); }
+.ps-label { font-size:.85rem; font-weight:700; color:var(--tx-100); margin-bottom:.3rem; }
+.ps-desc  { font-size:.77rem; color:var(--tx-400); }
+.profile-checklist { padding:0 1.5rem 1.5rem; display:flex; flex-direction:column; gap:.5rem; }
+.pc-row { display:flex; align-items:center; gap:.65rem; padding:.6rem; border-radius:var(--r-md); border:1px solid transparent; transition:all var(--ease); cursor:pointer; }
+.pc-row:hover { background:var(--bg-raised); border-color:var(--bd-subtle); }
+.pc-check { width:20px; height:20px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:.65rem; }
+.pc-check.done { background:var(--em-400); color:var(--bg-deep); font-weight:900; }
+.pc-check.pending { background:var(--bg-raised); border:1.5px solid var(--bd-default); color:transparent; }
+.pc-text { flex:1; font-size:.82rem; color:var(--tx-200); }
+.pc-text.pending { color:var(--tx-600); }
+.pc-pts  { font-size:.7rem; font-weight:700; color:var(--em-400); }
+
+/* JOB ALERTS CARD */
+.alert-toggle { display:flex; align-items:center; justify-content:space-between; padding:.75rem 0; border-bottom:1px solid var(--bd-subtle); }
+.alert-toggle:last-child { border-bottom:none; }
+.at-label { font-size:.84rem; color:var(--tx-200); font-weight:500; }
+.at-freq  { font-size:.72rem; color:var(--tx-600); margin-top:.05rem; }
+.toggle-switch { width:40px; height:22px; border-radius:11px; background:var(--bg-raised); border:1px solid var(--bd-subtle); position:relative; cursor:pointer; transition:all var(--ease); flex-shrink:0; }
+.toggle-switch.on { background:var(--em-400); border-color:var(--em-400); }
+.toggle-switch::after { content:''; position:absolute; width:16px; height:16px; border-radius:50%; background:#fff; top:2px; left:2px; transition:transform var(--ease); }
+.toggle-switch.on::after { transform:translateX(18px); }
+
+/* MOBILE */
+@media(max-width:1024px) {
+  .stats-row { grid-template-columns:repeat(2,1fr); }
+  .main-grid { grid-template-columns:1fr; }
+}
+@media(max-width:768px) {
+  .dash-main { margin-left:0; }
+  .sidebar { display:none; }
+  .stats-row { grid-template-columns:repeat(2,1fr); }
+  .dash-content { padding:1.25rem; }
+  .dash-topbar { padding:.75rem 1.25rem; }
+  .topbar-search input { width:130px; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-brand">
+    <a href="../index.html" style="display:flex;align-items:center;gap:.6rem;text-decoration:none">
+      <svg width="30" height="30" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14.5" stroke="url(#lg4)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="7" ry="14.5" stroke="url(#lg4)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="14.5" ry="4.5" stroke="url(#lg4)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="20" ry="6.5" stroke="url(#lg4)" stroke-width="1.8" stroke-opacity=".65" transform="rotate(-25 20 20)"/><defs><linearGradient id="lg4" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#00E599"/><stop offset="1" stop-color="#3B82F6"/></linearGradient></defs></svg>
+      <div><div class="sb-brand-name text-em">INEZA</div><div style="font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-800)">Candidate Portal</div></div>
+    </a>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">
+      <div class="sb-section-lbl">Main</div>
+      <a href="dashboard.html" class="sb-link active"><span class="link-ico">🏠</span>Dashboard</a>
+      <a href="jobs.html" class="sb-link"><span class="link-ico">💼</span>Browse Jobs<span class="link-badge">12</span></a>
+      <a href="applications.html" class="sb-link"><span class="link-ico">📋</span>My Applications</a>
+      <a href="saved.html" class="sb-link"><span class="link-ico">🔖</span>Saved Jobs</a>
+      <a href="messages.html" class="sb-link"><span class="link-ico">💬</span>Messages<span class="link-badge">3</span></a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Profile</div>
+      <a href="profile.html" class="sb-link"><span class="link-ico">👤</span>My Profile</a>
+      <a href="cv.html" class="sb-link"><span class="link-ico">📄</span>My CV</a>
+      <a href="preferences.html" class="sb-link"><span class="link-ico">🎯</span>Job Preferences</a>
+      <a href="alerts.html" class="sb-link"><span class="link-ico">🔔</span>Job Alerts</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Account</div>
+      <a href="settings.html" class="sb-link"><span class="link-ico">⚙️</span>Settings</a>
+      <a href="billing.html" class="sb-link"><span class="link-ico">💳</span>Billing & Plan</a>
+      <a href="#" class="sb-link" onclick="Auth.logout()"><span class="link-ico">🚪</span>Sign Out</a>
+    </div>
+  </nav>
+  <div class="sb-footer">
+    <div class="sb-user" id="sb-user">
+      <div class="avatar avatar-sm" style="color:var(--em-400);background:rgba(0,229,153,.1);border-color:var(--em-400)" id="sb-avatar">JP</div>
+      <div class="sb-user-info">
+        <span class="su-name" id="sb-name">Jean-Paul H.</span>
+        <span class="su-plan" id="sb-plan">✨ Pro Seeker</span>
+      </div>
+      <span style="color:var(--tx-600);font-size:.7rem;margin-left:auto">▾</span>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="dash-main">
+  <!-- TOPBAR -->
+  <div class="dash-topbar">
+    <div class="topbar-search">
+      <span style="color:var(--tx-600)">🔍</span>
+      <input type="text" placeholder="Search jobs, companies…" onkeydown="if(e.key==='Enter')window.location.href='../jobs/board.html?q='+this.value">
+    </div>
+    <div class="topbar-actions">
+      <div class="topbar-icon-btn" onclick="window.location.href='alerts.html'" title="Job Alerts">
+        🔔 <span class="notif-dot"></span>
+      </div>
+      <div class="topbar-icon-btn" onclick="window.location.href='messages.html'" title="Messages">
+        💬 <span class="notif-dot"></span>
+      </div>
+      <div class="dropdown">
+        <div class="topbar-icon-btn" data-dropdown style="width:auto;padding:0 .6rem;gap:.4rem">
+          <div class="avatar avatar-sm" style="color:var(--em-400);background:rgba(0,229,153,.1);border-color:var(--em-400)" id="tb-avatar">JP</div>
+          <span style="font-size:.84rem;font-weight:600;color:var(--tx-200)" id="tb-name">Jean-Paul</span>
+          <span style="font-size:.7rem;color:var(--tx-600)">▾</span>
+        </div>
+        <div class="dropdown-menu">
+          <div class="dropdown-item" onclick="window.location.href='profile.html'">👤 My Profile</div>
+          <div class="dropdown-item" onclick="window.location.href='settings.html'">⚙️ Settings</div>
+          <div class="dropdown-item" onclick="window.location.href='billing.html'">💳 Billing</div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item danger" onclick="Auth.logout()">🚪 Sign Out</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="dash-content">
+    <!-- HEADER -->
+    <div class="page-header">
+      <div>
+        <div class="ph-greeting" id="greeting">Good morning,</div>
+        <div class="ph-title" id="ph-name">Jean-Paul 👋</div>
+      </div>
+      <div style="display:flex;gap:.65rem;align-items:center;flex-wrap:wrap">
+        <span class="badge badge-em">✨ Pro Seeker</span>
+        <a href="../jobs/board.html" class="btn btn-primary btn-sm">Find Jobs 🚀</a>
+      </div>
+    </div>
+
+    <!-- RECRUITER MESSAGE -->
+    <div class="recruiter-msg reveal">
+      <div class="rm-header">
+        <div class="rm-avatar">GM</div>
+        <div>
+          <div class="rm-name">Grace Mukamana</div>
+          <div class="rm-role">Your Dedicated Recruiter · Technology Specialist</div>
+        </div>
+        <span class="rm-new">NEW</span>
+      </div>
+      <div class="rm-body">
+        "Hi Jean-Paul! I've reviewed your profile and found <span>3 excellent matches</span> for your skills. I've already shared your CV with Andela Rwanda for the Senior Engineer role — they're very interested. Can we schedule a quick call this week to discuss your salary expectations?"
+      </div>
+      <div class="rm-actions">
+        <button class="btn btn-primary btn-sm" onclick="Toast.success('Message sent! Grace will reply within 2 hours.')">Reply →</button>
+        <button class="btn btn-secondary btn-sm" onclick="window.location.href='messages.html'">View All Messages</button>
+      </div>
+    </div>
+
+    <!-- PROFILE COMPLETION BANNER -->
+    <div class="completion-banner reveal d1">
+      <div class="cb-left">
+        <div class="cb-title">Complete your profile to unlock more matches</div>
+        <div class="cb-desc">Profiles with 100% completion receive 4× more recruiter attention</div>
+        <div class="cb-items">
+          <span class="cb-item done">✓ Photo</span>
+          <span class="cb-item done">✓ CV Uploaded</span>
+          <span class="cb-item done">✓ Skills Added</span>
+          <span class="cb-item pending">+ Salary Range</span>
+          <span class="cb-item pending">+ LinkedIn URL</span>
+        </div>
+      </div>
+      <div class="cb-progress">
+        <div class="cb-prog-label"><span>Profile Strength</span><span class="cb-prog-pct">72%</span></div>
+        <div class="progress"><div class="progress-fill" style="width:72%"></div></div>
+        <button class="btn btn-primary btn-sm" style="margin-top:.85rem;width:100%" onclick="window.location.href='profile.html'">Complete Profile →</button>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card reveal d1">
+        <div class="sc-icon em">📋</div>
+        <div class="sc-val text-em" data-counter data-target="12" data-suffix="">12</div>
+        <div class="sc-lbl">Total Applications</div>
+        <div class="sc-change up">↑ +3 this week</div>
+      </div>
+      <div class="stat-card reveal d2">
+        <div class="sc-icon bl">👁</div>
+        <div class="sc-val" style="color:var(--bl-400)" data-counter data-target="284" data-suffix="">284</div>
+        <div class="sc-lbl">Profile Views</div>
+        <div class="sc-change up">↑ +47 this week</div>
+      </div>
+      <div class="stat-card reveal d3">
+        <div class="sc-icon gd">💬</div>
+        <div class="sc-val" style="color:var(--gd-400)" data-counter data-target="3" data-suffix="">3</div>
+        <div class="sc-lbl">Interview Invites</div>
+        <div class="sc-change up">↑ +2 new</div>
+      </div>
+      <div class="stat-card reveal d4">
+        <div class="sc-icon pu">🔖</div>
+        <div class="sc-val" style="color:#A78BFA" data-counter data-target="18" data-suffix="">18</div>
+        <div class="sc-lbl">Saved Jobs</div>
+        <div class="sc-change dn">4 expiring soon</div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="main-grid">
+      <div class="main-col">
+
+        <!-- APPLICATIONS -->
+        <div class="sec-card reveal">
+          <div class="sec-card-header">
+            <h3>📋 Recent Applications</h3>
+            <a href="applications.html">View all 12 →</a>
+          </div>
+          <div class="sec-card-body" style="padding:0 1.5rem">
+            <div class="app-item">
+              <div class="app-logo">AN</div>
+              <div class="app-info">
+                <div class="app-title">Senior Software Engineer</div>
+                <div class="app-company">Andela Rwanda · Kigali</div>
+                <div class="app-meta">
+                  <span class="status-badge status-interview">🗓 Interview Scheduled</span>
+                  <span class="app-date">Applied 2 days ago</span>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-sm" style="flex-shrink:0" onclick="Toast.info('Interview: Thu 12 Jun, 10:00 AM via Zoom')">View Details</button>
+            </div>
+            <div class="app-item">
+              <div class="app-logo">BK</div>
+              <div class="app-info">
+                <div class="app-title">Head of Risk & Compliance</div>
+                <div class="app-company">Bank of Kigali · Kigali</div>
+                <div class="app-meta">
+                  <span class="status-badge status-review">📖 Under Review</span>
+                  <span class="app-date">Applied 5 days ago</span>
+                </div>
+              </div>
+              <button class="btn btn-secondary btn-sm" style="flex-shrink:0">Track →</button>
+            </div>
+            <div class="app-item">
+              <div class="app-logo">MT</div>
+              <div class="app-info">
+                <div class="app-title">Digital Marketing Lead</div>
+                <div class="app-company">MTN Rwanda · Kigali</div>
+                <div class="app-meta">
+                  <span class="status-badge status-applied">📨 Applied</span>
+                  <span class="app-date">Applied 1 week ago</span>
+                </div>
+              </div>
+              <button class="btn btn-secondary btn-sm" style="flex-shrink:0">Track →</button>
+            </div>
+            <div class="app-item">
+              <div class="app-logo">IC</div>
+              <div class="app-info">
+                <div class="app-title">Data Analyst — BI</div>
+                <div class="app-company">Inyarwanda Capital · Remote</div>
+                <div class="app-meta">
+                  <span class="status-badge status-offered">🎉 Offer Received</span>
+                  <span class="app-date">Applied 2 weeks ago</span>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-sm" style="flex-shrink:0" onclick="Toast.success('Congratulations! View offer details in your email.')">View Offer</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECOMMENDED JOBS -->
+        <div class="sec-card reveal d1">
+          <div class="sec-card-header">
+            <h3>🎯 Recommended for You</h3>
+            <a href="../jobs/board.html">View all →</a>
+          </div>
+          <div class="sec-card-body" style="padding:0 1.5rem">
+            <div class="rec-job" onclick="window.location.href='../jobs/board.html'">
+              <div class="rec-job-logo">EQ</div>
+              <div style="flex:1">
+                <div class="rj-title">Lead Backend Engineer</div>
+                <div class="rj-company">Equity Bank Rwanda</div>
+                <div class="rj-salary">$1,800 – $2,800/mo</div>
+              </div>
+              <span class="rj-match">98% match</span>
+            </div>
+            <div class="rec-job" onclick="window.location.href='../jobs/board.html'">
+              <div class="rec-job-logo">RD</div>
+              <div style="flex:1">
+                <div class="rj-title">Software Architect</div>
+                <div class="rj-company">Rwanda Development Board</div>
+                <div class="rj-salary">RWF 2.2M – 3M/mo</div>
+              </div>
+              <span class="rj-match">95% match</span>
+            </div>
+            <div class="rec-job" onclick="window.location.href='../jobs/board.html'">
+              <div class="rec-job-logo">KI</div>
+              <div style="flex:1">
+                <div class="rj-title">Full Stack Developer</div>
+                <div class="rj-company">Kigali Innovation City</div>
+                <div class="rj-salary">$1,500 – $2,400/mo</div>
+              </div>
+              <span class="rj-match">92% match</span>
+            </div>
+            <div class="rec-job" onclick="window.location.href='../jobs/board.html'">
+              <div class="rec-job-logo">AB</div>
+              <div style="flex:1">
+                <div class="rj-title">DevOps Engineer</div>
+                <div class="rj-company">Airtel Rwanda (Technology)</div>
+                <div class="rj-salary">RWF 1.5M – 2.2M/mo</div>
+              </div>
+              <span class="rj-match">89% match</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div style="display:flex;flex-direction:column;gap:1.5rem">
+
+        <!-- PROFILE SCORE -->
+        <div class="sec-card reveal">
+          <div class="sec-card-header">
+            <h3>👤 Profile Strength</h3>
+            <a href="profile.html">Edit →</a>
+          </div>
+          <div class="profile-score">
+            <div class="ps-circle"><span class="ps-pct">72%</span></div>
+            <div class="ps-label">Good Profile</div>
+            <div class="ps-desc">Complete 2 more steps to reach Expert status</div>
+          </div>
+          <div class="profile-checklist">
+            <div class="pc-row"><div class="pc-check done">✓</div><div class="pc-text">Basic info added</div><div class="pc-pts">+20pts</div></div>
+            <div class="pc-row"><div class="pc-check done">✓</div><div class="pc-text">Photo uploaded</div><div class="pc-pts">+15pts</div></div>
+            <div class="pc-row"><div class="pc-check done">✓</div><div class="pc-text">CV uploaded</div><div class="pc-pts">+20pts</div></div>
+            <div class="pc-row"><div class="pc-check done">✓</div><div class="pc-text">Skills added</div><div class="pc-pts">+17pts</div></div>
+            <div class="pc-row" onclick="window.location.href='preferences.html'" style="cursor:pointer"><div class="pc-check pending"></div><div class="pc-text pending">Set salary range</div><div class="pc-pts">+15pts</div></div>
+            <div class="pc-row" onclick="window.location.href='profile.html'" style="cursor:pointer"><div class="pc-check pending"></div><div class="pc-text pending">Add LinkedIn URL</div><div class="pc-pts">+13pts</div></div>
+          </div>
+        </div>
+
+        <!-- JOB ALERTS -->
+        <div class="sec-card reveal d1">
+          <div class="sec-card-header">
+            <h3>🔔 Job Alerts</h3>
+            <a href="alerts.html">Manage →</a>
+          </div>
+          <div class="sec-card-body">
+            <div class="alert-toggle">
+              <div><div class="at-label">Software Engineer roles</div><div class="at-freq">Kigali · Daily alerts</div></div>
+              <div class="toggle-switch on" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <div class="alert-toggle">
+              <div><div class="at-label">Remote Tech roles</div><div class="at-freq">Any location · Daily</div></div>
+              <div class="toggle-switch on" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <div class="alert-toggle">
+              <div><div class="at-label">Senior / Lead roles</div><div class="at-freq">Rwanda + EAC · Weekly</div></div>
+              <div class="toggle-switch" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <button class="btn btn-secondary btn-sm btn-block" style="margin-top:1rem" onclick="window.location.href='alerts.html'">+ Add New Alert</button>
+          </div>
+        </div>
+
+        <!-- UPGRADE NUDGE -->
+        <div id="upgrade-nudge" style="background:linear-gradient(135deg,rgba(0,229,153,.08),rgba(59,130,246,.06));border:1px solid var(--bd-em);border-radius:var(--r-xl);padding:1.4rem;text-align:center">
+          <div style="font-size:1.8rem;margin-bottom:.6rem">💎</div>
+          <div style="font-size:.92rem;font-weight:700;color:var(--tx-100);margin-bottom:.4rem">Upgrade to Premium</div>
+          <div style="font-size:.78rem;color:var(--tx-400);line-height:1.6;margin-bottom:1rem">Unlock interview coaching, salary negotiation support, and get your profile featured to employers.</div>
+          <button class="btn btn-gold btn-sm btn-block" onclick="Payment.showCheckout('candidate_premium');document.getElementById('payment-modal').style.display='flex'">Upgrade — RWF 9,900/mo</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- PAYMENT MODAL (copied from index) -->
+<div class="modal-overlay" id="payment-modal">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-header">
+      <h3>Upgrade Your Plan</h3>
+      <button class="modal-close" onclick="Modal.close('payment-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:var(--bg-raised);border:1px solid var(--bd-em);border-radius:var(--r-md);padding:1rem;margin-bottom:1.2rem;display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:.88rem;font-weight:700;color:var(--tx-100)">Premium Plan</div><div style="font-size:.75rem;color:var(--tx-600)">Monthly subscription</div></div>
+        <div style="font-size:1.2rem;font-weight:900;color:var(--em-400)">RWF 9,900</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Payment Method</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem">
+          <label style="background:var(--bg-raised);border:1.5px solid var(--bd-em);border-radius:var(--r-md);padding:.7rem;display:flex;align-items:center;gap:.5rem;cursor:pointer">
+            <input type="radio" name="pm2" checked style="accent-color:var(--em-400)">
+            <span style="font-size:.84rem;font-weight:600;color:var(--tx-100)">📱 MTN MoMo</span>
+          </label>
+          <label style="background:var(--bg-raised);border:1.5px solid var(--bd-subtle);border-radius:var(--r-md);padding:.7rem;display:flex;align-items:center;gap:.5rem;cursor:pointer">
+            <input type="radio" name="pm2" style="accent-color:var(--em-400)">
+            <span style="font-size:.84rem;font-weight:600;color:var(--tx-100)">💳 Card</span>
+          </label>
+        </div>
+        <input type="tel" class="form-control" placeholder="+250 78X XXX XXX">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="Modal.close('payment-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="processUpgrade()">Pay RWF 9,900 🔒</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script>
+// Load user data
+document.addEventListener('DOMContentLoaded', () => {
+  const user = Auth.getUser() || { name:'Jean-Paul Habimana', email:'jp@ineza.rw', role:'candidate', plan:'pro' };
+
+  const fn = user.name?.split(' ')[0] || 'there';
+  const initials = Format.initials(user.name || 'JP');
+
+  // Update all name/avatar spots
+  ['sb-name','ph-name'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = id === 'ph-name' ? fn + ' 👋' : user.name?.split(' ').map((n,i)=>i<2?n:'').join(' ').trim() || fn;
+  });
+  ['sb-avatar','tb-avatar'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = initials;
+  });
+  const tbName = document.getElementById('tb-name');
+  if (tbName) tbName.textContent = fn;
+
+  // Greeting
+  const hour = new Date().getHours();
+  const greet = hour < 12 ? 'Good morning,' : hour < 17 ? 'Good afternoon,' : 'Good evening,';
+  const greetEl = document.getElementById('greeting');
+  if (greetEl) greetEl.textContent = greet;
+
+  // Plan badge
+  const planMap = { free:'Free Plan', pro:'✨ Pro Seeker', premium:'💎 Premium' };
+  const planEl = document.getElementById('sb-plan');
+  if (planEl) planEl.textContent = planMap[user.plan] || user.plan;
+
+  // Hide upgrade nudge for premium users
+  if (user.plan === 'premium') {
+    const nudge = document.getElementById('upgrade-nudge');
+    if (nudge) nudge.style.display = 'none';
+  }
+});
+
+async function processUpgrade() {
+  try {
+    await Payment.processPayment('candidate_premium', {});
+    Modal.close('payment-modal');
+    Toast.success('🎉 Upgraded to Premium! Your new features are now active.');
+    const user = Auth.getUser();
+    if (user) { user.plan = 'premium'; Auth.setUser(user); }
+    document.getElementById('upgrade-nudge').style.display = 'none';
+  } catch(err) {
+    Toast.error(err.error || 'Payment failed');
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Browse Jobs | Ineza Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/base.css">
+<style>
+body { background:var(--bg-deep); }
+
+/* NAV */
+.navbar { background:rgba(7,12,24,.96); backdrop-filter:blur(20px); border-bottom:1px solid var(--bd-subtle); padding:.65rem 0; position:sticky; top:0; z-index:200; }
+.nav-inner { max-width:1340px; margin:0 auto; padding:0 1.5rem; display:flex; align-items:center; gap:1.2rem; }
+.nav-logo { display:flex; align-items:center; gap:.6rem; }
+.nav-links { display:flex; gap:.2rem; margin-left:auto; }
+.nav-link { padding:.45rem .8rem; border-radius:var(--r-sm); font-size:.84rem; font-weight:500; color:var(--tx-400); transition:all var(--ease); }
+.nav-link:hover { color:var(--tx-100); background:var(--bg-raised); }
+.nav-link.active { color:var(--em-400); }
+.nav-actions { display:flex; gap:.5rem; flex-shrink:0; }
+.btn { display:inline-flex; align-items:center; gap:.4rem; padding:.6rem 1.4rem; border-radius:var(--r-md); font-size:.84rem; font-weight:600; font-family:var(--ff-body); transition:all var(--ease); border:none; cursor:pointer; white-space:nowrap; }
+.btn-primary { background:linear-gradient(135deg,#00E599,#00C97D); color:#020f08; }
+.btn-primary:hover { opacity:.92; transform:translateY(-1px); }
+.btn-secondary { background:var(--bg-raised); color:var(--tx-100); border:1.5px solid var(--bd-subtle); }
+.btn-secondary:hover { border-color:var(--bd-em); }
+.btn-sm { padding:.48rem 1rem; font-size:.8rem; border-radius:var(--r-sm); }
+.btn-ghost { background:transparent; color:var(--em-400); border:1.5px solid var(--bd-em); }
+.btn-ghost:hover { background:rgba(0,229,153,.08); }
+@media(max-width:768px) { .nav-links,.nav-actions { display:none; } }
+
+/* PAGE HERO */
+.page-hero { background:var(--bg-base); border-bottom:1px solid var(--bd-subtle); padding:2.2rem 0 1.8rem; }
+.ph-inner { max-width:1340px; margin:0 auto; padding:0 1.5rem; }
+.ph-top { display:flex; align-items:flex-start; justify-content:space-between; gap:1.5rem; flex-wrap:wrap; margin-bottom:1.4rem; }
+.ph-top h1 { font-size:clamp(1.6rem,3vw,2.4rem); font-weight:900; color:var(--tx-100); line-height:1.1; }
+.ph-top h1 span { background:var(--grad-text-em); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.ph-top p { font-size:.88rem; color:var(--tx-400); margin-top:.3rem; }
+
+/* SEARCH BAR */
+.search-bar { background:var(--bg-surface); border:1.5px solid var(--bd-muted); border-radius:var(--r-xl); padding:.4rem; display:flex; gap:.35rem; flex-wrap:wrap; box-shadow:0 4px 24px rgba(0,0,0,.3); }
+.search-bar input, .search-bar select { background:none; border:none; outline:none; font-family:var(--ff-body); font-size:.9rem; color:var(--tx-100); padding:.55rem .85rem; flex:1; min-width:140px; }
+.search-bar input::placeholder { color:var(--tx-800); }
+.search-bar select { border-left:1px solid var(--bd-subtle); color:var(--tx-400); cursor:pointer; min-width:155px; }
+.search-bar select option { background:var(--bg-surface); }
+.search-bar .btn { flex-shrink:0; padding:.6rem 1.5rem; }
+
+/* QUICK FILTERS */
+.quick-filter-row { display:flex; align-items:center; gap:.4rem; flex-wrap:wrap; margin-top:1rem; }
+.qf-label { font-size:.74rem; color:var(--tx-600); font-weight:500; }
+.qf-chip { padding:.28rem .82rem; font-size:.76rem; font-weight:600; color:var(--tx-400); background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:99px; cursor:pointer; transition:all var(--ease); font-family:var(--ff-body); }
+.qf-chip:hover, .qf-chip.active { background:rgba(0,229,153,.1); border-color:var(--bd-em); color:var(--em-400); }
+
+/* LAYOUT */
+.board-layout { max-width:1340px; margin:0 auto; padding:1.75rem 1.5rem; display:grid; grid-template-columns:280px 1fr; gap:1.5rem; align-items:start; }
+
+/* SIDEBAR FILTERS */
+.filter-sidebar { background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-xl); padding:1.4rem; position:sticky; top:72px; }
+.fs-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.2rem; padding-bottom:.85rem; border-bottom:1px solid var(--bd-subtle); }
+.fs-header h3 { font-size:.88rem; font-weight:700; color:var(--tx-100); }
+.fs-clear { font-size:.76rem; color:var(--em-400); background:none; border:none; cursor:pointer; font-family:var(--ff-body); }
+.filter-group { margin-bottom:1.3rem; }
+.fg-title { font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--tx-600); margin-bottom:.75rem; display:flex; align-items:center; justify-content:space-between; }
+.fg-title button { font-size:.7rem; color:var(--em-400); background:none; border:none; cursor:pointer; font-family:var(--ff-body); }
+.filter-sep { height:1px; background:var(--bd-subtle); margin:1rem 0; }
+.check-item { display:flex; align-items:center; gap:.55rem; padding:.32rem 0; cursor:pointer; }
+.check-item input[type=checkbox] { accent-color:var(--em-400); width:14px; height:14px; cursor:pointer; flex-shrink:0; }
+.check-item-label { font-size:.84rem; color:var(--tx-200); flex:1; cursor:pointer; transition:color var(--ease); }
+.check-item:hover .check-item-label { color:var(--em-400); }
+.check-item-count { font-size:.7rem; color:var(--tx-800); font-weight:600; }
+.salary-range { margin-top:.5rem; }
+.salary-range input[type=range] { width:100%; accent-color:var(--em-400); cursor:pointer; height:4px; }
+.salary-row { display:flex; align-items:center; gap:.5rem; margin-bottom:.4rem; }
+.salary-row label { font-size:.72rem; color:var(--tx-600); min-width:24px; }
+.salary-val { font-size:.76rem; font-weight:700; color:var(--em-400); min-width:55px; text-align:right; margin-left:auto; }
+.apply-filters { width:100%; padding:.68rem; background:var(--grad-em); color:#020f08; border:none; border-radius:var(--r-md); font-family:var(--ff-body); font-size:.88rem; font-weight:700; cursor:pointer; margin-top:1rem; transition:all var(--ease); }
+.apply-filters:hover { opacity:.92; }
+
+/* RESULTS AREA */
+.results-header { display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; margin-bottom:1.1rem; }
+.results-count { font-size:.88rem; color:var(--tx-400); }
+.results-count strong { color:var(--tx-100); font-weight:700; }
+.results-controls { display:flex; align-items:center; gap:.65rem; }
+.sort-select { background:var(--bg-surface); border:1px solid var(--bd-subtle); color:var(--tx-100); font-family:var(--ff-body); font-size:.82rem; padding:.4rem .7rem; border-radius:var(--r-sm); cursor:pointer; outline:none; }
+.sort-select option { background:var(--bg-surface); }
+.view-btns { display:flex; gap:.3rem; }
+.view-btn { width:30px; height:30px; display:flex; align-items:center; justify-content:center; background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-sm); cursor:pointer; transition:all var(--ease); color:var(--tx-400); font-size:.82rem; }
+.view-btn.active { background:rgba(0,229,153,.1); border-color:var(--bd-em); color:var(--em-400); }
+
+/* JOB CARDS */
+.jobs-list { display:flex; flex-direction:column; gap:.85rem; }
+.job-card { background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-xl); padding:1.4rem 1.6rem; display:flex; gap:1.1rem; align-items:flex-start; cursor:pointer; transition:all var(--ease); position:relative; overflow:hidden; }
+.job-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--grad-em); transform:scaleY(0); transition:transform var(--ease); transform-origin:bottom; border-radius:0; }
+.job-card:hover { border-color:var(--bd-em); transform:translateX(3px); box-shadow:0 4px 30px rgba(0,229,153,.1); }
+.job-card:hover::before { transform:scaleY(1); }
+.job-card.featured { border-color:rgba(251,191,36,.22); background:rgba(251,191,36,.02); }
+.job-card.featured::before { background:var(--grad-gd); }
+.feat-pill { position:absolute; top:.9rem; right:1.1rem; }
+.jc-logo { width:52px; height:52px; border-radius:var(--r-md); flex-shrink:0; background:var(--bg-raised); border:1px solid var(--bd-subtle); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; color:var(--em-400); }
+.jc-body { flex:1; min-width:0; }
+.jc-row1 { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:.3rem; }
+.jc-title { font-size:1rem; font-weight:700; color:var(--tx-100); }
+.jc-sal { font-weight:700; font-size:.94rem; color:var(--em-400); white-space:nowrap; }
+.jc-meta { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; margin-bottom:.55rem; }
+.jc-co { font-size:.84rem; color:var(--tx-400); font-weight:500; }
+.jc-dot { width:3px; height:3px; background:var(--tx-800); border-radius:50%; flex-shrink:0; }
+.jc-loc { font-size:.82rem; color:var(--tx-600); }
+.jc-desc { font-size:.82rem; color:var(--tx-400); line-height:1.65; margin-bottom:.65rem; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.jc-tags { display:flex; gap:.3rem; flex-wrap:wrap; }
+.badge { display:inline-flex; align-items:center; gap:.28rem; padding:.18rem .58rem; border-radius:99px; font-size:.68rem; font-weight:700; letter-spacing:.04em; white-space:nowrap; }
+.badge-em  { background:rgba(0,229,153,.12); color:#00E599; border:1px solid rgba(0,229,153,.22); }
+.badge-bl  { background:rgba(59,130,246,.12); color:#60A5FA; border:1px solid rgba(59,130,246,.22); }
+.badge-gd  { background:rgba(251,191,36,.12); color:#FBBF24; border:1px solid rgba(251,191,36,.22); }
+.badge-gray{ background:var(--bg-raised); color:var(--tx-400); border:1px solid var(--bd-subtle); }
+.jc-footer { display:flex; align-items:center; justify-content:space-between; padding-top:.65rem; border-top:1px solid var(--bd-subtle); margin-top:.65rem; }
+.jc-date { font-size:.72rem; color:var(--tx-800); }
+.jc-actions { display:flex; gap:.4rem; align-items:center; }
+.save-btn { width:30px; height:30px; background:var(--bg-raised); border:1px solid var(--bd-subtle); border-radius:var(--r-sm); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all var(--ease); font-size:.9rem; color:var(--tx-600); }
+.save-btn:hover, .save-btn.saved { background:rgba(251,191,36,.1); border-color:rgba(251,191,36,.3); color:var(--gd-400); }
+.apply-btn { padding:.38rem 1.1rem; background:var(--grad-em); color:#020f08; border:none; border-radius:var(--r-sm); font-family:var(--ff-body); font-size:.8rem; font-weight:700; cursor:pointer; transition:all var(--ease); }
+.apply-btn:hover { opacity:.9; }
+
+/* LOAD MORE */
+.load-more-btn { width:100%; padding:.82rem; background:var(--bg-surface); border:1px solid var(--bd-em); color:var(--em-400); border-radius:var(--r-lg); font-family:var(--ff-body); font-size:.9rem; font-weight:600; cursor:pointer; margin-top:1.2rem; transition:all var(--ease); }
+.load-more-btn:hover { background:rgba(0,229,153,.06); }
+
+/* PAGINATION */
+.pagination { display:flex; align-items:center; justify-content:center; gap:.4rem; margin-top:2rem; padding-bottom:1rem; }
+.page-btn { width:34px; height:34px; display:flex; align-items:center; justify-content:center; background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-sm); font-size:.82rem; font-weight:600; color:var(--tx-400); cursor:pointer; transition:all var(--ease); }
+.page-btn:hover { border-color:var(--bd-em); color:var(--em-400); }
+.page-btn.active { background:rgba(0,229,153,.1); border-color:var(--bd-em); color:var(--em-400); }
+
+/* JOB DETAIL MODAL */
+.modal-overlay { position:fixed; inset:0; background:rgba(3,6,13,.9); backdrop-filter:blur(8px); z-index:500; display:none; align-items:flex-start; justify-content:center; padding:1.5rem 1rem; overflow-y:auto; }
+.modal-overlay.open { display:flex; }
+.job-modal { background:var(--bg-surface); border:1px solid var(--bd-muted); border-radius:var(--r-2xl); width:100%; max-width:700px; position:relative; animation:modalIn .3s ease; }
+@keyframes modalIn { from{transform:translateY(-16px);opacity:0} to{transform:translateY(0);opacity:1} }
+.modal-close { position:absolute; top:1.1rem; right:1.3rem; width:32px; height:32px; border-radius:50%; background:var(--bg-raised); border:1px solid var(--bd-subtle); color:var(--tx-400); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all var(--ease); font-size:1.1rem; }
+.modal-close:hover { border-color:var(--bd-em); color:var(--tx-100); }
+.modal-top { padding:2rem; border-bottom:1px solid var(--bd-subtle); display:flex; gap:1.2rem; align-items:flex-start; }
+.modal-logo { width:60px; height:60px; border-radius:var(--r-lg); flex-shrink:0; background:var(--bg-raised); border:1px solid var(--bd-subtle); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem; color:var(--em-400); }
+.modal-body { padding:1.8rem 2rem; }
+.modal-section { margin-bottom:1.5rem; }
+.modal-section h4 { font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--tx-600); margin-bottom:.75rem; }
+.modal-section ul { list-style:none; display:flex; flex-direction:column; gap:.4rem; }
+.modal-section ul li { font-size:.87rem; color:var(--tx-400); line-height:1.65; display:flex; gap:.6rem; align-items:flex-start; }
+.modal-section ul li::before { content:'›'; color:var(--em-400); font-size:1rem; line-height:1.3; flex-shrink:0; }
+.modal-kv { display:grid; grid-template-columns:repeat(3,1fr); gap:.85rem; margin-bottom:1.5rem; }
+.mkv-item { background:var(--bg-raised); border:1px solid var(--bd-subtle); border-radius:var(--r-md); padding:.85rem; text-align:center; }
+.mkv-icon { font-size:1.3rem; display:block; margin-bottom:.3rem; }
+.mkv-val  { font-size:.95rem; font-weight:700; color:var(--em-400); display:block; margin-bottom:.1rem; }
+.mkv-lbl  { font-size:.66rem; color:var(--tx-600); text-transform:uppercase; letter-spacing:.08em; }
+.modal-footer { padding:1.4rem 2rem; border-top:1px solid var(--bd-subtle); display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+.mf-info { font-size:.78rem; color:var(--tx-600); }
+.mf-info span { color:var(--tx-400); font-weight:600; }
+.modal-apply-btn { padding:.78rem 2rem; background:var(--grad-em); color:#020f08; border:none; border-radius:var(--r-lg); font-family:var(--ff-body); font-size:.96rem; font-weight:800; cursor:pointer; transition:all var(--ease); }
+.modal-apply-btn:hover { opacity:.92; transform:translateY(-1px); }
+.modal-save-btn { padding:.78rem 1.2rem; background:var(--bg-raised); color:var(--tx-200); border:1px solid var(--bd-muted); border-radius:var(--r-lg); font-family:var(--ff-body); font-size:.86rem; font-weight:600; cursor:pointer; transition:all var(--ease); }
+.modal-save-btn:hover { border-color:var(--bd-em); color:var(--em-400); }
+
+/* NO RESULTS */
+.no-results { text-align:center; padding:4rem 2rem; }
+.nr-icon { font-size:3rem; margin-bottom:1rem; display:block; }
+
+@media(max-width:1024px) { .board-layout{grid-template-columns:240px 1fr} }
+@media(max-width:768px) { .board-layout{grid-template-columns:1fr}.filter-sidebar{display:none;position:fixed;inset:0;z-index:300;border-radius:0;overflow-y:auto}.filter-sidebar.mobile-open{display:block}.modal-kv{grid-template-columns:1fr 1fr}.modal-top{flex-direction:column}.modal-body{padding:1.4rem 1.4rem} }
+@media(max-width:480px) { .jc-row1{flex-direction:column;gap:.25rem}.modal-kv{grid-template-columns:1fr 1fr} }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">
+      <svg width="32" height="32" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14.5" stroke="url(#lgb)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="7" ry="14.5" stroke="url(lgb)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="14.5" ry="4.5" stroke="url(#lgb)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="20" ry="6.5" stroke="url(#lgb)" stroke-width="1.8" stroke-opacity=".65" transform="rotate(-25 20 20)"/><defs><linearGradient id="lgb" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#00E599"/><stop offset="1" stop-color="#3B82F6"/></linearGradient></defs></svg>
+      <div style="margin-left:.55rem">
+        <div style="font-size:.9rem;font-weight:800;letter-spacing:.08em;background:linear-gradient(135deg,#4DFFA6,#00E599);-webkit-background-clip:text;-webkit-text-fill-color:transparent">INEZA</div>
+        <div style="font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-800)">Agencies</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="board.html" class="nav-link active">Find Jobs</a>
+      <a href="../employer/dashboard.html" class="nav-link">For Employers</a>
+      <a href="../index.html#pricing" class="nav-link">Pricing</a>
+    </div>
+    <div class="nav-actions" id="nav-auth">
+      <a href="../auth/signin.html" class="btn btn-secondary btn-sm">Sign In</a>
+      <a href="../auth/signup.html" class="btn btn-primary btn-sm">Register Free</a>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="ph-inner">
+    <div class="ph-top">
+      <div>
+        <h1>Find Your <span>Perfect Role</span></h1>
+        <p><span id="result-count-hero">2,400+</span> verified positions across Rwanda and beyond — updated daily</p>
+      </div>
+      <a href="../auth/signup.html?role=candidate" class="btn btn-primary btn-sm">Upload My CV →</a>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="main-search" placeholder="Job title, skill, or company name…">
+      <select id="loc-filter">
+        <option value="">All Locations</option>
+        <option>Kigali, Rwanda</option>
+        <option>Northern Province</option>
+        <option>Southern Province</option>
+        <option>Eastern Province</option>
+        <option>Western Province</option>
+        <option>Remote</option>
+        <option>International</option>
+      </select>
+      <select id="sector-filter">
+        <option value="">All Sectors</option>
+        <option>Technology & ICT</option>
+        <option>Finance & Banking</option>
+        <option>Healthcare</option>
+        <option>Engineering</option>
+        <option>Agriculture</option>
+        <option>Tourism & Hospitality</option>
+        <option>Education</option>
+        <option>Logistics</option>
+      </select>
+      <button class="btn btn-primary" onclick="runSearch()">Search Jobs</button>
+    </div>
+    <div class="quick-filter-row">
+      <span class="qf-label">Quick:</span>
+      <button class="qf-chip active" onclick="quickFilter('all',this)">All Jobs</button>
+      <button class="qf-chip" onclick="quickFilter('fulltime',this)">Full-time</button>
+      <button class="qf-chip" onclick="quickFilter('remote',this)">Remote</button>
+      <button class="qf-chip" onclick="quickFilter('senior',this)">Senior Level</button>
+      <button class="qf-chip" onclick="quickFilter('featured',this)">⭐ Featured</button>
+      <button class="qf-chip" onclick="quickFilter('new',this)">🆕 Posted Today</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOARD -->
+<div class="board-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="filter-sidebar" id="filter-sidebar">
+    <div class="fs-header">
+      <h3>Filters</h3>
+      <button class="fs-clear" onclick="clearFilters()">Clear All</button>
+    </div>
+
+    <div class="filter-group">
+      <div class="fg-title">Salary Range</div>
+      <div class="salary-range">
+        <div class="salary-row">
+          <label>Min</label>
+          <input type="range" min="0" max="5000" step="100" value="0" id="sal-min" oninput="updateSalary()">
+          <span class="salary-val" id="sal-min-val">$0</span>
+        </div>
+        <div class="salary-row">
+          <label>Max</label>
+          <input type="range" min="0" max="12000" step="100" value="12000" id="sal-max" oninput="updateSalary()">
+          <span class="salary-val" id="sal-max-val">$12k+</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-sep"></div>
+    <div class="filter-group">
+      <div class="fg-title">Job Type</div>
+      <label class="check-item"><input type="checkbox" checked><span class="check-item-label">Full-time</span><span class="check-item-count">1,240</span></label>
+      <label class="check-item"><input type="checkbox" checked><span class="check-item-label">Part-time</span><span class="check-item-count">340</span></label>
+      <label class="check-item"><input type="checkbox"><span class="check-item-label">Contract / Temp</span><span class="check-item-count">480</span></label>
+      <label class="check-item"><input type="checkbox"><span class="check-item-label">Remote</span><span class="check-item-count">290</span></label>
+      <label class="check-item"><input type="checkbox"><span class="check-item-label">Internship</span><span class="check-item-count">150</span></label>
+    </div>
+
+    <div class="filter-sep"></div>
+    <div class="filter-group">
+      <div class="fg-title">Industry</div>
+      <label class="check-item"><input type="checkbox" checked><span class="check-item-label">Technology & ICT</span><span class="check-item-count">420</span></label>
+      <label class="check-item"><input type="checkbox" checked><span class="check-item-label">Finance & Banking</span><span class="check-item-count">310</span></label>
+      <label class="check-item"><input type="checkbox"><span class="check-item-label">Healthcare</span><span class="check-item-count">280</span></label>
+      <label class="check-item"><input type="checkbox"><span class="check-item-label">Engineering</span><span class="check-item-count">245</span></label>
+      <label class="check-item"><input type="checkbox"><span class="check-item-label">Agriculture</span><span class="check-item-count">190</span></label>
+      <label class="check-item"><input type="checkbox"><span class="check-item-label">Tourism & Hospitality</span><span class="check-item-count">175</span></label>
+      <label class="check-item"><input type="checkbox"><span class="check-item-label">Education</span><span class="check-item-count">142</span></label>
+    </div>
+
+    <div class="filter-sep"></div>
+    <div class="filter-group">
+      <div class="fg-title">Experience Level</div>
+      <label class="check-item"><input type="checkbox"><span class="check-item-label">Entry Level (0–2 yrs)</span><span class="check-item-count">310</span></label>
+      <label class="check-item"><input type="checkbox" checked><span class="check-item-label">Mid Level (3–5 yrs)</span><span class="check-item-count">890</span></label>
+      <label class="check-item"><input type="checkbox" checked><span class="check-item-label">Senior (5–10 yrs)</span><span class="check-item-count">720</span></label>
+      <label class="check-item"><input type="checkbox"><span class="check-item-label">Executive (10+ yrs)</span><span class="check-item-count">140</span></label>
+    </div>
+
+    <div class="filter-sep"></div>
+    <div class="filter-group">
+      <div class="fg-title">Location</div>
+      <label class="check-item"><input type="checkbox" checked><span class="check-item-label">Kigali</span><span class="check-item-count">1,850</span></label>
+      <label class="check-item"><input type="checkbox"><span class="check-item-label">Northern Province</span><span class="check-item-count">120</span></label>
+      <label class="check-item"><input type="checkbox"><span class="check-item-label">Southern Province</span><span class="check-item-count">95</span></label>
+      <label class="check-item"><input type="checkbox"><span class="check-item-label">Remote / International</span><span class="check-item-count">247</span></label>
+    </div>
+
+    <div class="filter-sep"></div>
+    <div class="filter-group">
+      <div class="fg-title">Date Posted</div>
+      <label class="check-item"><input type="checkbox" checked><span class="check-item-label">Last 24 hours</span><span class="check-item-count">48</span></label>
+      <label class="check-item"><input type="checkbox" checked><span class="check-item-label">Last 3 days</span><span class="check-item-count">142</span></label>
+      <label class="check-item"><input type="checkbox"><span class="check-item-label">Last week</span><span class="check-item-count">380</span></label>
+      <label class="check-item"><input type="checkbox"><span class="check-item-label">Last month</span><span class="check-item-count">1,100</span></label>
+    </div>
+
+    <button class="apply-filters" onclick="Toast.success('Filters applied! Showing matching jobs.')">Apply Filters</button>
+  </aside>
+
+  <!-- RESULTS -->
+  <div>
+    <div class="results-header">
+      <div class="results-count">Showing <strong id="result-count">2,400</strong> jobs</div>
+      <div class="results-controls">
+        <label style="font-size:.78rem;color:var(--tx-600)">Sort:</label>
+        <select class="sort-select">
+          <option>Most Relevant</option>
+          <option>Newest First</option>
+          <option>Highest Salary</option>
+          <option>Most Applied</option>
+        </select>
+        <div class="view-btns">
+          <div class="view-btn active" title="List view">☰</div>
+          <div class="view-btn" title="Grid view">⊞</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jobs-list" id="jobs-list">
+
+      <!-- FEATURED 1 -->
+      <div class="job-card featured" data-sector="tech" data-type="fulltime" data-level="senior" onclick="openModal('j1')">
+        <div class="feat-pill"><span class="badge badge-gd">⭐ Featured</span></div>
+        <div class="jc-logo">AN</div>
+        <div class="jc-body">
+          <div class="jc-row1">
+            <div class="jc-title">Senior Software Engineer — Backend</div>
+            <div class="jc-sal">$2,000 – $3,200/mo</div>
+          </div>
+          <div class="jc-meta">
+            <span class="jc-co">Andela Rwanda</span><span class="jc-dot"></span>
+            <span class="jc-loc">📍 Kigali, Rwanda</span>
+          </div>
+          <p class="jc-desc">Build scalable backend systems for pan-African fintech clients. React, Node.js, PostgreSQL and AWS environment. Own features from architecture to production deployment.</p>
+          <div class="jc-tags">
+            <span class="badge badge-em">Full-time</span>
+            <span class="badge badge-bl">Remote Eligible</span>
+            <span class="badge badge-gray">Senior Level</span>
+            <span class="badge badge-gray">Tech & ICT</span>
+            <span class="badge badge-gray">Node.js</span>
+          </div>
+          <div class="jc-footer">
+            <span class="jc-date">Posted 2 days ago · 34 applicants</span>
+            <div class="jc-actions">
+              <div class="save-btn" onclick="toggleSave(this,event)" title="Save job">♡</div>
+              <button class="apply-btn" onclick="event.stopPropagation();openModal('j1')">View & Apply</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEATURED 2 -->
+      <div class="job-card featured" data-sector="finance" data-type="fulltime" data-level="executive" onclick="openModal('j2')">
+        <div class="feat-pill"><span class="badge badge-gd">⭐ Featured</span></div>
+        <div class="jc-logo">BK</div>
+        <div class="jc-body">
+          <div class="jc-row1">
+            <div class="jc-title">Head of Risk & Compliance</div>
+            <div class="jc-sal">RWF 1.8M – 2.5M/mo</div>
+          </div>
+          <div class="jc-meta">
+            <span class="jc-co">Bank of Kigali</span><span class="jc-dot"></span>
+            <span class="jc-loc">📍 Kigali, Rwanda</span>
+          </div>
+          <p class="jc-desc">Lead enterprise risk management across BK's retail and corporate portfolios. Develop compliance frameworks aligned with BNR and Basel III standards.</p>
+          <div class="jc-tags">
+            <span class="badge badge-em">Full-time</span>
+            <span class="badge badge-gray">Executive Level</span>
+            <span class="badge badge-gray">Finance</span>
+            <span class="badge badge-gray">CPA Required</span>
+          </div>
+          <div class="jc-footer">
+            <span class="jc-date">Posted 3 days ago · 19 applicants</span>
+            <div class="jc-actions">
+              <div class="save-btn" onclick="toggleSave(this,event)">♡</div>
+              <button class="apply-btn" onclick="event.stopPropagation();openModal('j2')">View & Apply</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REGULAR JOBS -->
+      <div class="job-card" data-sector="tech" data-type="fulltime" data-level="senior" onclick="openModal('j3')">
+        <div class="jc-logo">MT</div>
+        <div class="jc-body">
+          <div class="jc-row1"><div class="jc-title">Digital Marketing Lead</div><div class="jc-sal">RWF 900K – 1.4M/mo</div></div>
+          <div class="jc-meta"><span class="jc-co">MTN Rwanda</span><span class="jc-dot"></span><span class="jc-loc">📍 Kigali</span></div>
+          <p class="jc-desc">Own MTN Rwanda's digital channel strategy. Drive MoMo adoption through data-led campaigns across social, search and programmatic platforms.</p>
+          <div class="jc-tags"><span class="badge badge-em">Full-time</span><span class="badge badge-gray">Senior</span><span class="badge badge-gray">Marketing</span></div>
+          <div class="jc-footer"><span class="jc-date">5 days ago · 51 applicants</span><div class="jc-actions"><div class="save-btn" onclick="toggleSave(this,event)">♡</div><button class="apply-btn" onclick="event.stopPropagation();openModal('j3')">View & Apply</button></div></div>
+        </div>
+      </div>
+
+      <div class="job-card" data-sector="engineering" data-type="contract" data-level="mid" onclick="openModal('j4')">
+        <div class="jc-logo">RB</div>
+        <div class="jc-body">
+          <div class="jc-row1"><div class="jc-title">Project Civil Engineer</div><div class="jc-sal">RWF 1.2M – 1.8M/mo</div></div>
+          <div class="jc-meta"><span class="jc-co">Rwanda Building Authority</span><span class="jc-dot"></span><span class="jc-loc">📍 Kigali / Field</span></div>
+          <p class="jc-desc">Oversee structural design and project delivery for major mixed-use developments in Greater Kigali. Manage site teams of up to 20 engineers.</p>
+          <div class="jc-tags"><span class="badge badge-bl">Contract</span><span class="badge badge-gray">Mid Level</span><span class="badge badge-gray">Engineering</span></div>
+          <div class="jc-footer"><span class="jc-date">1 week ago · 27 applicants</span><div class="jc-actions"><div class="save-btn" onclick="toggleSave(this,event)">♡</div><button class="apply-btn" onclick="event.stopPropagation();openModal('j4')">View & Apply</button></div></div>
+        </div>
+      </div>
+
+      <div class="job-card" data-sector="health" data-type="fulltime" data-level="executive" onclick="openModal('j5')">
+        <div class="jc-logo">KF</div>
+        <div class="jc-body">
+          <div class="jc-row1"><div class="jc-title">Medical Director — Clinical Services</div><div class="jc-sal">Competitive + Benefits</div></div>
+          <div class="jc-meta"><span class="jc-co">King Faisal Hospital</span><span class="jc-dot"></span><span class="jc-loc">📍 Kigali</span></div>
+          <p class="jc-desc">Provide clinical leadership across multi-specialty departments at Rwanda's flagship referral hospital. Drive quality improvement and staff development programs.</p>
+          <div class="jc-tags"><span class="badge badge-em">Full-time</span><span class="badge badge-gray">Executive</span><span class="badge badge-gray">Healthcare</span></div>
+          <div class="jc-footer"><span class="jc-date">1 week ago · 11 applicants</span><div class="jc-actions"><div class="save-btn" onclick="toggleSave(this,event)">♡</div><button class="apply-btn" onclick="event.stopPropagation();openModal('j5')">View & Apply</button></div></div>
+        </div>
+      </div>
+
+      <div class="job-card" data-sector="hospitality" data-type="fulltime" data-level="executive" onclick="openModal('j6')">
+        <div class="jc-logo">RA</div>
+        <div class="jc-body">
+          <div class="jc-row1"><div class="jc-title">Director of Ground Operations</div><div class="jc-sal">$5,000 – $8,000/mo</div></div>
+          <div class="jc-meta"><span class="jc-co">RwandAir</span><span class="jc-dot"></span><span class="jc-loc">📍 Kigali International Airport</span></div>
+          <p class="jc-desc">Manage all ground handling, cargo and passenger operations across RwandAir's 28-route international network. IATA compliance expertise essential.</p>
+          <div class="jc-tags"><span class="badge badge-em">Full-time</span><span class="badge badge-gray">Executive</span><span class="badge badge-gray">Aviation</span></div>
+          <div class="jc-footer"><span class="jc-date">2 weeks ago · 8 applicants</span><div class="jc-actions"><div class="save-btn" onclick="toggleSave(this,event)">♡</div><button class="apply-btn" onclick="event.stopPropagation();openModal('j6')">View & Apply</button></div></div>
+        </div>
+      </div>
+
+      <div class="job-card" data-sector="tech" data-type="remote" data-level="mid" onclick="openModal('j7')">
+        <div class="jc-logo">IC</div>
+        <div class="jc-body">
+          <div class="jc-row1"><div class="jc-title">Data Analyst — Business Intelligence</div><div class="jc-sal">RWF 700K – 1.1M/mo</div></div>
+          <div class="jc-meta"><span class="jc-co">Inyarwanda Capital</span><span class="jc-dot"></span><span class="jc-loc">📍 Kigali / Remote</span></div>
+          <p class="jc-desc">Build Power BI dashboards and analytics pipelines driving investment decisions. Python, SQL and financial modelling skills essential. Exciting startup environment.</p>
+          <div class="jc-tags"><span class="badge badge-em">Full-time</span><span class="badge badge-bl">Remote Eligible</span><span class="badge badge-gray">Mid Level</span><span class="badge badge-gray">Data</span></div>
+          <div class="jc-footer"><span class="jc-date">2 weeks ago · 62 applicants</span><div class="jc-actions"><div class="save-btn" onclick="toggleSave(this,event)">♡</div><button class="apply-btn" onclick="event.stopPropagation();openModal('j7')">View & Apply</button></div></div>
+        </div>
+      </div>
+
+      <div class="job-card" data-sector="finance" data-type="fulltime" data-level="senior" onclick="openModal('j8')">
+        <div class="jc-logo">EQ</div>
+        <div class="jc-body">
+          <div class="jc-row1"><div class="jc-title">Branch Manager — Retail Banking</div><div class="jc-sal">RWF 1.1M – 1.6M/mo</div></div>
+          <div class="jc-meta"><span class="jc-co">Equity Bank Rwanda</span><span class="jc-dot"></span><span class="jc-loc">📍 Multiple Locations</span></div>
+          <p class="jc-desc">Lead branch operations, sales targets and team development across Equity Bank's fast-expanding retail network. Strong customer relationship skills required.</p>
+          <div class="jc-tags"><span class="badge badge-em">Full-time</span><span class="badge badge-gray">Senior</span><span class="badge badge-gray">Finance</span></div>
+          <div class="jc-footer"><span class="jc-date">2 weeks ago · 44 applicants</span><div class="jc-actions"><div class="save-btn" onclick="toggleSave(this,event)">♡</div><button class="apply-btn" onclick="event.stopPropagation();openModal('j8')">View & Apply</button></div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="load-more-btn" onclick="loadMore()">Load More Jobs (2,390 remaining) ↓</button>
+
+    <div class="pagination">
+      <div class="page-btn">‹</div>
+      <div class="page-btn active">1</div>
+      <div class="page-btn">2</div>
+      <div class="page-btn">3</div>
+      <div class="page-btn">4</div>
+      <div class="page-btn">5</div>
+      <span style="font-size:.8rem;color:var(--tx-800);padding:0 .3rem">…</span>
+      <div class="page-btn">48</div>
+      <div class="page-btn">›</div>
+    </div>
+  </div>
+</div>
+
+<!-- JOB DETAIL MODAL -->
+<div class="modal-overlay" id="job-modal" onclick="closeModalOutside(event)">
+  <div class="job-modal">
+    <button class="modal-close" onclick="closeJobModal()">✕</button>
+    <div class="modal-top">
+      <div class="modal-logo" id="m-logo">AN</div>
+      <div>
+        <h2 style="font-size:1.4rem;font-weight:900;color:var(--tx-100);margin-bottom:.25rem" id="m-title">Senior Software Engineer</h2>
+        <div style="font-size:.88rem;color:var(--tx-400);margin-bottom:.5rem" id="m-company">Andela Rwanda · Kigali, Rwanda</div>
+        <div style="display:flex;gap:.35rem;flex-wrap:wrap" id="m-tags"></div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-kv">
+        <div class="mkv-item"><span class="mkv-icon">💰</span><span class="mkv-val" id="m-sal">$2,000–$3,200</span><span class="mkv-lbl">Monthly Salary</span></div>
+        <div class="mkv-item"><span class="mkv-icon">⏱</span><span class="mkv-val" id="m-posted">2 days ago</span><span class="mkv-lbl">Date Posted</span></div>
+        <div class="mkv-item"><span class="mkv-icon">👥</span><span class="mkv-val" id="m-apps">34 applied</span><span class="mkv-lbl">Applicants</span></div>
+      </div>
+      <div class="modal-section">
+        <h4>About the Role</h4>
+        <p style="font-size:.88rem;color:var(--tx-400);line-height:1.78" id="m-desc"></p>
+      </div>
+      <div class="modal-section">
+        <h4>Key Responsibilities</h4>
+        <ul id="m-resp"></ul>
+      </div>
+      <div class="modal-section">
+        <h4>Requirements</h4>
+        <ul id="m-reqs"></ul>
+      </div>
+      <div class="modal-section" style="background:rgba(0,229,153,.04);border:1px solid var(--bd-em);border-radius:var(--r-lg);padding:1rem">
+        <h4 style="color:var(--em-400)">What Ineza Provides</h4>
+        <ul>
+          <li>Full CV review and professional formatting before submission</li>
+          <li>Interview coaching tailored to this specific company and role</li>
+          <li>Salary negotiation guidance — we know what this employer pays</li>
+          <li>Dedicated recruiter throughout the entire hiring process</li>
+        </ul>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="mf-info">Managed by Ineza Agencies · <span>Reference: <span id="m-ref">INA-2025-1001</span></span></div>
+      <div style="display:flex;gap:.6rem">
+        <button class="modal-save-btn" onclick="Toast.success('Job saved to your profile!')">♡ Save Job</button>
+        <button class="modal-apply-btn" onclick="handleApply()">Apply Through Ineza →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script>
+const JOB_DATA = {
+  j1: { logo:'AN', title:'Senior Software Engineer — Backend', company:'Andela Rwanda · Kigali, Rwanda', sal:'$2,000–$3,200/mo', posted:'2 days ago', apps:'34 applied', ref:'INA-2025-1042',
+    tags:'<span class="badge badge-em">Full-time</span><span class="badge badge-bl">Remote Eligible</span><span class="badge badge-gray">Senior Level</span>',
+    desc:'Build scalable backend systems for pan-African fintech clients. Work with a globally distributed team using React, Node.js, PostgreSQL and AWS. Own complete features from architecture to production deployment.',
+    resp:['Design high-performance RESTful APIs and microservices at scale','Lead code reviews and mentor junior engineers on best practices','Translate product requirements into scalable technical solutions','Optimise database queries and cloud infrastructure costs','Maintain 99.9% uptime SLA across all production systems'],
+    reqs:['5+ years professional backend engineering experience','Strong Node.js, Python or equivalent server-side language','AWS/GCP cloud infrastructure (EC2, Lambda, RDS)','BSc in Computer Science or equivalent practical experience','Excellent English communication; French is a bonus'] },
+  j2: { logo:'BK', title:'Head of Risk & Compliance', company:'Bank of Kigali · Kigali, Rwanda', sal:'RWF 1.8M–2.5M/mo', posted:'3 days ago', apps:'19 applied', ref:'INA-2025-1038',
+    tags:'<span class="badge badge-em">Full-time</span><span class="badge badge-gray">Executive Level</span><span class="badge badge-gray">Finance</span>',
+    desc:'Lead enterprise risk management across BK\'s retail, corporate and SME banking portfolios. Develop regulatory compliance frameworks aligned with BNR requirements and international banking standards.',
+    resp:['Develop enterprise-wide risk management frameworks','Ensure compliance with BNR regulations and Basel III','Lead a team of 12 risk and compliance professionals','Report directly to the Board Risk Committee','Drive risk culture transformation across all business units'],
+    reqs:['CPA, ACCA or equivalent professional qualification','10+ years banking risk management experience','In-depth knowledge of BNR regulatory requirements','Proven leadership of large compliance teams','MBA preferred'] },
+  j3: { logo:'MT', title:'Digital Marketing Lead', company:'MTN Rwanda · Kigali, Rwanda', sal:'RWF 900K–1.4M/mo', posted:'5 days ago', apps:'51 applied', ref:'INA-2025-1031',
+    tags:'<span class="badge badge-em">Full-time</span><span class="badge badge-gray">Senior Level</span><span class="badge badge-gray">Marketing</span>',
+    desc:'Own MTN Rwanda\'s complete digital marketing strategy. Drive mobile money adoption and brand awareness through data-led performance campaigns across all digital channels.',
+    resp:['Develop and execute integrated digital marketing strategies','Manage performance budgets across social, search and programmatic','Lead a team of 6 digital marketers and agency partners','Optimise the MoMo digital acquisition funnel','Report KPIs to the CMO monthly'],
+    reqs:['7+ years digital marketing experience','Proficiency in Google Analytics, Meta Ads and programmatic platforms','Strong data analysis and A/B testing background','Telecom or fintech industry experience preferred','Degree in Marketing, Business or related field'] },
+  j4: { logo:'RB', title:'Project Civil Engineer', company:'Rwanda Building Authority · Kigali/Field', sal:'RWF 1.2M–1.8M/mo', posted:'1 week ago', apps:'27 applied', ref:'INA-2025-1025',
+    tags:'<span class="badge badge-bl">Contract</span><span class="badge badge-gray">Mid Level</span><span class="badge badge-gray">Engineering</span>',
+    desc:'Oversee structural design, site inspections and full project delivery for major mixed-use developments in Greater Kigali. Manage multidisciplinary site teams across multiple phases.',
+    resp:['Lead structural design review and technical approval','Manage teams of up to 20 site engineers and contractors','Ensure compliance with Rwanda building codes and safety standards','Prepare detailed progress reports and cost forecasts','Liaise with government authorities and project stakeholders'],
+    reqs:['BSc or BEng in Civil or Structural Engineering','5+ years on large-scale construction projects','Proficiency in AutoCAD, Revit and project management tools','Registered with Rwanda Engineers Council','Valid driving licence'] },
+  j5: { logo:'KF', title:'Medical Director — Clinical Services', company:'King Faisal Hospital · Kigali', sal:'Competitive Package', posted:'1 week ago', apps:'11 applied', ref:'INA-2025-1019',
+    tags:'<span class="badge badge-em">Full-time</span><span class="badge badge-gray">Executive Level</span><span class="badge badge-gray">Healthcare</span>',
+    desc:'Provide senior clinical leadership across multi-specialty departments at Rwanda\'s flagship referral hospital. Drive quality improvement programs and staff development.',
+    resp:['Oversee clinical operations across 12 specialty departments','Lead hospital-wide quality and patient safety initiatives','Mentor and develop senior medical staff','Represent KFH at national and international health forums','Drive clinical research and innovation programs'],
+    reqs:['MB ChB plus specialist postgraduate qualification','10+ years clinical experience including 5+ in management','Registered with Rwanda Medical Council','Proven leadership in a complex healthcare environment','Fluency in English; Kinyarwanda and French advantageous'] },
+  j6: { logo:'RA', title:'Director of Ground Operations', company:'RwandAir · Kigali International Airport', sal:'$5,000–$8,000/mo', posted:'2 weeks ago', apps:'8 applied', ref:'INA-2025-1011',
+    tags:'<span class="badge badge-em">Full-time</span><span class="badge badge-gray">Executive Level</span><span class="badge badge-gray">Aviation</span>',
+    desc:'Manage all ground handling, passenger and cargo operations across RwandAir\'s 28-route international network. Ensure IATA compliance, safety and operational excellence.',
+    resp:['Oversee ground operations at Kigali and all outstations','Drive IATA ISAGO compliance across all handling activities','Manage global ground handling contractor relationships','Lead a team of 180 ground operations professionals','Develop operational efficiency improvement programs'],
+    reqs:['10+ years airline operations, 5+ at Director level','IATA airport operations qualifications','Strong leadership and P&L management skills','International travel flexibility required','Aviation security clearance (or ability to obtain)'] },
+  j7: { logo:'IC', title:'Data Analyst — Business Intelligence', company:'Inyarwanda Capital · Kigali / Remote', sal:'RWF 700K–1.1M/mo', posted:'2 weeks ago', apps:'62 applied', ref:'INA-2025-1008',
+    tags:'<span class="badge badge-em">Full-time</span><span class="badge badge-bl">Remote Eligible</span><span class="badge badge-gray">Mid Level</span>',
+    desc:'Build Power BI dashboards and analytics pipelines driving investment and portfolio decisions at one of Rwanda\'s most exciting fintech startups.',
+    resp:['Design and maintain Power BI dashboards for the investment team','Build automated ETL pipelines using Python and SQL','Analyse portfolio company KPIs and produce investor reports','Work closely with fund managers to surface data insights','Maintain data warehouse integrity and documentation'],
+    reqs:['3+ years as a data analyst','Proficiency in Python, SQL and Power BI or Tableau','Financial modelling and investment analysis experience','BSc in Statistics, Economics, Computer Science or related','Strong attention to detail and communication skills'] },
+  j8: { logo:'EQ', title:'Branch Manager — Retail Banking', company:'Equity Bank Rwanda · Multiple Locations', sal:'RWF 1.1M–1.6M/mo', posted:'2 weeks ago', apps:'44 applied', ref:'INA-2025-1005',
+    tags:'<span class="badge badge-em">Full-time</span><span class="badge badge-gray">Senior Level</span><span class="badge badge-gray">Finance</span>',
+    desc:'Lead branch operations, sales targets and team development across Equity Bank Rwanda\'s fast-expanding retail branch network across multiple provinces.',
+    resp:['Manage all branch operations, compliance and customer experience','Achieve monthly deposits, loans and account opening targets','Coach and develop a team of 15–25 branch staff','Build community relationships and business pipelines','Ensure full regulatory and audit compliance'],
+    reqs:['Degree in Banking, Business, Finance or related','5+ years retail banking, 2+ in management','Proven track record meeting sales targets','Strong leadership and customer service skills','Knowledge of BNR banking regulations'] }
+};
+
+function openModal(id) {
+  const d = JOB_DATA[id];
+  if (!d) return;
+  document.getElementById('m-logo').textContent = d.logo;
+  document.getElementById('m-title').textContent = d.title;
+  document.getElementById('m-company').textContent = d.company;
+  document.getElementById('m-tags').innerHTML = d.tags;
+  document.getElementById('m-sal').textContent = d.sal;
+  document.getElementById('m-posted').textContent = d.posted;
+  document.getElementById('m-apps').textContent = d.apps;
+  document.getElementById('m-ref').textContent = d.ref;
+  document.getElementById('m-desc').textContent = d.desc;
+  document.getElementById('m-resp').innerHTML = d.resp.map(r=>`<li>${r}</li>`).join('');
+  document.getElementById('m-reqs').innerHTML = d.reqs.map(r=>`<li>${r}</li>`).join('');
+  document.getElementById('job-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeJobModal() {
+  document.getElementById('job-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeModalOutside(e) { if(e.target === document.getElementById('job-modal')) closeJobModal(); }
+
+function toggleSave(btn, e) {
+  e.stopPropagation();
+  btn.classList.toggle('saved');
+  btn.textContent = btn.classList.contains('saved') ? '♥' : '♡';
+  Toast.success(btn.classList.contains('saved') ? 'Job saved!' : 'Job removed from saved');
+}
+
+function quickFilter(type, btn) {
+  document.querySelectorAll('.qf-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const cards = document.querySelectorAll('.job-card');
+  cards.forEach(c => {
+    c.style.display = type === 'all' ? '' :
+      type === 'featured' ? (c.classList.contains('featured') ? '' : 'none') :
+      type === 'remote' ? (c.dataset.type === 'remote' ? '' : 'none') :
+      type === 'senior' ? (c.dataset.level === 'senior' || c.dataset.level === 'executive' ? '' : 'none') :
+      type === 'fulltime' ? (c.dataset.type === 'fulltime' ? '' : 'none') : '';
+  });
+}
+
+function updateSalary() {
+  const mn = document.getElementById('sal-min').value;
+  const mx = document.getElementById('sal-max').value;
+  document.getElementById('sal-min-val').textContent = mn == 0 ? '$0' : `$${Math.round(mn/100)*100}`;
+  document.getElementById('sal-max-val').textContent = mx >= 11900 ? '$12k+' : `$${Math.round(mx/100)*100}`;
+}
+
+function clearFilters() {
+  document.querySelectorAll('.filter-sidebar input[type=checkbox]').forEach(c => c.checked = false);
+  document.getElementById('sal-min').value = 0;
+  document.getElementById('sal-max').value = 12000;
+  updateSalary();
+  document.querySelectorAll('.job-card').forEach(c => c.style.display = '');
+  Toast.info('All filters cleared');
+}
+
+function runSearch() {
+  const q = document.getElementById('main-search').value.trim().toLowerCase();
+  if (!q) { document.querySelectorAll('.job-card').forEach(c => c.style.display = ''); return; }
+  let shown = 0;
+  document.querySelectorAll('.job-card').forEach(c => {
+    const text = c.textContent.toLowerCase();
+    const match = text.includes(q);
+    c.style.display = match ? '' : 'none';
+    if (match) shown++;
+  });
+  document.getElementById('result-count').textContent = shown;
+  Toast.info(`Showing ${shown} results for "${q}"`);
+}
+
+function loadMore() {
+  Toast.info('🚀 Register free to access all 2,400+ live jobs with personalised matching!');
+  setTimeout(() => window.location.href = '../auth/signup.html?role=candidate', 2200);
+}
+
+function handleApply() {
+  const user = Auth.getUser();
+  if (!user) {
+    closeJobModal();
+    Toast.info('Please sign in or register to apply');
+    setTimeout(() => window.location.href = '../auth/signup.html?role=candidate', 1800);
+  } else {
+    Toast.success('Application submitted! Your recruiter will be in touch within 48 hours. 🎉');
+    closeJobModal();
+  }
+}
+
+document.getElementById('main-search').addEventListener('keydown', e => { if(e.key==='Enter') runSearch(); });
+
+// Pre-fill search from URL
+const urlP = new URLSearchParams(window.location.search);
+if (urlP.get('q')) { document.getElementById('main-search').value = urlP.get('q'); runSearch(); }
+if (urlP.get('loc')) { document.getElementById('loc-filter').value = urlP.get('loc'); }
+</script>
+</body>
+</html>

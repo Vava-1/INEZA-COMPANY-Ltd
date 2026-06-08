@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employer Dashboard | Ineza Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/base.css">
+<style>
+body { background:var(--bg-deep); }
+.sidebar { background:var(--bg-surface); border-right:1px solid var(--bd-subtle); position:fixed; top:0; left:0; bottom:0; width:260px; display:flex; flex-direction:column; z-index:300; overflow-y:auto; }
+.sb-brand { padding:1.4rem 1.25rem; border-bottom:1px solid var(--bd-subtle); display:flex; align-items:center; gap:.65rem; flex-shrink:0; }
+.sb-nav { padding:.75rem .65rem; flex:1; }
+.sb-section { margin-bottom:1.5rem; }
+.sb-section-lbl { font-size:.6rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--tx-800); padding:.3rem .65rem; margin-bottom:.35rem; }
+.sb-link { display:flex; align-items:center; gap:.65rem; padding:.62rem .8rem; border-radius:var(--r-md); font-size:.86rem; font-weight:500; color:var(--tx-400); transition:all var(--ease); cursor:pointer; text-decoration:none; }
+.sb-link:hover { background:var(--bg-raised); color:var(--tx-100); }
+.sb-link.active { background:rgba(251,191,36,.1); color:var(--gd-400); border:1px solid rgba(251,191,36,.25); }
+.sb-link .link-ico { width:18px; text-align:center; font-size:1.05rem; flex-shrink:0; }
+.sb-link .link-badge { margin-left:auto; background:var(--gd-400); color:var(--bg-deep); font-size:.62rem; font-weight:800; padding:.1rem .42rem; border-radius:99px; }
+.sb-footer { padding:1rem .65rem; border-top:1px solid var(--bd-subtle); flex-shrink:0; }
+.sb-user { display:flex; align-items:center; gap:.65rem; padding:.65rem; border-radius:var(--r-md); background:var(--bg-raised); border:1px solid var(--bd-subtle); }
+.dash-main { margin-left:260px; min-height:100vh; }
+.dash-topbar { padding:.9rem 2rem; background:var(--bg-surface); border-bottom:1px solid var(--bd-subtle); display:flex; align-items:center; justify-content:space-between; gap:1rem; position:sticky; top:0; z-index:200; }
+.topbar-search { display:flex; align-items:center; gap:.6rem; background:var(--bg-raised); border:1px solid var(--bd-subtle); border-radius:var(--r-md); padding:.45rem .85rem; }
+.topbar-search:focus-within { border-color:rgba(251,191,36,.35); }
+.topbar-search input { background:none; border:none; outline:none; font-family:var(--ff-body); font-size:.86rem; color:var(--tx-100); width:220px; }
+.topbar-search input::placeholder { color:var(--tx-800); }
+.topbar-actions { display:flex; align-items:center; gap:.6rem; }
+.topbar-icon-btn { width:36px; height:36px; border-radius:var(--r-sm); background:var(--bg-raised); border:1px solid var(--bd-subtle); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1rem; color:var(--tx-400); transition:all var(--ease); position:relative; }
+.topbar-icon-btn:hover { border-color:rgba(251,191,36,.35); color:var(--gd-400); }
+.notif-dot { position:absolute; top:5px; right:5px; width:7px; height:7px; background:var(--gd-400); border-radius:50%; border:1px solid var(--bg-surface); }
+.dash-content { padding:2rem; }
+
+/* EMPLOYER GOLD THEME OVERRIDES */
+.stat-card.gd-theme { border-color:rgba(251,191,36,.15); }
+.stat-card.gd-theme:hover { border-color:rgba(251,191,36,.3); box-shadow:0 0 24px rgba(251,191,36,.1); }
+.badge-gd2 { background:rgba(251,191,36,.12); color:var(--gd-400); border:1px solid rgba(251,191,36,.25); font-size:.68rem; font-weight:700; padding:.16rem .55rem; border-radius:99px; }
+
+/* STATS */
+.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:2rem; }
+.sc-icon { width:42px; height:42px; border-radius:var(--r-md); display:flex; align-items:center; justify-content:center; font-size:1.3rem; margin-bottom:.9rem; }
+.sc-icon.gd { background:rgba(251,191,36,.1); border:1px solid rgba(251,191,36,.25); }
+.sc-icon.em { background:rgba(0,229,153,.1); border:1px solid var(--bd-em); }
+.sc-icon.bl { background:rgba(59,130,246,.1); border:1px solid rgba(59,130,246,.25); }
+.sc-icon.pu { background:rgba(147,51,234,.1); border:1px solid rgba(147,51,234,.25); }
+.sc-val { font-size:1.8rem; font-weight:900; line-height:1; margin-bottom:.25rem; }
+.sc-lbl { font-size:.78rem; color:var(--tx-400); margin-bottom:.3rem; }
+.sc-change { font-size:.73rem; font-weight:600; }
+.sc-change.up { color:var(--em-400); } .sc-change.dn { color:var(--danger); }
+
+/* MAIN GRID */
+.main-grid { display:grid; grid-template-columns:1fr 320px; gap:1.5rem; }
+
+/* SECTION CARD */
+.sec-card { background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-xl); overflow:hidden; }
+.sec-card-header { padding:1.2rem 1.5rem; border-bottom:1px solid var(--bd-subtle); display:flex; align-items:center; justify-content:space-between; }
+.sec-card-header h3 { font-size:.95rem; font-weight:700; color:var(--tx-100); }
+.sec-card-body { padding:1.2rem 1.5rem; }
+
+/* JOB POSTING ROW */
+.job-row { display:flex; align-items:center; gap:1rem; padding:.9rem 0; border-bottom:1px solid var(--bd-subtle); flex-wrap:wrap; }
+.job-row:last-child { border-bottom:none; }
+.jr-info { flex:1; min-width:0; }
+.jr-title { font-size:.92rem; font-weight:700; color:var(--tx-100); margin-bottom:.15rem; }
+.jr-meta  { font-size:.76rem; color:var(--tx-400); display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+.jr-stats { display:flex; gap:1rem; flex-shrink:0; }
+.jr-stat  { text-align:center; }
+.jr-stat-val { font-size:1rem; font-weight:800; color:var(--tx-100); display:block; line-height:1; }
+.jr-stat-lbl { font-size:.65rem; color:var(--tx-600); }
+.jr-actions { display:flex; gap:.45rem; flex-shrink:0; }
+.job-status-active   { background:rgba(0,229,153,.1);  color:var(--em-400); border:1px solid var(--bd-em); }
+.job-status-paused   { background:rgba(251,191,36,.1); color:var(--gd-400); border:1px solid rgba(251,191,36,.25); }
+.job-status-closed   { background:rgba(100,116,139,.1);color:var(--tx-600); border:1px solid var(--bd-subtle); }
+.job-status-badge    { font-size:.68rem; font-weight:700; padding:.15rem .55rem; border-radius:99px; }
+
+/* CANDIDATE CARD */
+.cand-card { display:flex; align-items:flex-start; gap:.9rem; padding:.95rem 0; border-bottom:1px solid var(--bd-subtle); cursor:pointer; transition:all var(--ease); }
+.cand-card:last-child { border-bottom:none; }
+.cand-card:hover .cc-name { color:var(--gd-400); }
+.cc-avatar { width:42px; height:42px; border-radius:50%; background:var(--bg-raised); border:2px solid var(--bd-muted); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.85rem; color:var(--tx-200); flex-shrink:0; }
+.cc-info { flex:1; min-width:0; }
+.cc-name  { font-size:.9rem; font-weight:700; color:var(--tx-100); transition:color var(--ease); margin-bottom:.1rem; }
+.cc-role  { font-size:.77rem; color:var(--tx-400); margin-bottom:.3rem; }
+.cc-tags  { display:flex; gap:.3rem; flex-wrap:wrap; }
+.cc-match { font-size:.72rem; font-weight:800; padding:.16rem .55rem; background:rgba(251,191,36,.1); border:1px solid rgba(251,191,36,.25); border-radius:99px; color:var(--gd-400); flex-shrink:0; align-self:flex-start; }
+.cc-actions { display:flex; gap:.35rem; flex-shrink:0; align-self:center; }
+
+/* PIPELINE */
+.pipeline { display:grid; grid-template-columns:repeat(4,1fr); gap:.75rem; margin-bottom:2rem; }
+.pipe-col { background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-lg); padding:1rem; }
+.pipe-col-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:.75rem; }
+.pipe-col-name { font-size:.78rem; font-weight:700; color:var(--tx-400); text-transform:uppercase; letter-spacing:.07em; }
+.pipe-col-cnt  { font-size:.72rem; font-weight:800; background:var(--bg-raised); color:var(--tx-400); padding:.1rem .48rem; border-radius:99px; }
+.pipe-item { background:var(--bg-raised); border:1px solid var(--bd-subtle); border-radius:var(--r-md); padding:.75rem; margin-bottom:.5rem; cursor:pointer; transition:all var(--ease); }
+.pipe-item:hover { border-color:var(--bd-em); }
+.pipe-item:last-child { margin-bottom:0; }
+.pi-name    { font-size:.82rem; font-weight:700; color:var(--tx-100); margin-bottom:.12rem; }
+.pi-role    { font-size:.72rem; color:var(--tx-600); margin-bottom:.35rem; }
+.pi-footer  { display:flex; align-items:center; justify-content:space-between; }
+.pi-days    { font-size:.68rem; color:var(--tx-800); }
+
+/* ANALYTICS MINI CHART */
+.mini-chart { display:flex; align-items:flex-end; gap:4px; height:50px; margin-top:.5rem; }
+.mc-bar { flex:1; background:var(--bd-subtle); border-radius:3px 3px 0 0; transition:all .3s ease; position:relative; min-height:4px; }
+.mc-bar:hover { opacity:.85; }
+.mc-bar.em { background:var(--em-400); }
+.mc-bar.gd { background:var(--gd-400); }
+.mc-bar.bl { background:var(--bl-400); }
+.chart-labels { display:flex; gap:4px; margin-top:.3rem; }
+.chart-label { flex:1; text-align:center; font-size:.6rem; color:var(--tx-800); }
+
+/* REVENUE CARD */
+.revenue-card { background:linear-gradient(135deg,rgba(251,191,36,.08),rgba(251,191,36,.03)); border:1px solid rgba(251,191,36,.2); border-radius:var(--r-xl); padding:1.5rem; }
+.rc-amount { font-size:2rem; font-weight:900; color:var(--gd-400); line-height:1; margin-bottom:.3rem; }
+.rc-label  { font-size:.8rem; color:var(--tx-400); margin-bottom:.75rem; }
+.rc-breakdown { display:flex; flex-direction:column; gap:.4rem; }
+.rcb-item  { display:flex; align-items:center; justify-content:space-between; font-size:.8rem; }
+.rcb-label { color:var(--tx-600); display:flex; align-items:center; gap:.4rem; }
+.rcb-dot   { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.rcb-val   { font-weight:700; color:var(--tx-200); }
+
+/* ACTIVITY FEED */
+.activity-item { display:flex; align-items:flex-start; gap:.75rem; padding:.75rem 0; border-bottom:1px solid var(--bd-subtle); }
+.activity-item:last-child { border-bottom:none; }
+.ai-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:6px; }
+.ai-text { font-size:.82rem; color:var(--tx-200); line-height:1.5; flex:1; }
+.ai-text strong { color:var(--tx-100); }
+.ai-time { font-size:.7rem; color:var(--tx-800); flex-shrink:0; }
+
+/* QUICK ACTIONS */
+.quick-actions { display:grid; grid-template-columns:1fr 1fr; gap:.65rem; }
+.qa-btn { background:var(--bg-raised); border:1px solid var(--bd-subtle); border-radius:var(--r-lg); padding:1rem; text-align:center; cursor:pointer; transition:all var(--ease); }
+.qa-btn:hover { border-color:rgba(251,191,36,.3); background:rgba(251,191,36,.04); }
+.qa-ico  { font-size:1.5rem; display:block; margin-bottom:.35rem; }
+.qa-name { font-size:.8rem; font-weight:600; color:var(--tx-200); }
+
+@media(max-width:1200px) { .pipeline{grid-template-columns:repeat(2,1fr)} }
+@media(max-width:1024px) { .stats-row{grid-template-columns:repeat(2,1fr)}.main-grid{grid-template-columns:1fr} }
+@media(max-width:768px) { .dash-main{margin-left:0}.sidebar{display:none}.dash-content{padding:1.25rem}.dash-topbar{padding:.75rem 1.25rem}.pipeline{grid-template-columns:1fr 1fr} }
+@media(max-width:480px) { .pipeline{grid-template-columns:1fr}.stats-row{grid-template-columns:1fr 1fr} }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-brand">
+    <a href="../index.html" style="display:flex;align-items:center;gap:.6rem;text-decoration:none">
+      <svg width="30" height="30" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14.5" stroke="url(#lg5)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="7" ry="14.5" stroke="url(#lg5)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="14.5" ry="4.5" stroke="url(#lg5)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="20" ry="6.5" stroke="url(#lg5)" stroke-width="1.8" stroke-opacity=".65" transform="rotate(-25 20 20)"/><defs><linearGradient id="lg5" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#FBBF24"/><stop offset="1" stop-color="#F59E0B"/></linearGradient></defs></svg>
+      <div><div style="font-size:.95rem;font-weight:800;letter-spacing:.08em;background:linear-gradient(135deg,#FCD34D,#F59E0B);-webkit-background-clip:text;-webkit-text-fill-color:transparent">INEZA</div><div style="font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-800)">Employer Portal</div></div>
+    </a>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">
+      <div class="sb-section-lbl">Main</div>
+      <a href="dashboard.html" class="sb-link active"><span class="link-ico">🏠</span>Dashboard</a>
+      <a href="post-job.html" class="sb-link"><span class="link-ico">➕</span>Post a Job</a>
+      <a href="jobs.html" class="sb-link"><span class="link-ico">📋</span>My Job Postings<span class="link-badge">5</span></a>
+      <a href="candidates.html" class="sb-link"><span class="link-ico">👥</span>Candidate Pool<span class="link-badge">28</span></a>
+      <a href="pipeline.html" class="sb-link"><span class="link-ico">🔄</span>Hiring Pipeline</a>
+      <a href="messages.html" class="sb-link"><span class="link-ico">💬</span>Messages<span class="link-badge">7</span></a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Analytics</div>
+      <a href="analytics.html" class="sb-link"><span class="link-ico">📊</span>Analytics</a>
+      <a href="reports.html" class="sb-link"><span class="link-ico">📈</span>Reports</a>
+      <a href="invoices.html" class="sb-link"><span class="link-ico">🧾</span>Invoices</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Company</div>
+      <a href="company-profile.html" class="sb-link"><span class="link-ico">🏢</span>Company Profile</a>
+      <a href="team.html" class="sb-link"><span class="link-ico">👤</span>Team Members</a>
+      <a href="settings.html" class="sb-link"><span class="link-ico">⚙️</span>Settings</a>
+      <a href="billing.html" class="sb-link"><span class="link-ico">💳</span>Billing & Plan</a>
+      <a href="#" class="sb-link" onclick="Auth.logout()"><span class="link-ico">🚪</span>Sign Out</a>
+    </div>
+  </nav>
+  <div class="sb-footer">
+    <div class="sb-user">
+      <div class="avatar avatar-sm" style="color:var(--gd-400);background:rgba(251,191,36,.1);border-color:var(--gd-400)" id="sb-avatar-emp">TK</div>
+      <div>
+        <span style="font-size:.86rem;font-weight:700;color:var(--tx-100);display:block" id="sb-emp-name">TechCorp Rwanda</span>
+        <span style="font-size:.68rem;color:var(--gd-400);display:block">🏢 Business Plan</span>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="dash-main">
+  <div class="dash-topbar">
+    <div class="topbar-search">
+      <span style="color:var(--tx-600)">🔍</span>
+      <input type="text" placeholder="Search candidates, jobs…">
+    </div>
+    <div class="topbar-actions">
+      <a href="post-job.html" class="btn btn-gold btn-sm">+ Post a Job</a>
+      <div class="topbar-icon-btn" title="Notifications">🔔<span class="notif-dot"></span></div>
+      <div class="dropdown">
+        <div class="topbar-icon-btn" data-dropdown style="width:auto;padding:0 .6rem;gap:.4rem">
+          <div class="avatar avatar-sm" style="color:var(--gd-400);background:rgba(251,191,36,.1);border-color:var(--gd-400)">TK</div>
+          <span style="font-size:.84rem;font-weight:600;color:var(--tx-200)">TechCorp</span>
+          <span style="font-size:.7rem;color:var(--tx-600)">▾</span>
+        </div>
+        <div class="dropdown-menu">
+          <div class="dropdown-item" onclick="window.location.href='company-profile.html'">🏢 Company Profile</div>
+          <div class="dropdown-item" onclick="window.location.href='settings.html'">⚙️ Settings</div>
+          <div class="dropdown-item" onclick="window.location.href='billing.html'">💳 Billing</div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item danger" onclick="Auth.logout()">🚪 Sign Out</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dash-content">
+    <!-- HEADER -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:2rem;flex-wrap:wrap">
+      <div>
+        <div style="font-size:.82rem;color:var(--tx-600);margin-bottom:.2rem" id="emp-greeting">Good morning,</div>
+        <div style="font-size:1.5rem;font-weight:800;color:var(--tx-100)">TechCorp Rwanda Dashboard 👋</div>
+      </div>
+      <div style="display:flex;gap:.65rem;align-items:center;flex-wrap:wrap">
+        <span class="badge-gd2">🏢 Business Plan</span>
+        <a href="candidates.html" class="btn btn-secondary btn-sm">View Candidates</a>
+        <a href="post-job.html" class="btn btn-gold btn-sm">+ Post New Job</a>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="sec-card stat-card gd-theme reveal d1">
+        <div class="sc-icon gd">💼</div>
+        <div class="sc-val" style="color:var(--gd-400)" data-counter data-target="5" data-suffix="">5</div>
+        <div class="sc-lbl">Active Job Postings</div>
+        <div class="sc-change up">↑ 2 new this week</div>
+      </div>
+      <div class="sec-card stat-card reveal d2">
+        <div class="sc-icon em">👥</div>
+        <div class="sc-val text-em" data-counter data-target="284" data-suffix="">284</div>
+        <div class="sc-lbl">Total Applications</div>
+        <div class="sc-change up">↑ +43 this week</div>
+      </div>
+      <div class="sec-card stat-card reveal d3">
+        <div class="sc-icon bl">🗓</div>
+        <div class="sc-val" style="color:var(--bl-400)" data-counter data-target="12" data-suffix="">12</div>
+        <div class="sc-lbl">Interviews Scheduled</div>
+        <div class="sc-change up">↑ +4 this week</div>
+      </div>
+      <div class="sec-card stat-card reveal d4">
+        <div class="sc-icon pu">🤝</div>
+        <div class="sc-val" style="color:#A78BFA" data-counter data-target="3" data-suffix="">3</div>
+        <div class="sc-lbl">Offers Extended</div>
+        <div class="sc-change up">2 accepted</div>
+      </div>
+    </div>
+
+    <!-- PIPELINE -->
+    <div class="sec-card reveal" style="margin-bottom:1.5rem;overflow:visible">
+      <div class="sec-card-header">
+        <h3>🔄 Hiring Pipeline</h3>
+        <a href="pipeline.html">Full Pipeline View →</a>
+      </div>
+      <div style="padding:1.2rem 1.5rem">
+        <div class="pipeline">
+          <div class="pipe-col">
+            <div class="pipe-col-hdr">
+              <span class="pipe-col-name">Applied</span>
+              <span class="pipe-col-cnt">48</span>
+            </div>
+            <div class="pipe-item" onclick="Toast.info('Jean-Paul H. — Senior Software Engineer')">
+              <div class="pi-name">Jean-Paul H.</div>
+              <div class="pi-role">Senior Software Eng.</div>
+              <div class="pi-footer">
+                <span class="badge badge-em" style="font-size:.6rem">98% match</span>
+                <span class="pi-days">2d ago</span>
+              </div>
+            </div>
+            <div class="pipe-item">
+              <div class="pi-name">Sarah M.</div>
+              <div class="pi-role">Frontend Developer</div>
+              <div class="pi-footer">
+                <span class="badge badge-em" style="font-size:.6rem">94% match</span>
+                <span class="pi-days">3d ago</span>
+              </div>
+            </div>
+            <div class="pipe-item">
+              <div class="pi-name">David K.</div>
+              <div class="pi-role">Backend Engineer</div>
+              <div class="pi-footer">
+                <span class="badge badge-bl" style="font-size:.6rem">87% match</span>
+                <span class="pi-days">4d ago</span>
+              </div>
+            </div>
+          </div>
+          <div class="pipe-col">
+            <div class="pipe-col-hdr">
+              <span class="pipe-col-name" style="color:var(--gd-400)">Screening</span>
+              <span class="pipe-col-cnt">16</span>
+            </div>
+            <div class="pipe-item" style="border-color:rgba(251,191,36,.2)">
+              <div class="pi-name">Alice N.</div>
+              <div class="pi-role">Full Stack Developer</div>
+              <div class="pi-footer">
+                <span class="badge-gd2" style="font-size:.6rem;padding:.1rem .45rem">Ineza Vetted</span>
+                <span class="pi-days">1d ago</span>
+              </div>
+            </div>
+            <div class="pipe-item" style="border-color:rgba(251,191,36,.2)">
+              <div class="pi-name">Patrick U.</div>
+              <div class="pi-role">DevOps Engineer</div>
+              <div class="pi-footer">
+                <span class="badge-gd2" style="font-size:.6rem;padding:.1rem .45rem">Ineza Vetted</span>
+                <span class="pi-days">2d ago</span>
+              </div>
+            </div>
+          </div>
+          <div class="pipe-col">
+            <div class="pipe-col-hdr">
+              <span class="pipe-col-name" style="color:var(--bl-400)">Interview</span>
+              <span class="pipe-col-cnt">8</span>
+            </div>
+            <div class="pipe-item" style="border-color:rgba(59,130,246,.2)">
+              <div class="pi-name">Grace M.</div>
+              <div class="pi-role">Product Engineer</div>
+              <div class="pi-footer">
+                <span class="badge badge-bl" style="font-size:.6rem">Thu 10am</span>
+                <span class="pi-days">Tomorrow</span>
+              </div>
+            </div>
+            <div class="pipe-item" style="border-color:rgba(59,130,246,.2)">
+              <div class="pi-name">Rodrigue B.</div>
+              <div class="pi-role">Tech Lead</div>
+              <div class="pi-footer">
+                <span class="badge badge-bl" style="font-size:.6rem">Fri 2pm</span>
+                <span class="pi-days">Friday</span>
+              </div>
+            </div>
+          </div>
+          <div class="pipe-col">
+            <div class="pipe-col-hdr">
+              <span class="pipe-col-name" style="color:var(--em-400)">Offer / Hired</span>
+              <span class="pipe-col-cnt">3</span>
+            </div>
+            <div class="pipe-item" style="border-color:var(--bd-em)">
+              <div class="pi-name">Emmanuel T.</div>
+              <div class="pi-role">Senior Engineer</div>
+              <div class="pi-footer">
+                <span class="badge badge-em" style="font-size:.6rem">Accepted ✓</span>
+                <span class="pi-days">Starts Jun 1</span>
+              </div>
+            </div>
+            <div class="pipe-item" style="border-color:rgba(251,191,36,.25)">
+              <div class="pi-name">Claudette R.</div>
+              <div class="pi-role">Data Engineer</div>
+              <div class="pi-footer">
+                <span class="badge-gd2" style="font-size:.6rem;padding:.1rem .45rem">Offer Sent</span>
+                <span class="pi-days">Pending</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="main-grid">
+      <div style="display:flex;flex-direction:column;gap:1.5rem">
+
+        <!-- ACTIVE JOBS -->
+        <div class="sec-card reveal">
+          <div class="sec-card-header">
+            <h3>📋 Active Job Postings</h3>
+            <a href="post-job.html" style="color:var(--gd-400)">+ Post New →</a>
+          </div>
+          <div style="padding:0 1.5rem">
+            <div class="job-row">
+              <div class="jr-info">
+                <div class="jr-title">Senior Software Engineer</div>
+                <div class="jr-meta">
+                  <span class="job-status-badge job-status-active">● Active</span>
+                  <span>Kigali · Full-time</span>
+                  <span>Posted 3 days ago</span>
+                  <span style="color:var(--danger);font-weight:600">Closes in 12 days</span>
+                </div>
+              </div>
+              <div class="jr-stats">
+                <div class="jr-stat"><span class="jr-stat-val text-em">78</span><span class="jr-stat-lbl">Applied</span></div>
+                <div class="jr-stat"><span class="jr-stat-val" style="color:var(--gd-400)">12</span><span class="jr-stat-lbl">Shortlisted</span></div>
+                <div class="jr-stat"><span class="jr-stat-val" style="color:var(--bl-400)">4</span><span class="jr-stat-lbl">Interviews</span></div>
+              </div>
+              <div class="jr-actions">
+                <button class="btn btn-secondary btn-sm" onclick="window.location.href='candidates.html'">View Applicants</button>
+                <button class="btn btn-sm" style="background:var(--bg-raised);border:1px solid var(--bd-subtle);color:var(--tx-400)" onclick="Toast.info('Job editing feature coming soon')">Edit</button>
+              </div>
+            </div>
+            <div class="job-row">
+              <div class="jr-info">
+                <div class="jr-title">Product Manager</div>
+                <div class="jr-meta">
+                  <span class="job-status-badge job-status-active">● Active</span>
+                  <span>Kigali · Full-time</span>
+                  <span>Posted 1 week ago</span>
+                </div>
+              </div>
+              <div class="jr-stats">
+                <div class="jr-stat"><span class="jr-stat-val text-em">45</span><span class="jr-stat-lbl">Applied</span></div>
+                <div class="jr-stat"><span class="jr-stat-val" style="color:var(--gd-400)">8</span><span class="jr-stat-lbl">Shortlisted</span></div>
+                <div class="jr-stat"><span class="jr-stat-val" style="color:var(--bl-400)">3</span><span class="jr-stat-lbl">Interviews</span></div>
+              </div>
+              <div class="jr-actions">
+                <button class="btn btn-secondary btn-sm" onclick="window.location.href='candidates.html'">View Applicants</button>
+                <button class="btn btn-sm" style="background:var(--bg-raised);border:1px solid var(--bd-subtle);color:var(--tx-400)">Edit</button>
+              </div>
+            </div>
+            <div class="job-row">
+              <div class="jr-info">
+                <div class="jr-title">UX/UI Designer</div>
+                <div class="jr-meta">
+                  <span class="job-status-badge job-status-paused">⏸ Paused</span>
+                  <span>Kigali · Full-time</span>
+                  <span>Posted 2 weeks ago</span>
+                </div>
+              </div>
+              <div class="jr-stats">
+                <div class="jr-stat"><span class="jr-stat-val text-em">32</span><span class="jr-stat-lbl">Applied</span></div>
+                <div class="jr-stat"><span class="jr-stat-val" style="color:var(--gd-400)">5</span><span class="jr-stat-lbl">Shortlisted</span></div>
+                <div class="jr-stat"><span class="jr-stat-val" style="color:var(--bl-400)">2</span><span class="jr-stat-lbl">Interviews</span></div>
+              </div>
+              <div class="jr-actions">
+                <button class="btn btn-primary btn-sm" onclick="Toast.success('Job resumed!')">Resume</button>
+                <button class="btn btn-sm" style="background:var(--bg-raised);border:1px solid var(--bd-subtle);color:var(--tx-400)">Edit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TOP CANDIDATES -->
+        <div class="sec-card reveal d1">
+          <div class="sec-card-header">
+            <h3>⭐ Top Ineza-Matched Candidates</h3>
+            <a href="candidates.html" style="color:var(--gd-400)">View all 28 →</a>
+          </div>
+          <div style="padding:0 1.5rem">
+            <div class="cand-card">
+              <div class="cc-avatar" style="color:var(--em-400);background:rgba(0,229,153,.1);border-color:var(--em-400)">JP</div>
+              <div class="cc-info">
+                <div class="cc-name">Jean-Paul Habimana</div>
+                <div class="cc-role">Senior Software Engineer · 7 years exp</div>
+                <div class="cc-tags">
+                  <span class="badge badge-gray">Node.js</span>
+                  <span class="badge badge-gray">Python</span>
+                  <span class="badge badge-gray">AWS</span>
+                  <span class="badge badge-em">Ineza Vetted ✓</span>
+                </div>
+              </div>
+              <span class="cc-match">98%</span>
+              <div class="cc-actions">
+                <button class="btn btn-gold btn-sm" onclick="Toast.success('Interview invite sent to Jean-Paul!')">Invite →</button>
+                <button class="btn btn-secondary btn-sm" onclick="Toast.info('CV opened in new tab')">CV</button>
+              </div>
+            </div>
+            <div class="cand-card">
+              <div class="cc-avatar" style="color:var(--bl-400);background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.4)">AM</div>
+              <div class="cc-info">
+                <div class="cc-name">Alice Mukamana</div>
+                <div class="cc-role">Full Stack Developer · 5 years exp</div>
+                <div class="cc-tags">
+                  <span class="badge badge-gray">React</span>
+                  <span class="badge badge-gray">TypeScript</span>
+                  <span class="badge badge-em">Ineza Vetted ✓</span>
+                </div>
+              </div>
+              <span class="cc-match">95%</span>
+              <div class="cc-actions">
+                <button class="btn btn-gold btn-sm" onclick="Toast.success('Interview invite sent!')">Invite →</button>
+                <button class="btn btn-secondary btn-sm">CV</button>
+              </div>
+            </div>
+            <div class="cand-card">
+              <div class="cc-avatar" style="color:var(--gd-400);background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.4)">DM</div>
+              <div class="cc-info">
+                <div class="cc-name">David Mutabazi</div>
+                <div class="cc-role">DevOps Engineer · 4 years exp</div>
+                <div class="cc-tags">
+                  <span class="badge badge-gray">Docker</span>
+                  <span class="badge badge-gray">Kubernetes</span>
+                  <span class="badge badge-gray">Terraform</span>
+                </div>
+              </div>
+              <span class="cc-match">91%</span>
+              <div class="cc-actions">
+                <button class="btn btn-gold btn-sm" onclick="Toast.success('Interview invite sent!')">Invite →</button>
+                <button class="btn btn-secondary btn-sm">CV</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div style="display:flex;flex-direction:column;gap:1.5rem">
+
+        <!-- REVENUE / PLAN -->
+        <div class="revenue-card reveal">
+          <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:rgba(251,191,36,.6);margin-bottom:.5rem">This Month</div>
+          <div class="rc-amount">RWF 120,000</div>
+          <div class="rc-label">Business Plan Active · Renews Jun 15</div>
+          <div class="rc-breakdown">
+            <div class="rcb-item"><span class="rcb-label"><span class="rcb-dot" style="background:var(--gd-400)"></span>Plan subscription</span><span class="rcb-val">RWF 120,000</span></div>
+            <div class="rcb-item"><span class="rcb-label"><span class="rcb-dot" style="background:var(--em-400)"></span>Placement savings</span><span class="rcb-val" style="color:var(--em-400)">RWF 845,000 saved</span></div>
+          </div>
+          <button class="btn btn-gold btn-sm btn-block" style="margin-top:1rem" onclick="window.location.href='billing.html'">Manage Billing →</button>
+        </div>
+
+        <!-- APPLICATIONS CHART -->
+        <div class="sec-card reveal d1">
+          <div class="sec-card-header">
+            <h3>📊 Applications This Week</h3>
+          </div>
+          <div class="sec-card-body">
+            <div style="font-size:1.4rem;font-weight:900;color:var(--tx-100);margin-bottom:.1rem">43 <span style="font-size:.75rem;font-weight:400;color:var(--em-400)">↑ +12%</span></div>
+            <div style="font-size:.75rem;color:var(--tx-600);margin-bottom:.75rem">Applications received</div>
+            <div class="mini-chart" id="chart">
+              <div class="mc-bar em" style="height:55%" title="Mon: 6"></div>
+              <div class="mc-bar gd" style="height:70%" title="Tue: 8"></div>
+              <div class="mc-bar em" style="height:40%" title="Wed: 4"></div>
+              <div class="mc-bar em" style="height:90%" title="Thu: 12"></div>
+              <div class="mc-bar gd" style="height:65%" title="Fri: 7"></div>
+              <div class="mc-bar bl" style="height:45%" title="Sat: 5"></div>
+              <div class="mc-bar em" style="height:10%" title="Sun: 1"></div>
+            </div>
+            <div class="chart-labels">
+              <span class="chart-label">M</span><span class="chart-label">T</span><span class="chart-label">W</span>
+              <span class="chart-label">T</span><span class="chart-label">F</span><span class="chart-label">S</span>
+              <span class="chart-label">S</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="sec-card reveal d2">
+          <div class="sec-card-header"><h3>⚡ Quick Actions</h3></div>
+          <div class="sec-card-body">
+            <div class="quick-actions">
+              <div class="qa-btn" onclick="window.location.href='post-job.html'"><span class="qa-ico">➕</span><span class="qa-name">Post New Job</span></div>
+              <div class="qa-btn" onclick="window.location.href='candidates.html'"><span class="qa-ico">🔍</span><span class="qa-name">Search Candidates</span></div>
+              <div class="qa-btn" onclick="window.location.href='messages.html'"><span class="qa-ico">💬</span><span class="qa-name">Messages (7)</span></div>
+              <div class="qa-btn" onclick="window.location.href='reports.html'"><span class="qa-ico">📈</span><span class="qa-name">View Reports</span></div>
+              <div class="qa-btn" onclick="window.location.href='company-profile.html'"><span class="qa-ico">🏢</span><span class="qa-name">Edit Company</span></div>
+              <div class="qa-btn" onclick="Toast.info('Your dedicated recruiter: Grace Mukamana · +250 788 000 000')"><span class="qa-ico">📞</span><span class="qa-name">Call Recruiter</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIVITY FEED -->
+        <div class="sec-card reveal d3">
+          <div class="sec-card-header"><h3>🕐 Recent Activity</h3></div>
+          <div style="padding:0 1.5rem">
+            <div class="activity-item">
+              <div class="ai-dot" style="background:var(--em-400)"></div>
+              <div class="ai-text"><strong>Jean-Paul H.</strong> applied for Senior Software Engineer</div>
+              <span class="ai-time">2h ago</span>
+            </div>
+            <div class="activity-item">
+              <div class="ai-dot" style="background:var(--gd-400)"></div>
+              <div class="ai-text">Ineza recruiter <strong>Grace M.</strong> shortlisted 3 candidates for your PM role</div>
+              <span class="ai-time">4h ago</span>
+            </div>
+            <div class="activity-item">
+              <div class="ai-dot" style="background:var(--bl-400)"></div>
+              <div class="ai-text"><strong>Emmanuel T.</strong> accepted your offer for Senior Engineer 🎉</div>
+              <span class="ai-time">Yesterday</span>
+            </div>
+            <div class="activity-item">
+              <div class="ai-dot" style="background:var(--em-400)"></div>
+              <div class="ai-text">Your job "<strong>UX Designer</strong>" received 8 new applications</div>
+              <span class="ai-time">2d ago</span>
+            </div>
+            <div class="activity-item">
+              <div class="ai-dot" style="background:var(--gd-400)"></div>
+              <div class="ai-text">Plan renewed: <strong>Business Plan</strong> — RWF 120,000 charged</div>
+              <span class="ai-time">3d ago</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const user = Auth.getUser() || { name:'TechCorp Rwanda', role:'employer', plan:'business' };
+  const greetEl = document.getElementById('emp-greeting');
+  if (greetEl) {
+    const h = new Date().getHours();
+    greetEl.textContent = h < 12 ? 'Good morning,' : h < 17 ? 'Good afternoon,' : 'Good evening,';
+  }
+});
+</script>
+</body>
+</html>

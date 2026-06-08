@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Account | Ineza Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/base.css">
+<style>
+body { background:var(--bg-deep); }
+.signup-wrap { display:grid; grid-template-columns:340px 1fr; min-height:100vh; }
+
+/* LEFT PANEL */
+.su-left {
+  background:var(--bg-surface); border-right:1px solid var(--bd-subtle);
+  padding:2.2rem 1.5rem; display:flex; flex-direction:column; gap:1.8rem;
+  position:sticky; top:0; height:100vh; overflow-y:auto;
+}
+.su-logo { display:flex; align-items:center; gap:.65rem; }
+.su-brand { font-size:.95rem; font-weight:800; letter-spacing:.08em; }
+.su-back { display:inline-flex; align-items:center; gap:.4rem; font-size:.82rem; color:var(--tx-600); margin-top:-.5rem; transition:color var(--ease); }
+.su-back:hover { color:var(--em-400); }
+
+/* PROGRESS STEPS */
+.prog-list { display:flex; flex-direction:column; gap:0; flex:1; }
+.prog-item { display:flex; align-items:flex-start; gap:.85rem; padding:.8rem 0; position:relative; cursor:pointer; }
+.prog-item:not(:last-child)::after { content:''; position:absolute; left:18px; top:52px; height:calc(100% - 20px); width:2px; background:var(--bd-subtle); }
+.prog-item.done::after { background:var(--em-500); }
+.prog-item.active::after { background:linear-gradient(to bottom,var(--em-400),var(--bd-subtle)); }
+.pi-num {
+  width:36px; height:36px; border-radius:50%; flex-shrink:0; position:relative; z-index:1;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.82rem; font-weight:700; transition:all var(--ease);
+  background:var(--bg-raised); border:2px solid var(--bd-subtle); color:var(--tx-800);
+}
+.prog-item.active .pi-num  { background:rgba(0,229,153,.12); border-color:var(--em-400); color:var(--em-400); }
+.prog-item.done   .pi-num  { background:var(--em-500); border-color:var(--em-500); color:var(--bg-deep); }
+.pi-info { padding-top:.35rem; }
+.pi-title { font-size:.86rem; font-weight:700; color:var(--tx-800); transition:color var(--ease); }
+.prog-item.active .pi-title { color:var(--tx-100); }
+.prog-item.done   .pi-title { color:var(--em-500); }
+.pi-sub   { font-size:.73rem; color:var(--tx-800); margin-top:.05rem; }
+.prog-item.active .pi-sub { color:var(--tx-600); }
+
+/* PLAN PREVIEW */
+.plan-preview { background:var(--bg-raised); border:1px solid var(--bd-em); border-radius:var(--r-lg); padding:1.1rem; }
+.pp-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:.55rem; }
+.pp-name { font-size:.85rem; font-weight:700; color:var(--tx-100); }
+.pp-price { font-size:.88rem; font-weight:800; color:var(--em-400); }
+.pp-feats { display:flex; flex-direction:column; gap:.3rem; }
+.pp-feat { font-size:.74rem; color:var(--tx-400); display:flex; align-items:center; gap:.4rem; }
+.pp-feat::before { content:'✓'; color:var(--em-400); font-size:.75rem; }
+
+/* RIGHT PANEL */
+.su-right { background:var(--bg-base); padding:3rem 2.5rem; }
+.su-right-inner { max-width:560px; }
+
+/* STEP HEADER */
+.step-hdr { margin-bottom:2rem; }
+.step-tag { font-size:.7rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--em-400); display:inline-flex; align-items:center; gap:.4rem; margin-bottom:.55rem; }
+.step-tag::before { content:''; display:inline-block; width:14px; height:1.5px; background:var(--em-400); border-radius:99px; }
+.step-hdr h2 { font-size:clamp(1.5rem,3vw,2.1rem); font-weight:900; line-height:1.08; margin-bottom:.4rem; }
+.step-hdr p  { font-size:.9rem; color:var(--tx-400); line-height:1.65; }
+
+/* PROGRESS BAR */
+.su-progress { margin-bottom:2rem; }
+.su-prog-bar { height:3px; background:var(--bd-subtle); border-radius:99px; overflow:hidden; }
+.su-prog-fill { height:100%; background:var(--grad-em); border-radius:99px; transition:width .5s ease; }
+.su-prog-info { display:flex; justify-content:space-between; font-size:.7rem; color:var(--tx-800); margin-top:.4rem; }
+
+/* ROLE CARDS */
+.role-cards { display:grid; grid-template-columns:1fr 1fr; gap:.85rem; margin-bottom:1.4rem; }
+.role-card {
+  background:var(--bg-surface); border:2px solid var(--bd-subtle); border-radius:var(--r-xl);
+  padding:1.75rem 1.5rem; cursor:pointer; transition:all var(--ease); text-align:center; position:relative;
+}
+.role-card:hover { border-color:var(--bd-em); transform:translateY(-2px); }
+.role-card.selected { border-color:var(--em-400); background:rgba(0,229,153,.05); }
+.role-card.selected::after { content:'✓'; position:absolute; top:.6rem; right:.7rem; width:20px; height:20px; background:var(--em-400); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.65rem; color:var(--bg-deep); font-weight:900; }
+.rc-icon { font-size:2.5rem; margin-bottom:.8rem; display:block; }
+.rc-name { font-size:1rem; font-weight:800; color:var(--tx-100); margin-bottom:.25rem; }
+.rc-desc { font-size:.76rem; color:var(--tx-400); line-height:1.5; }
+.rc-features { display:flex; flex-direction:column; gap:.28rem; margin-top:.75rem; }
+.rc-feat { font-size:.72rem; color:var(--tx-600); display:flex; align-items:center; gap:.35rem; }
+.rc-feat::before { content:'✓'; color:var(--em-500); font-size:.7rem; }
+
+/* PLAN SELECTOR */
+.plan-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:.75rem; margin-bottom:1.2rem; }
+.plan-opt { background:var(--bg-surface); border:2px solid var(--bd-subtle); border-radius:var(--r-lg); padding:1.2rem 1rem; cursor:pointer; transition:all var(--ease); text-align:center; position:relative; }
+.plan-opt:hover { border-color:var(--bd-em); }
+.plan-opt.selected { border-color:var(--em-400); background:rgba(0,229,153,.05); }
+.plan-opt.recommended::before { content:'Popular'; position:absolute; top:-.6rem; left:50%; transform:translateX(-50%); background:var(--grad-em); color:var(--bg-deep); font-size:.6rem; font-weight:800; padding:.15rem .65rem; border-radius:99px; white-space:nowrap; }
+.po-name { font-size:.88rem; font-weight:800; color:var(--tx-100); margin-bottom:.2rem; }
+.po-price { font-size:1.4rem; font-weight:900; color:var(--em-400); margin-bottom:.1rem; }
+.po-period { font-size:.7rem; color:var(--tx-600); }
+
+/* STEP NAV */
+.step-nav { display:flex; align-items:center; justify-content:space-between; margin-top:2.2rem; padding-top:1.8rem; border-top:1px solid var(--bd-subtle); gap:1rem; flex-wrap:wrap; }
+.sn-info { font-size:.73rem; color:var(--tx-800); }
+.btn-back { padding:.68rem 1.5rem; background:none; border:1.5px solid var(--bd-subtle); border-radius:var(--r-md); font-family:var(--ff-body); font-size:.88rem; font-weight:600; color:var(--tx-400); cursor:pointer; transition:all var(--ease); }
+.btn-back:hover { border-color:var(--bd-em); color:var(--tx-100); }
+
+/* PHOTO UPLOAD */
+.photo-upload-zone { display:flex; align-items:center; gap:1.2rem; margin-bottom:1.4rem; }
+.photo-circle { width:76px; height:76px; border-radius:50%; background:var(--bg-raised); border:2px dashed var(--bd-em); display:flex; align-items:center; justify-content:center; font-size:1.8rem; cursor:pointer; flex-shrink:0; transition:all var(--ease); overflow:hidden; }
+.photo-circle:hover { border-color:var(--em-400); background:rgba(0,229,153,.05); }
+
+/* CV DROP */
+.cv-drop { border:2px dashed var(--bd-em); border-radius:var(--r-xl); padding:2.5rem; text-align:center; cursor:pointer; transition:all var(--ease); background:rgba(0,229,153,.02); }
+.cv-drop:hover,.cv-drop.dragging { border-color:var(--em-400); background:rgba(0,229,153,.06); }
+.cv-uploaded { display:none; align-items:center; gap:.85rem; padding:1rem 1.2rem; background:rgba(0,229,153,.06); border:1px solid var(--bd-em); border-radius:var(--r-lg); margin-top:.9rem; }
+.cv-uploaded.show { display:flex; }
+
+/* SKILLS */
+.skills-input-wrap { background:var(--bg-raised); border:1.5px solid var(--bd-subtle); border-radius:var(--r-md); padding:.6rem; min-height:52px; display:flex; flex-wrap:wrap; gap:.38rem; cursor:text; transition:border-color var(--ease); }
+.skills-input-wrap:focus-within { border-color:var(--bd-em); }
+.skill-tag { display:inline-flex; align-items:center; gap:.3rem; padding:.22rem .65rem; background:rgba(0,229,153,.1); border:1px solid rgba(0,229,153,.22); border-radius:99px; font-size:.77rem; font-weight:600; color:var(--em-400); }
+.skill-tag button { background:none; border:none; color:var(--em-600); font-size:.85rem; cursor:pointer; padding:0; line-height:1; }
+.skills-real-input { background:none; border:none; outline:none; font-family:var(--ff-body); font-size:.85rem; color:var(--tx-100); min-width:120px; flex:1; padding:.22rem .3rem; }
+.skills-real-input::placeholder { color:var(--tx-800); }
+.skill-suggestions { display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.6rem; }
+.ss-chip { padding:.2rem .65rem; background:var(--bg-raised); border:1px solid var(--bd-subtle); border-radius:99px; font-size:.73rem; color:var(--tx-600); cursor:pointer; transition:all var(--ease); }
+.ss-chip:hover { border-color:var(--bd-em); color:var(--em-400); }
+
+/* REVIEW TABLE */
+.review-section { background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-xl); overflow:hidden; margin-bottom:1.2rem; }
+.rs-header { padding:1.1rem 1.4rem; border-bottom:1px solid var(--bd-subtle); display:flex; align-items:center; justify-content:space-between; }
+.rs-header span { font-size:.72rem; font-weight:700; color:var(--tx-600); text-transform:uppercase; letter-spacing:.1em; }
+.rs-header button { font-size:.75rem; color:var(--em-400); background:none; border:none; cursor:pointer; font-family:var(--ff-body); }
+.rs-body { padding:1.2rem 1.4rem; display:grid; grid-template-columns:1fr 1fr; gap:.85rem; }
+.rs-item .rs-label { font-size:.67rem; color:var(--tx-800); text-transform:uppercase; letter-spacing:.08em; margin-bottom:.18rem; }
+.rs-item .rs-val   { font-size:.9rem; font-weight:600; color:var(--tx-100); }
+
+/* SUCCESS */
+.success-page { display:none; text-align:center; padding:3rem 0; }
+.success-page.show { display:block; }
+.sp-check { width:80px; height:80px; background:rgba(0,229,153,.1); border:2px solid var(--bd-em); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2.5rem; margin:0 auto 1.5rem; }
+.next-steps-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:.8rem; margin-top:2rem; text-align:left; }
+.ns-card { background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-lg); padding:1.1rem; }
+.ns-ico { font-size:1.4rem; margin-bottom:.45rem; }
+.ns-title { font-size:.84rem; font-weight:700; color:var(--tx-100); margin-bottom:.2rem; }
+.ns-desc  { font-size:.74rem; color:var(--tx-600); line-height:1.5; }
+
+@media(max-width:1024px) { .plan-grid{grid-template-columns:1fr 1fr} }
+@media(max-width:768px) { .signup-wrap{grid-template-columns:1fr}.su-left{display:none}.su-right{padding:1.5rem 1.2rem}.su-right-inner{max-width:100%}.role-cards{grid-template-columns:1fr}.next-steps-grid{grid-template-columns:1fr} }
+@media(max-width:480px) { .plan-grid{grid-template-columns:1fr}.rs-body{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<div class="signup-wrap">
+  <!-- LEFT -->
+  <div class="su-left">
+    <div>
+      <a href="../index.html" class="su-logo" style="text-decoration:none;margin-bottom:.5rem;display:inline-flex">
+        <svg width="32" height="32" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14.5" stroke="url(#lg3)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="7" ry="14.5" stroke="url(#lg3)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="14.5" ry="4.5" stroke="url(#lg3)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="20" ry="6.5" stroke="url(#lg3)" stroke-width="1.8" stroke-opacity=".65" transform="rotate(-25 20 20)"/><defs><linearGradient id="lg3" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#00E599"/><stop offset="1" stop-color="#3B82F6"/></linearGradient></defs></svg>
+        <div style="margin-left:.6rem"><div class="su-brand text-em">INEZA</div><div style="font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-800)">Agencies</div></div>
+      </a>
+      <a href="signin.html" class="su-back">← Already have an account?</a>
+    </div>
+
+    <div class="prog-list" id="prog-list">
+      <div class="prog-item active" id="pi-1">
+        <div class="pi-num" id="pn-1">1</div>
+        <div class="pi-info"><div class="pi-title">Choose Your Role</div><div class="pi-sub">Candidate or Employer</div></div>
+      </div>
+      <div class="prog-item" id="pi-2">
+        <div class="pi-num" id="pn-2">2</div>
+        <div class="pi-info"><div class="pi-title">Personal Details</div><div class="pi-sub">Name, contact info</div></div>
+      </div>
+      <div class="prog-item" id="pi-3">
+        <div class="pi-num" id="pn-3">3</div>
+        <div class="pi-info"><div class="pi-title">Professional Profile</div><div class="pi-sub">Experience & skills</div></div>
+      </div>
+      <div class="prog-item" id="pi-4">
+        <div class="pi-num" id="pn-4">4</div>
+        <div class="pi-info"><div class="pi-title">Choose Plan</div><div class="pi-sub">Free or paid features</div></div>
+      </div>
+      <div class="prog-item" id="pi-5">
+        <div class="pi-num" id="pn-5">5</div>
+        <div class="pi-info"><div class="pi-title">Review & Launch</div><div class="pi-sub">Confirm and go live</div></div>
+      </div>
+    </div>
+
+    <div class="plan-preview" id="plan-preview" style="display:none">
+      <div class="pp-head">
+        <span class="pp-name" id="pp-name">Pro Seeker</span>
+        <span class="pp-price" id="pp-price">RWF 5,000/mo</span>
+      </div>
+      <div class="pp-feats" id="pp-feats"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="su-right">
+    <div class="su-right-inner">
+
+      <!-- PROGRESS BAR -->
+      <div class="su-progress">
+        <div class="su-prog-bar"><div class="su-prog-fill" id="su-fill" style="width:20%"></div></div>
+        <div class="su-prog-info"><span id="su-step-lbl">Step 1 of 5</span><span id="su-pct-lbl">20%</span></div>
+      </div>
+
+      <!-- STEP 1: ROLE -->
+      <div id="step-1">
+        <div class="step-hdr">
+          <div class="step-tag">Step 1 — Choose Your Role</div>
+          <h2>Welcome to <span class="text-em">Ineza</span></h2>
+          <p>Tell us who you are so we can create the perfect experience for you.</p>
+        </div>
+        <div class="role-cards">
+          <div class="role-card selected" id="rc-candidate" onclick="selectRole('candidate')">
+            <span class="rc-icon">👤</span>
+            <div class="rc-name">Job Seeker</div>
+            <div class="rc-desc">I'm looking for employment opportunities in Rwanda or abroad</div>
+            <div class="rc-features">
+              <span class="rc-feat">Browse 2,400+ verified jobs</span>
+              <span class="rc-feat">CV upload and review</span>
+              <span class="rc-feat">Recruiter matching</span>
+              <span class="rc-feat">Free to register</span>
+            </div>
+          </div>
+          <div class="role-card" id="rc-employer" onclick="selectRole('employer')">
+            <span class="rc-icon">🏢</span>
+            <div class="rc-name">Employer</div>
+            <div class="rc-desc">I'm hiring and need to find exceptional talent for my organisation</div>
+            <div class="rc-features">
+              <span class="rc-feat">Post jobs instantly</span>
+              <span class="rc-feat">Access 15,000+ candidates</span>
+              <span class="rc-feat">48hr shortlist guarantee</span>
+              <span class="rc-feat">90-day replacement</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SOCIAL LOGIN -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:1.2rem">
+          <button class="social-btn" style="background:var(--bg-surface);border:1.5px solid var(--bd-subtle);border-radius:var(--r-md);padding:.72rem;display:flex;align-items:center;justify-content:center;gap:.55rem;font-size:.86rem;font-weight:600;color:var(--tx-200);cursor:pointer;transition:all var(--ease);font-family:var(--ff-body)" onclick="">
+            <span>G</span> Continue with Google
+          </button>
+          <button class="social-btn" style="background:var(--bg-surface);border:1.5px solid var(--bd-subtle);border-radius:var(--r-md);padding:.72rem;display:flex;align-items:center;justify-content:center;gap:.55rem;font-size:.86rem;font-weight:600;color:var(--tx-200);cursor:pointer;transition:all var(--ease);font-family:var(--ff-body)" onclick="">
+            <span>in</span> Continue with LinkedIn
+          </button>
+        </div>
+        <div class="or-divider"><span>or fill in the form below</span></div>
+
+        <div class="step-nav">
+          <span class="sn-info">🔒 Your data is safe and never shared without consent.</span>
+          <button class="btn btn-primary" onclick="nextStep(1)">Next: Personal Details →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: PERSONAL -->
+      <div id="step-2" style="display:none">
+        <div class="step-hdr">
+          <div class="step-tag">Step 2 — Personal Details</div>
+          <h2>Tell Us About <span class="text-em">Yourself</span></h2>
+          <p>Basic information to set up your account and connect you with the right matches.</p>
+        </div>
+
+        <!-- PHOTO -->
+        <div class="photo-upload-zone">
+          <div class="photo-circle" id="photo-circle" onclick="document.getElementById('photo-inp').click()">📷</div>
+          <input type="file" id="photo-inp" accept="image/*" style="display:none" onchange="previewPhoto(this)">
+          <div>
+            <div style="font-size:.88rem;font-weight:700;color:var(--tx-100);margin-bottom:.2rem">Profile Photo</div>
+            <div style="font-size:.76rem;color:var(--tx-600);margin-bottom:.45rem">Optional — increases profile views by 38%</div>
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('photo-inp').click()">Upload Photo</button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" id="fg-fn">
+            <label class="form-label">First Name <span class="req">*</span></label>
+            <input class="form-control" id="fn" placeholder="Jean-Paul" data-validate="required">
+            <div class="form-error">First name is required</div>
+          </div>
+          <div class="form-group" id="fg-ln">
+            <label class="form-label">Last Name <span class="req">*</span></label>
+            <input class="form-control" id="ln" placeholder="Habimana" data-validate="required">
+            <div class="form-error">Last name is required</div>
+          </div>
+        </div>
+        <div class="form-group" id="fg-em2">
+          <label class="form-label">Email Address <span class="req">*</span></label>
+          <input type="email" class="form-control" id="em2" placeholder="you@email.com" data-validate="required|email">
+          <div class="form-error">Valid email required</div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Phone Number <span class="req">*</span></label>
+            <input type="tel" class="form-control" id="ph" placeholder="+250 788 000 000">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Location <span class="req">*</span></label>
+            <select class="form-control" id="loc">
+              <option value="">Select city…</option>
+              <option selected>Kigali, Rwanda</option>
+              <option>Northern Province</option>
+              <option>Southern Province</option>
+              <option>Eastern Province</option>
+              <option>Western Province</option>
+              <option>International</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password <span class="req">*</span></label>
+          <div class="pass-wrap" style="position:relative">
+            <input type="password" class="form-control" id="pw" placeholder="Minimum 8 characters" data-validate="required|password" style="padding-right:2.8rem">
+            <button type="button" onclick="togglePass2()" style="position:absolute;right:.85rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--tx-600);cursor:pointer;font-size:1rem">👁</button>
+          </div>
+          <div class="form-hint">Must be at least 8 characters</div>
+          <div class="form-error">Password must be at least 8 characters</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">How did you hear about Ineza?</label>
+          <select class="form-control">
+            <option value="">Select one…</option>
+            <option>Google Search</option>
+            <option>Social Media</option>
+            <option>Friend / Colleague Referral</option>
+            <option>WhatsApp</option>
+            <option>Employer Recommendation</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:.6rem;padding:.8rem;background:var(--bg-raised);border-radius:var(--r-md)">
+          <input type="checkbox" id="tos" style="accent-color:var(--em-400);width:14px;height:14px;margin-top:2px;flex-shrink:0;cursor:pointer">
+          <label for="tos" style="font-size:.8rem;color:var(--tx-400);line-height:1.55;cursor:pointer">I agree to Ineza's <a href="#" style="color:var(--em-400)">Terms of Service</a> and <a href="#" style="color:var(--em-400)">Privacy Policy</a>. I confirm I am 18+ years old.</label>
+        </div>
+        <div class="step-nav">
+          <button class="btn-back" onclick="prevStep(2)">← Back</button>
+          <button class="btn btn-primary" onclick="nextStep(2)">Next: Profile →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: PROFILE -->
+      <div id="step-3" style="display:none">
+        <div class="step-hdr">
+          <div class="step-tag">Step 3 — Professional Profile</div>
+          <h2 id="step3-title">Your <span class="text-em">Experience</span></h2>
+          <p id="step3-desc">Help our recruiters match you with roles where you'll genuinely excel.</p>
+        </div>
+
+        <!-- CANDIDATE FIELDS -->
+        <div id="cand-fields">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Current Job Title</label>
+              <input class="form-control" placeholder="e.g. Senior Software Engineer">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Industry / Sector <span class="req">*</span></label>
+              <select class="form-control">
+                <option value="">Select…</option>
+                <option>Technology & ICT</option>
+                <option>Finance & Banking</option>
+                <option>Healthcare</option>
+                <option>Engineering</option>
+                <option>Agriculture</option>
+                <option>Tourism & Hospitality</option>
+                <option>Education</option>
+                <option>Logistics</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Years of Experience <span class="req">*</span></label>
+              <select class="form-control">
+                <option value="">Select…</option>
+                <option>0–1 years</option>
+                <option>2–3 years</option>
+                <option>4–6 years</option>
+                <option>7–10 years</option>
+                <option>10+ years</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Highest Qualification</label>
+              <select class="form-control">
+                <option>Bachelor's Degree</option>
+                <option>Master's Degree (MBA/MSc)</option>
+                <option>PhD / Doctorate</option>
+                <option>Professional Certificate</option>
+                <option>Advanced Diploma</option>
+                <option>Secondary / A-Level</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Professional Summary</label>
+            <textarea class="form-control" placeholder="Describe your professional background and key achievements in 3–5 sentences…" style="min-height:90px"></textarea>
+            <div class="form-hint">This is what recruiters read first. Be specific about achievements.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Key Skills <span style="font-size:.7rem;color:var(--tx-600);font-weight:400">(type & press Enter)</span></label>
+            <div class="skills-input-wrap" id="skills-wrap" onclick="document.getElementById('skills-inp').focus()">
+              <input type="text" class="skills-real-input" id="skills-inp" placeholder="Add a skill and press Enter…" onkeydown="TagInput.addSkill(event)">
+            </div>
+            <div class="skill-suggestions">
+              <span style="font-size:.7rem;color:var(--tx-800);align-self:center">Quick add:</span>
+              <span class="ss-chip" onclick="TagInput.addTagByName('skills-wrap','skills-inp','Python')">Python</span>
+              <span class="ss-chip" onclick="TagInput.addTagByName('skills-wrap','skills-inp','SQL')">SQL</span>
+              <span class="ss-chip" onclick="TagInput.addTagByName('skills-wrap','skills-inp','Project Management')">Project Management</span>
+              <span class="ss-chip" onclick="TagInput.addTagByName('skills-wrap','skills-inp','Excel')">Excel</span>
+              <span class="ss-chip" onclick="TagInput.addTagByName('skills-wrap','skills-inp','Leadership')">Leadership</span>
+              <span class="ss-chip" onclick="TagInput.addTagByName('skills-wrap','skills-inp','Financial Analysis')">Financial Analysis</span>
+            </div>
+          </div>
+
+          <!-- CV UPLOAD -->
+          <div class="form-group">
+            <label class="form-label">Upload Your CV <span style="color:var(--tx-600);font-size:.7rem;font-weight:400">(PDF or Word)</span></label>
+            <div class="cv-drop" id="cv-zone" onclick="document.getElementById('cv-inp').click()" ondragover="event.preventDefault();this.classList.add('dragging')" ondragleave="this.classList.remove('dragging')" ondrop="handleCVDrop(event)">
+              <div style="font-size:2.2rem;margin-bottom:.6rem">📄</div>
+              <div style="font-size:.95rem;font-weight:700;color:var(--tx-100);margin-bottom:.3rem">Drag & drop your CV here</div>
+              <div style="font-size:.78rem;color:var(--tx-600);margin-bottom:.9rem">PDF, Word (.docx) or RTF · Max 5MB</div>
+              <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();document.getElementById('cv-inp').click()">Browse Files</button>
+              <input type="file" id="cv-inp" accept=".pdf,.doc,.docx,.rtf" style="display:none" onchange="handleCV(this)">
+            </div>
+            <div class="cv-uploaded" id="cv-uploaded">
+              <span style="font-size:1.6rem">📋</span>
+              <div style="flex:1"><div style="font-size:.86rem;font-weight:600;color:var(--tx-100)" id="cv-name">filename.pdf</div><div style="font-size:.73rem;color:var(--tx-600)" id="cv-size">0MB</div></div>
+              <button onclick="removeCV()" style="background:none;border:none;color:var(--tx-800);font-size:1.1rem;cursor:pointer">✕</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- EMPLOYER FIELDS -->
+        <div id="emp-fields" style="display:none">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Company Name <span class="req">*</span></label>
+              <input class="form-control" placeholder="e.g. Bank of Kigali">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Your Job Title</label>
+              <input class="form-control" placeholder="e.g. HR Director">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Company Size</label>
+              <select class="form-control">
+                <option>1–10 employees</option>
+                <option>11–50 employees</option>
+                <option>51–200 employees</option>
+                <option>201–1000 employees</option>
+                <option>1000+ employees</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Industry</label>
+              <select class="form-control">
+                <option>Technology & ICT</option>
+                <option>Finance & Banking</option>
+                <option>Healthcare</option>
+                <option>Engineering</option>
+                <option>Hospitality</option>
+                <option>Education</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Company Website</label>
+            <input type="url" class="form-control" placeholder="https://yourcompany.rw">
+          </div>
+          <div class="form-group">
+            <label class="form-label">What are your main hiring needs?</label>
+            <textarea class="form-control" placeholder="Describe the types of roles you typically hire for, your volume, and any specific requirements…" style="min-height:90px"></textarea>
+          </div>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn-back" onclick="prevStep(3)">← Back</button>
+          <button class="btn btn-primary" onclick="nextStep(3)">Next: Choose Plan →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: PLAN -->
+      <div id="step-4" style="display:none">
+        <div class="step-hdr">
+          <div class="step-tag">Step 4 — Choose Your Plan</div>
+          <h2>Unlock Your <span class="text-em">Full Potential</span></h2>
+          <p id="plan-step-desc">Start free or upgrade for faster results and premium support.</p>
+        </div>
+
+        <!-- CANDIDATE PLANS -->
+        <div id="cand-plans">
+          <div class="plan-grid">
+            <div class="plan-opt selected" id="plan-free" onclick="selectPlan('free')">
+              <div class="po-name">Free</div>
+              <div class="po-price">0</div>
+              <div class="po-period">forever</div>
+            </div>
+            <div class="plan-opt recommended" id="plan-pro" onclick="selectPlan('pro')">
+              <div class="po-name">Pro Seeker</div>
+              <div class="po-price" style="font-size:1.1rem">RWF 5,000</div>
+              <div class="po-period">per month</div>
+            </div>
+            <div class="plan-opt" id="plan-premium" onclick="selectPlan('premium')">
+              <div class="po-name">Premium</div>
+              <div class="po-price" style="font-size:1.1rem">RWF 9,900</div>
+              <div class="po-period">per month</div>
+            </div>
+          </div>
+          <div id="plan-detail" style="background:var(--bg-surface);border:1px solid var(--bd-em);border-radius:var(--r-xl);padding:1.4rem;margin-bottom:1rem">
+            <div style="font-size:.82rem;font-weight:700;color:var(--tx-100);margin-bottom:.65rem" id="plan-detail-name">Free Plan — What's included:</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.35rem" id="plan-detail-feats">
+              <div style="font-size:.8rem;color:var(--tx-400);display:flex;align-items:center;gap:.4rem"><span style="color:var(--em-400)">✓</span> Browse all 2,400+ jobs</div>
+              <div style="font-size:.8rem;color:var(--tx-400);display:flex;align-items:center;gap:.4rem"><span style="color:var(--em-400)">✓</span> Create candidate profile</div>
+              <div style="font-size:.8rem;color:var(--tx-400);display:flex;align-items:center;gap:.4rem"><span style="color:var(--em-400)">✓</span> Apply to 5 jobs/month</div>
+              <div style="font-size:.8rem;color:var(--tx-400);display:flex;align-items:center;gap:.4rem"><span style="color:var(--em-400)">✓</span> Email job alerts (weekly)</div>
+              <div style="font-size:.8rem;color:var(--tx-600);display:flex;align-items:center;gap:.4rem"><span>–</span> Priority recruiter matching</div>
+              <div style="font-size:.8rem;color:var(--tx-600);display:flex;align-items:center;gap:.4rem"><span>–</span> CV review & coaching</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EMPLOYER PLANS -->
+        <div id="emp-plans" style="display:none">
+          <div class="plan-grid">
+            <div class="plan-opt selected" onclick="selectPlan('starter')">
+              <div class="po-name">Starter</div>
+              <div class="po-price" style="font-size:1rem">RWF 49K</div>
+              <div class="po-period">per month</div>
+            </div>
+            <div class="plan-opt recommended" onclick="selectPlan('business')">
+              <div class="po-name">Business</div>
+              <div class="po-price" style="font-size:1rem">RWF 120K</div>
+              <div class="po-period">per month</div>
+            </div>
+            <div class="plan-opt" onclick="selectPlan('enterprise')">
+              <div class="po-name">Enterprise</div>
+              <div class="po-price" style="font-size:1rem">RWF 290K</div>
+              <div class="po-period">per month</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAYMENT FOR PAID PLANS -->
+        <div id="payment-section" style="display:none;background:var(--bg-surface);border:1px solid var(--bd-em);border-radius:var(--r-xl);padding:1.5rem;margin-bottom:1rem">
+          <div style="font-size:.82rem;font-weight:700;color:var(--tx-100);margin-bottom:1rem">💳 Payment Method</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem">
+            <label style="background:var(--bg-raised);border:1.5px solid var(--bd-em);border-radius:var(--r-md);padding:.75rem;display:flex;align-items:center;gap:.6rem;cursor:pointer">
+              <input type="radio" name="pmeth" value="momo" checked style="accent-color:var(--em-400)">
+              <div><div style="font-size:.84rem;font-weight:600;color:var(--tx-100)">📱 MTN MoMo</div><div style="font-size:.7rem;color:var(--tx-600)">Mobile money</div></div>
+            </label>
+            <label style="background:var(--bg-raised);border:1.5px solid var(--bd-subtle);border-radius:var(--r-md);padding:.75rem;display:flex;align-items:center;gap:.6rem;cursor:pointer">
+              <input type="radio" name="pmeth" value="airtel" style="accent-color:var(--em-400)">
+              <div><div style="font-size:.84rem;font-weight:600;color:var(--tx-100)">📲 Airtel Money</div><div style="font-size:.7rem;color:var(--tx-600)">Mobile money</div></div>
+            </label>
+            <label style="background:var(--bg-raised);border:1.5px solid var(--bd-subtle);border-radius:var(--r-md);padding:.75rem;display:flex;align-items:center;gap:.6rem;cursor:pointer">
+              <input type="radio" name="pmeth" value="card" style="accent-color:var(--em-400)">
+              <div><div style="font-size:.84rem;font-weight:600;color:var(--tx-100)">💳 Card</div><div style="font-size:.7rem;color:var(--tx-600)">Visa / Mastercard</div></div>
+            </label>
+            <label style="background:var(--bg-raised);border:1.5px solid var(--bd-subtle);border-radius:var(--r-md);padding:.75rem;display:flex;align-items:center;gap:.6rem;cursor:pointer">
+              <input type="radio" name="pmeth" value="bank" style="accent-color:var(--em-400)">
+              <div><div style="font-size:.84rem;font-weight:600;color:var(--tx-100)">🏦 Bank Transfer</div><div style="font-size:.7rem;color:var(--tx-600)">Direct deposit</div></div>
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="form-label">MTN / Airtel Phone Number</label>
+            <input class="form-control" type="tel" placeholder="+250 78X XXX XXX">
+          </div>
+          <div style="background:rgba(0,229,153,.06);border:1px solid var(--bd-em);border-radius:var(--r-md);padding:.75rem;font-size:.78rem;color:var(--tx-400);line-height:1.6">
+            🔒 Payments are processed securely. You will receive a confirmation on your mobile device. Cancel anytime from your account settings.
+          </div>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn-back" onclick="prevStep(4)">← Back</button>
+          <button class="btn btn-primary" onclick="nextStep(4)" id="plan-next-btn">Next: Review →</button>
+        </div>
+      </div>
+
+      <!-- STEP 5: REVIEW -->
+      <div id="step-5" style="display:none">
+        <div class="step-hdr">
+          <div class="step-tag">Step 5 — Review & Launch</div>
+          <h2>You're Almost <span class="text-em">Live!</span></h2>
+          <p>Check your details before we launch your profile and connect you with opportunities.</p>
+        </div>
+        <div class="review-section">
+          <div class="rs-header"><span>Personal Details</span><button onclick="gotoStep(2)">Edit →</button></div>
+          <div class="rs-body">
+            <div class="rs-item"><div class="rs-label">Full Name</div><div class="rs-val" id="rv-name">Jean-Paul Habimana</div></div>
+            <div class="rs-item"><div class="rs-label">Email</div><div class="rs-val" id="rv-email">jp@email.com</div></div>
+            <div class="rs-item"><div class="rs-label">Location</div><div class="rs-val" id="rv-loc">Kigali, Rwanda</div></div>
+            <div class="rs-item"><div class="rs-label">Account Type</div><div class="rs-val" id="rv-role" style="color:var(--em-400)">Job Seeker</div></div>
+          </div>
+        </div>
+        <div class="review-section">
+          <div class="rs-header"><span>Selected Plan</span><button onclick="gotoStep(4)">Change →</button></div>
+          <div style="padding:1.2rem 1.4rem;display:flex;align-items:center;justify-content:space-between">
+            <div><div style="font-size:.95rem;font-weight:800;color:var(--tx-100)" id="rv-plan">Free Plan</div><div style="font-size:.78rem;color:var(--tx-600)" id="rv-plan-price">Free forever</div></div>
+            <span class="badge badge-em" id="rv-plan-badge">Active</span>
+          </div>
+        </div>
+        <div style="background:rgba(0,229,153,.05);border:1px solid var(--bd-em);border-radius:var(--r-md);padding:1rem 1.2rem;font-size:.82rem;color:var(--tx-400);line-height:1.65;margin-bottom:1.2rem">
+          By creating your account, you agree to Ineza's <a href="#" style="color:var(--em-400)">Terms of Service</a> and <a href="#" style="color:var(--em-400)">Privacy Policy</a>. Your profile will be visible to relevant employers once approved by our team.
+        </div>
+        <div class="step-nav">
+          <button class="btn-back" onclick="prevStep(5)">← Back</button>
+          <button class="btn btn-primary btn-lg" onclick="submitRegistration()" id="submit-btn">
+            <span class="btn-text">🚀 Launch My Profile</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="success-page" id="success-page">
+        <div class="sp-check">🎉</div>
+        <h2 style="font-family:var(--ff-body);font-size:1.8rem;font-weight:900;margin-bottom:.5rem">Welcome to Ineza, <span class="text-em" id="sp-name">there</span>!</h2>
+        <p style="font-size:.9rem;color:var(--tx-400);max-width:420px;margin:0 auto 1.8rem;line-height:1.75">Your profile is live! A specialist recruiter will contact you within 24 hours to discuss your goals and the best opportunities for you.</p>
+        <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">
+          <a href="../candidate/dashboard.html" id="dash-link" class="btn btn-primary btn-lg">Go to My Dashboard →</a>
+          <a href="../jobs/board.html" class="btn btn-secondary btn-lg">Browse Jobs</a>
+        </div>
+        <div class="next-steps-grid">
+          <div class="ns-card"><div class="ns-ico">📞</div><div class="ns-title">Recruiter Call</div><div class="ns-desc">Within 24hrs your dedicated recruiter will call to discuss your profile.</div></div>
+          <div class="ns-card"><div class="ns-ico">📋</div><div class="ns-title">CV Review</div><div class="ns-desc">We'll review your CV and send improvement tips within 24 hours.</div></div>
+          <div class="ns-card"><div class="ns-ico">💼</div><div class="ns-title">Job Matches</div><div class="ns-desc">Curated opportunities will be sent to your inbox within 48 hours.</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script>
+let currentStep = 1;
+let selectedRole = 'candidate';
+let selectedPlan = 'free';
+const STEPS = 5;
+const PCT = ['20%','40%','60%','80%','100%'];
+
+function gotoStep(n) {
+  for (let i = 1; i <= STEPS; i++) {
+    const el = document.getElementById('step-' + i);
+    if (el) el.style.display = i === n ? 'block' : 'none';
+  }
+  currentStep = n;
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextStep(from) {
+  if (from === currentStep) {
+    markDone(from);
+    gotoStep(from + 1);
+  }
+}
+function prevStep(from) {
+  if (from === currentStep && from > 1) gotoStep(from - 1);
+}
+
+function markDone(n) {
+  const item = document.getElementById('pi-' + n);
+  const num  = document.getElementById('pn-' + n);
+  if (item) item.classList.replace('active','done');
+  if (num)  num.textContent = '✓';
+  const next = document.getElementById('pi-' + (n + 1));
+  if (next) next.classList.add('active');
+  // Update review values
+  if (n === 2) {
+    const fn = document.getElementById('fn')?.value || '';
+    const ln = document.getElementById('ln')?.value || '';
+    const em = document.getElementById('em2')?.value || '';
+    const lc = document.getElementById('loc')?.value || '';
+    if (document.getElementById('rv-name')) document.getElementById('rv-name').textContent = (fn + ' ' + ln).trim() || '—';
+    if (document.getElementById('rv-email')) document.getElementById('rv-email').textContent = em || '—';
+    if (document.getElementById('rv-loc')) document.getElementById('rv-loc').textContent = lc || '—';
+    if (document.getElementById('sp-name')) document.getElementById('sp-name').textContent = fn || 'there';
+  }
+}
+
+function updateProgress() {
+  document.getElementById('su-fill').style.width = PCT[currentStep - 1];
+  document.getElementById('su-step-lbl').textContent = 'Step ' + currentStep + ' of ' + STEPS;
+  document.getElementById('su-pct-lbl').textContent = PCT[currentStep - 1];
+  // Update sidebar active
+  for (let i = 1; i <= STEPS; i++) {
+    const pi = document.getElementById('pi-' + i);
+    if (pi && !pi.classList.contains('done')) {
+      pi.classList.toggle('active', i === currentStep);
+    }
+  }
+}
+
+function selectRole(role) {
+  selectedRole = role;
+  document.getElementById('rc-candidate').classList.toggle('selected', role === 'candidate');
+  document.getElementById('rc-employer').classList.toggle('selected', role === 'employer');
+  // Show correct fields in step 3 and 4
+  document.getElementById('cand-fields').style.display = role === 'candidate' ? 'block' : 'none';
+  document.getElementById('emp-fields').style.display  = role === 'employer'  ? 'block' : 'none';
+  document.getElementById('cand-plans').style.display  = role === 'candidate' ? 'block' : 'none';
+  document.getElementById('emp-plans').style.display   = role === 'employer'  ? 'block' : 'none';
+  document.getElementById('rv-role').textContent = role === 'candidate' ? 'Job Seeker' : 'Employer';
+  document.getElementById('dash-link').href = role === 'employer' ? '../employer/dashboard.html' : '../candidate/dashboard.html';
+}
+
+function selectPlan(plan) {
+  selectedPlan = plan;
+  document.querySelectorAll('.plan-opt').forEach(p => p.classList.remove('selected'));
+  const isPaid = !['free','starter'].includes(plan);
+  document.getElementById('payment-section').style.display = isPaid ? 'block' : 'none';
+  // Update review
+  const planNames = { free:'Free Plan', pro:'Pro Seeker', premium:'Premium', starter:'Starter', business:'Business', enterprise:'Enterprise' };
+  const planPrices = { free:'Free forever', pro:'RWF 5,000/month', premium:'RWF 9,900/month', starter:'RWF 49,000/month', business:'RWF 120,000/month', enterprise:'RWF 290,000/month' };
+  if (document.getElementById('rv-plan')) document.getElementById('rv-plan').textContent = planNames[plan] || plan;
+  if (document.getElementById('rv-plan-price')) document.getElementById('rv-plan-price').textContent = planPrices[plan] || '';
+  // Update sidebar preview
+  const pp = document.getElementById('plan-preview');
+  if (pp && isPaid) {
+    pp.style.display = 'block';
+    document.getElementById('pp-name').textContent  = planNames[plan] || plan;
+    document.getElementById('pp-price').textContent = planPrices[plan] || '';
+  } else if (pp) { pp.style.display = 'none'; }
+}
+
+async function submitRegistration() {
+  const btn = document.getElementById('submit-btn');
+  btn.classList.add('loading');
+  const isPaid = !['free','starter'].includes(selectedPlan);
+  try {
+    if (isPaid) {
+      await Payment.processPayment('candidate_' + selectedPlan, {});
+    }
+    const fn = document.getElementById('fn')?.value.trim() || 'User';
+    const ln = document.getElementById('ln')?.value.trim() || '';
+    const em = document.getElementById('em2')?.value.trim() || 'user@ineza.rw';
+    Auth.setUser({ name: fn + ' ' + ln, email: em, role: selectedRole, plan: selectedPlan });
+    // Show success
+    for (let i = 1; i <= STEPS; i++) { const el = document.getElementById('step-' + i); if (el) el.style.display = 'none'; }
+    document.getElementById('success-page').classList.add('show');
+    document.getElementById('su-fill').style.width = '100%';
+    Toast.success('Account created successfully! 🎉');
+  } catch (err) {
+    Toast.error(err.error || 'Something went wrong. Please try again.');
+  } finally {
+    btn.classList.remove('loading');
+  }
+}
+
+// CV handling
+function handleCV(input) {
+  if (input.files?.[0]) {
+    const f = input.files[0];
+    document.getElementById('cv-name').textContent = f.name;
+    document.getElementById('cv-size').textContent = (f.size/1024/1024).toFixed(1) + ' MB · ' + f.name.split('.').pop().toUpperCase();
+    document.getElementById('cv-uploaded').classList.add('show');
+    document.getElementById('cv-zone').style.display = 'none';
+  }
+}
+function handleCVDrop(e) {
+  e.preventDefault();
+  document.getElementById('cv-zone').classList.remove('dragging');
+  const f = e.dataTransfer.files[0];
+  if (f) { document.getElementById('cv-inp').files = e.dataTransfer.files; handleCV(document.getElementById('cv-inp')); }
+}
+function removeCV() {
+  document.getElementById('cv-uploaded').classList.remove('show');
+  document.getElementById('cv-zone').style.display = 'block';
+}
+function previewPhoto(input) {
+  if (input.files?.[0]) {
+    const r = new FileReader();
+    r.onload = e => { document.getElementById('photo-circle').innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`; };
+    r.readAsDataURL(input.files[0]);
+  }
+}
+function togglePass2() {
+  const p = document.getElementById('pw');
+  p.type = p.type === 'password' ? 'text' : 'password';
+}
+function togglePass() {
+  const p = document.getElementById('password');
+  p.type = p.type === 'password' ? 'text' : 'password';
+}
+
+// TagInput override for this page
+TagInput.addSkill = function(e) {
+  if (['Enter',','].includes(e.key)) {
+    e.preventDefault();
+    const val = document.getElementById('skills-inp').value.trim().replace(/,$/,'');
+    if (val) TagInput.addTagByName('skills-wrap','skills-inp',val);
+    document.getElementById('skills-inp').value = '';
+  }
+};
+
+// Read URL params
+const urlP = new URLSearchParams(window.location.search);
+if (urlP.get('role')) selectRole(urlP.get('role'));
+if (urlP.get('plan')) { gotoStep(4); selectPlan(urlP.get('plan')); }
+</script>
+</body>
+</html>

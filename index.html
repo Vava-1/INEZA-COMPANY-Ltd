@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ineza Company Ltd Agencies | Rwanda's #1 Employment Platform</title>
+<meta name="description" content="Rwanda's most trusted employment platform. Connect with 2,400+ verified jobs, top employers, and specialist recruiters. Free to register. Global reach.">
+<meta name="theme-color" content="#03060D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+<style>
+/* ── PAGE SPECIFIC ─────────────────────────────────────────── */
+
+/* MOBILE MENU */
+.mobile-menu {
+  display:none; position:fixed; inset:0; background:rgba(3,6,13,.97);
+  backdrop-filter:blur(20px); z-index:450; flex-direction:column;
+  align-items:center; justify-content:center; gap:1.5rem;
+}
+.mobile-menu.open { display:flex; }
+.mobile-menu .nav-link { font-size:1.5rem; font-weight:700; color:var(--tx-200); }
+.mobile-menu .nav-link:hover { color:var(--em-400); background:none; }
+.mm-close { position:absolute; top:1.5rem; right:1.5rem; font-size:1.8rem; color:var(--tx-400); cursor:pointer; }
+
+/* ── HERO ──────────────────────────────────────────────────── */
+.hero {
+  min-height: 100vh; display:flex; align-items:center; padding-top:80px;
+  position:relative; overflow:hidden;
+}
+.hero-bg {
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 60% 50%, rgba(0,229,153,.08) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 50% at 20% 80%, rgba(59,130,246,.06) 0%, transparent 50%),
+    radial-gradient(ellipse 30% 30% at 85% 15%, rgba(147,51,234,.06) 0%, transparent 40%);
+}
+/* Animated mesh grid */
+.hero-grid {
+  position:absolute; inset:0; opacity:.35;
+  background-image:
+    linear-gradient(rgba(0,229,153,.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,153,.08) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+.hero-inner {
+  max-width:1280px; margin:0 auto; padding:3rem 1.5rem 5rem;
+  display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:center;
+  position:relative; z-index:1;
+}
+.hero-eyebrow {
+  display:inline-flex; align-items:center; gap:.55rem;
+  padding:.32rem 1rem; border-radius:var(--r-full);
+  background:rgba(0,229,153,.08); border:1px solid rgba(0,229,153,.2);
+  font-size:.75rem; font-weight:600; color:var(--em-400);
+  letter-spacing:.06em; margin-bottom:1.4rem; width:fit-content;
+}
+.hero-eyebrow .pulse {
+  width:6px; height:6px; border-radius:50%; background:var(--em-400);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.6)}}
+
+.hero-title { font-size:clamp(2.8rem,5.5vw,4.8rem); font-weight:900; line-height:1.04; letter-spacing:-.035em; margin-bottom:1.2rem; }
+.hero-title .line-accent { display:block; }
+.hero-desc { font-size:1.05rem; color:var(--tx-400); line-height:1.8; max-width:500px; margin-bottom:2rem; }
+
+/* SEARCH BAR */
+.hero-search {
+  background:var(--bg-surface); border:1.5px solid var(--bd-muted);
+  border-radius:var(--r-xl); padding:.45rem; display:flex; gap:.35rem;
+  max-width:540px; margin-bottom:1.2rem; box-shadow:0 8px 40px rgba(0,0,0,.4);
+}
+.hero-search input, .hero-search select {
+  background:none; border:none; outline:none; font-family:var(--ff-body);
+  font-size:.9rem; color:var(--tx-100); padding:.5rem .75rem; flex:1;
+}
+.hero-search input::placeholder { color:var(--tx-800); }
+.hero-search select { border-left:1px solid var(--bd-subtle); color:var(--tx-400); cursor:pointer; min-width:140px; }
+.hero-search select option { background:var(--bg-surface); }
+.hero-search .btn { flex-shrink:0; padding:.6rem 1.4rem; font-size:.88rem; }
+
+.hero-popular { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+.hero-popular .pop-label { font-size:.76rem; color:var(--tx-600); }
+.hero-popular a { font-size:.76rem; color:var(--tx-400); padding:.18rem .65rem; border:1px solid var(--bd-subtle); border-radius:var(--r-full); transition:all var(--ease); }
+.hero-popular a:hover { color:var(--em-400); border-color:var(--bd-em); }
+.hero-actions { display:flex; gap:.75rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+
+/* GLOBE SIDE */
+.hero-visual { position:relative; display:flex; align-items:center; justify-content:center; height:520px; }
+#globe-canvas { filter: drop-shadow(0 0 60px rgba(0,229,153,.2)); }
+.hero-float {
+  position:absolute; background:rgba(12,21,37,.85); backdrop-filter:blur(16px);
+  border:1px solid var(--bd-muted); border-radius:var(--r-lg);
+  padding:.7rem 1rem; display:flex; align-items:center; gap:.65rem;
+  font-size:.82rem; font-weight:600; animation:float 4s ease-in-out infinite;
+}
+.hero-float:nth-child(3) { animation-delay:-2.1s; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.hf-1 { bottom:80px; left:5px; }
+.hf-2 { top:90px; right:5px; }
+.hf-ico { width:34px; height:34px; background:rgba(0,229,153,.1); border:1px solid var(--bd-em); border-radius:var(--r-sm); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+.hf-val { color:var(--tx-100); display:block; }
+.hf-sub { font-size:.68rem; font-weight:400; color:var(--tx-600); display:block; }
+
+/* ── TICKER BAR ────────────────────────────────────────────── */
+.ticker { padding:.8rem 0; background:var(--bg-surface); border-top:1px solid var(--bd-subtle); border-bottom:1px solid var(--bd-subtle); overflow:hidden; }
+.ticker-lbl { text-align:center; font-size:.64rem; color:var(--tx-800); text-transform:uppercase; letter-spacing:.14em; margin-bottom:.55rem; }
+.ticker-wrap { overflow:hidden; position:relative; }
+.ticker-wrap::before,.ticker-wrap::after { content:''; position:absolute; top:0; bottom:0; width:100px; z-index:2; }
+.ticker-wrap::before { left:0; background:linear-gradient(to right,var(--bg-surface),transparent); }
+.ticker-wrap::after  { right:0; background:linear-gradient(to left,var(--bg-surface),transparent); }
+.ticker-track { display:flex; align-items:center; gap:2rem; width:max-content; animation:ticker 38s linear infinite; }
+@keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+.ticker-item { font-size:.9rem; font-weight:700; color:var(--tx-800); letter-spacing:.05em; white-space:nowrap; display:flex; align-items:center; gap:.45rem; transition:color var(--ease); }
+.ticker-item:hover { color:var(--em-400); }
+.ticker-dot { width:4px; height:4px; background:var(--bd-default); border-radius:50%; }
+
+/* ── STATS BAR ─────────────────────────────────────────────── */
+.stats-bar { background:var(--bg-base); padding:2.5rem 0; border-bottom:1px solid var(--bd-subtle); }
+.stats-inner { display:flex; align-items:center; justify-content:space-around; gap:2rem; flex-wrap:wrap; }
+.stat-item { text-align:center; }
+.stat-num { font-size:clamp(1.8rem,3.5vw,2.8rem); font-weight:900; line-height:1; display:block; margin-bottom:.3rem; }
+.stat-desc { font-size:.78rem; color:var(--tx-600); font-weight:500; }
+.stat-divider { width:1px; height:50px; background:var(--bd-subtle); }
+
+/* ── HOW IT WORKS ──────────────────────────────────────────── */
+.hiw { background:var(--bg-base); }
+.hiw-tabs-wrap { display:flex; justify-content:center; margin-bottom:3rem; }
+.hiw-panels {}
+.hiw-steps { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+.step-card {
+  background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-xl);
+  padding:2rem; position:relative; transition:all var(--ease); text-align:center;
+}
+.step-card:hover { border-color:var(--bd-em); transform:translateY(-4px); box-shadow:var(--shadow-em); }
+.step-num {
+  width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:1.3rem; font-weight:900; margin:0 auto 1.2rem;
+  background:linear-gradient(135deg,rgba(0,229,153,.15),rgba(0,229,153,.05));
+  border:1.5px solid var(--bd-em); color:var(--em-400);
+}
+.step-arrow {
+  position:absolute; right:-1.1rem; top:50%; transform:translateY(-50%);
+  width:2.2rem; height:2.2rem; background:var(--bg-raised); border:1px solid var(--bd-em);
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  color:var(--em-400); font-size:.85rem; z-index:1;
+}
+.step-card:last-child .step-arrow { display:none; }
+.step-icon { font-size:2.5rem; margin-bottom:.8rem; display:block; }
+.step-card h4 { font-size:1rem; font-weight:700; color:var(--tx-100); margin-bottom:.4rem; }
+.step-card p  { font-size:.83rem; color:var(--tx-400); line-height:1.7; }
+
+/* ── JOBS SECTION ──────────────────────────────────────────── */
+.jobs-sec { background:var(--bg-deep); }
+.job-filter-bar { display:flex; align-items:center; gap:.4rem; flex-wrap:wrap; margin-bottom:2rem; }
+.jobs-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; margin-bottom:2rem; }
+.job-card {
+  background:var(--bg-surface); border:1px solid var(--bd-subtle);
+  border-radius:var(--r-xl); padding:1.5rem; cursor:pointer;
+  transition:all var(--ease); position:relative; overflow:hidden;
+}
+.job-card::before {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+  background:var(--grad-em); transform:scaleY(0); transition:transform var(--ease);
+  transform-origin:bottom;
+}
+.job-card:hover::before { transform:scaleY(1); }
+.job-card:hover { border-color:var(--bd-em); transform:translateY(-2px); box-shadow:var(--shadow-em); }
+.job-card.featured { border-color:rgba(251,191,36,.25); }
+.job-card.featured::before { background:var(--grad-gd); }
+.featured-badge { position:absolute; top:.85rem; right:.9rem; }
+.jc-header { display:flex; gap:.9rem; align-items:flex-start; margin-bottom:.85rem; }
+.jc-logo {
+  width:50px; height:50px; border-radius:var(--r-md); flex-shrink:0;
+  background:var(--bg-raised); border:1px solid var(--bd-subtle);
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:.95rem; color:var(--em-400);
+}
+.jc-title { font-size:.98rem; font-weight:700; color:var(--tx-100); margin-bottom:.15rem; }
+.jc-company { font-size:.83rem; color:var(--tx-400); }
+.jc-tags { display:flex; gap:.35rem; flex-wrap:wrap; margin-bottom:.85rem; }
+.jc-desc { font-size:.82rem; color:var(--tx-400); line-height:1.65; margin-bottom:.85rem; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.jc-footer { display:flex; align-items:center; justify-content:space-between; padding-top:.75rem; border-top:1px solid var(--bd-subtle); }
+.jc-salary { font-size:.92rem; font-weight:700; color:var(--em-400); }
+.jc-meta { font-size:.72rem; color:var(--tx-600); }
+.jobs-cta { display:flex; align-items:center; justify-content:center; gap:1rem; flex-wrap:wrap; }
+
+/* ── SECTORS ───────────────────────────────────────────────── */
+.sectors { background:var(--bg-base); }
+.sectors-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; }
+.sector-card {
+  background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-xl);
+  padding:1.5rem 1.25rem; text-align:center; cursor:pointer; transition:all var(--ease);
+  position:relative; overflow:hidden;
+}
+.sector-card::before { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:var(--grad-em); transform:scaleX(0); transition:transform var(--ease); }
+.sector-card:hover { border-color:var(--bd-em); transform:translateY(-4px); }
+.sector-card:hover::before { transform:scaleX(1); }
+.sector-icon { font-size:2.2rem; display:block; margin-bottom:.7rem; }
+.sector-name { font-weight:700; font-size:.9rem; color:var(--tx-100); margin-bottom:.2rem; }
+.sector-count { font-size:.72rem; color:var(--em-400); font-weight:600; }
+
+/* ── WHY INEZA ─────────────────────────────────────────────── */
+.why { background:var(--bg-deep); }
+.why-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.3rem; }
+.why-card {
+  background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-xl);
+  padding:2rem; position:relative; overflow:hidden; transition:all var(--ease);
+}
+.why-card:hover { border-color:var(--bd-em); box-shadow:var(--shadow-em); }
+.why-card::after { content:attr(data-number); position:absolute; top:-.5rem; right:1rem; font-size:6rem; font-weight:900; color:rgba(0,229,153,.04); font-family:var(--ff-body); line-height:1; }
+.why-icon { width:52px; height:52px; border-radius:var(--r-md); background:rgba(0,229,153,.08); border:1px solid var(--bd-em); display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin-bottom:1.2rem; }
+.why-card h4 { font-size:1rem; font-weight:700; color:var(--tx-100); margin-bottom:.5rem; }
+.why-card p { font-size:.84rem; color:var(--tx-400); line-height:1.78; }
+
+/* ── FOR EMPLOYERS ─────────────────────────────────────────── */
+.for-employers { background:var(--bg-base); }
+.emp-split { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; }
+.emp-l .overline { display:inline-flex; align-items:center; gap:.5rem; color:var(--gd-400); margin-bottom:.8rem; font-size:.78rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; }
+.emp-l h2 { margin-bottom:.9rem; }
+.emp-l p { color:var(--tx-400); margin-bottom:1.5rem; line-height:1.78; }
+.emp-points { display:flex; flex-direction:column; gap:.75rem; margin-bottom:2rem; }
+.emp-point { display:flex; align-items:flex-start; gap:.75rem; font-size:.88rem; color:var(--tx-200); }
+.ep-ico { width:24px; height:24px; background:rgba(0,229,153,.1); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.7rem; color:var(--em-400); flex-shrink:0; margin-top:.05rem; }
+.emp-r { display:flex; flex-direction:column; gap:.9rem; }
+.emp-metric {
+  background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-xl);
+  padding:1.4rem 1.6rem; display:flex; align-items:center; gap:1.1rem; transition:all var(--ease);
+}
+.emp-metric:hover { border-color:var(--bd-em); transform:translateX(5px); }
+.em-icon { width:50px; height:50px; border-radius:var(--r-md); background:rgba(0,229,153,.08); border:1px solid var(--bd-em); display:flex; align-items:center; justify-content:center; font-size:1.5rem; flex-shrink:0; }
+.em-val { font-size:1.5rem; font-weight:900; color:var(--em-400); font-family:var(--ff-body); line-height:1; display:block; }
+.em-lbl { font-size:.82rem; color:var(--tx-400); display:block; }
+.em-sub  { font-size:.72rem; color:var(--tx-600); display:block; margin-top:.1rem; }
+
+/* ── PRICING ───────────────────────────────────────────────── */
+.pricing { background:var(--bg-deep); }
+.pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; align-items:start; }
+.price-card {
+  background:var(--bg-surface); border:1px solid var(--bd-subtle);
+  border-radius:var(--r-2xl); padding:2.2rem; position:relative; transition:all var(--ease);
+}
+.price-card:hover { border-color:var(--bd-em); }
+.price-card.popular {
+  border-color:var(--bd-em);
+  background:linear-gradient(145deg,rgba(0,229,153,.05) 0%,var(--bg-surface) 40%);
+}
+.popular-badge {
+  position:absolute; top:-13px; left:50%; transform:translateX(-50%);
+  background:var(--grad-em); color:#020f08; font-size:.68rem; font-weight:800;
+  padding:.28rem 1rem; border-radius:var(--r-full); white-space:nowrap; letter-spacing:.06em;
+}
+.pc-icon { font-size:2rem; margin-bottom:.75rem; display:block; }
+.pc-name { font-size:1.1rem; font-weight:800; color:var(--tx-100); margin-bottom:.25rem; }
+.pc-desc { font-size:.8rem; color:var(--tx-600); margin-bottom:1.4rem; line-height:1.55; }
+.pc-price { margin-bottom:.2rem; }
+.pc-price .amount { font-size:2.4rem; font-weight:900; line-height:1; }
+.pc-price .currency { font-size:1rem; font-weight:500; vertical-align:top; color:var(--tx-400); }
+.pc-price .period { font-size:.8rem; color:var(--tx-600); }
+.pc-note { font-size:.74rem; color:var(--tx-800); margin-bottom:1.5rem; }
+.pc-features { display:flex; flex-direction:column; gap:.5rem; margin-bottom:1.8rem; }
+.pc-feat { display:flex; align-items:flex-start; gap:.55rem; font-size:.83rem; color:var(--tx-200); line-height:1.5; }
+.pc-feat .check { color:var(--em-400); flex-shrink:0; font-size:.8rem; }
+.pc-feat .cross { color:var(--tx-800); flex-shrink:0; }
+
+/* ── TESTIMONIALS ──────────────────────────────────────────── */
+.testi { background:var(--bg-base); overflow:hidden; }
+.testi-track-wrap { overflow:hidden; }
+.testi-track { display:flex; gap:1.2rem; transition:transform .55s cubic-bezier(.4,0,.2,1); padding:0 .5rem 1rem; }
+.testi-card {
+  background:var(--bg-surface); border:1px solid var(--bd-subtle);
+  border-radius:var(--r-2xl); padding:2rem; min-width:380px; max-width:380px; flex-shrink:0;
+}
+.tc-stars { color:var(--gd-400); font-size:.85rem; letter-spacing:.15rem; margin-bottom:.85rem; }
+.tc-quote { font-size:1rem; color:var(--tx-200); line-height:1.78; margin-bottom:1.4rem; font-style:italic; }
+.tc-author { display:flex; align-items:center; gap:.75rem; }
+.tc-role { font-size:.76rem; color:var(--tx-600); }
+.testi-nav { display:flex; justify-content:center; align-items:center; gap:.75rem; margin-top:2rem; }
+.testi-btn { width:36px; height:36px; border-radius:50%; background:var(--bg-raised); border:1px solid var(--bd-em); color:var(--em-400); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:.9rem; transition:all var(--ease); }
+.testi-btn:hover { background:rgba(0,229,153,.1); }
+.testi-dots { display:flex; gap:.4rem; }
+.tdot { width:6px; height:6px; border-radius:50%; background:var(--bd-default); cursor:pointer; transition:all var(--ease); }
+.tdot.active { background:var(--em-400); width:22px; border-radius:var(--r-full); }
+
+/* ── GLOBAL MAP SECTION ────────────────────────────────────── */
+.global { background:var(--bg-deep); }
+.global-inner { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start; }
+.countries-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:.6rem; }
+.country-chip {
+  background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-md);
+  padding:.55rem .7rem; display:flex; align-items:center; gap:.45rem; transition:all var(--ease);
+}
+.country-chip:hover { border-color:var(--bd-em); }
+.country-chip.hq { border-color:var(--bd-em); background:rgba(0,229,153,.05); }
+.cc-flag { font-size:1.1rem; }
+.cc-name { font-size:.78rem; font-weight:600; color:var(--tx-200); display:block; }
+.cc-status { font-size:.64rem; color:var(--tx-600); display:block; }
+.country-chip.hq .cc-name { color:var(--em-400); }
+
+/* ── CTA SECTION ───────────────────────────────────────────── */
+.cta-section { background:var(--bg-base); padding:var(--sp-24) 0; }
+.cta-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; }
+.cta-card {
+  background:var(--bg-surface); border:1px solid var(--bd-subtle);
+  border-radius:var(--r-2xl); padding:2.8rem; text-align:center; transition:all var(--ease);
+  position:relative; overflow:hidden;
+}
+.cta-card::before { content:''; position:absolute; inset:0; opacity:0; transition:opacity var(--ease); }
+.cta-card.em::before { background:radial-gradient(ellipse at 50% 0%,rgba(0,229,153,.08),transparent 60%); }
+.cta-card.gd::before { background:radial-gradient(ellipse at 50% 0%,rgba(251,191,36,.08),transparent 60%); }
+.cta-card:hover::before { opacity:1; }
+.cta-card:hover { border-color:var(--bd-em); transform:translateY(-3px); }
+.cta-card.gd:hover { border-color:var(--bd-gd); }
+.cta-icon { font-size:3rem; display:block; margin-bottom:1rem; }
+.cta-card h3 { font-size:1.5rem; font-weight:800; margin-bottom:.5rem; }
+.cta-card p { font-size:.88rem; color:var(--tx-400); margin-bottom:1.5rem; line-height:1.75; }
+.cta-badges { display:flex; justify-content:center; gap:.45rem; flex-wrap:wrap; margin-bottom:1.6rem; }
+.cb { font-size:.71rem; font-weight:600; padding:.2rem .7rem; border:1px solid var(--bd-subtle); border-radius:var(--r-full); color:var(--tx-600); }
+
+/* ── FOOTER ────────────────────────────────────────────────── */
+footer {
+  background:var(--bg-base); border-top:1px solid var(--bd-subtle);
+  padding:4.5rem 0 2rem;
+}
+.footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1.5fr; gap:3rem; margin-bottom:3rem; padding-bottom:3rem; border-bottom:1px solid var(--bd-subtle); }
+.footer-brand p { font-size:.83rem; color:var(--tx-600); line-height:1.75; margin:.75rem 0 1.2rem; max-width:260px; }
+.footer-socials { display:flex; gap:.5rem; }
+.fs-btn { width:34px; height:34px; background:var(--bg-raised); border:1px solid var(--bd-subtle); border-radius:var(--r-sm); display:flex; align-items:center; justify-content:center; font-size:.82rem; color:var(--tx-400); cursor:pointer; transition:all var(--ease); }
+.fs-btn:hover { border-color:var(--bd-em); color:var(--em-400); }
+.footer-col h5 { font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--tx-200); margin-bottom:1rem; }
+.footer-links { display:flex; flex-direction:column; gap:.55rem; }
+.footer-links a { font-size:.83rem; color:var(--tx-600); transition:color var(--ease); }
+.footer-links a:hover { color:var(--em-400); }
+.footer-contact .fc-item { display:flex; gap:.55rem; margin-bottom:.65rem; align-items:flex-start; }
+.fc-icon { color:var(--em-400); font-size:.82rem; margin-top:2px; flex-shrink:0; }
+.fc-text { font-size:.8rem; color:var(--tx-600); line-height:1.5; }
+.footer-bottom { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.75rem; }
+.footer-bottom p { font-size:.76rem; color:var(--tx-800); }
+.footer-legal { display:flex; gap:1.5rem; }
+.footer-legal a { font-size:.76rem; color:var(--tx-800); transition:color var(--ease); }
+.footer-legal a:hover { color:var(--em-400); }
+
+/* ── PAYMENT MODAL ─────────────────────────────────────────── */
+.pm-grid { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; margin-bottom:1.2rem; }
+.pm-method { background:var(--bg-raised); border:1.5px solid var(--bd-subtle); border-radius:var(--r-md); padding:.9rem; display:flex; align-items:center; gap:.6rem; cursor:pointer; transition:all var(--ease); }
+.pm-method:hover { border-color:var(--bd-em); }
+.pm-method.selected { border-color:var(--bd-em); background:rgba(0,229,153,.06); }
+.pm-method input { accent-color:var(--em-400); }
+.pm-method-name { font-size:.86rem; font-weight:600; color:var(--tx-100); }
+.pm-summary { background:var(--bg-raised); border:1px solid var(--bd-subtle); border-radius:var(--r-md); padding:1rem; margin-bottom:1.2rem; }
+.pm-summary-row { display:flex; justify-content:space-between; align-items:center; font-size:.84rem; margin-bottom:.4rem; }
+.pm-summary-row:last-child { margin-bottom:0; padding-top:.5rem; border-top:1px solid var(--bd-subtle); font-weight:700; font-size:.95rem; }
+.pm-summary-row .pm-label { color:var(--tx-400); }
+.pm-summary-row .pm-val { color:var(--tx-100); }
+.pm-summary-row:last-child .pm-val { color:var(--em-400); }
+
+/* RESPONSIVE */
+@media(max-width:1024px) { .hero-inner{grid-template-columns:1fr}.hero-visual{height:340px;order:-1}.sectors-grid{grid-template-columns:repeat(3,1fr)}.footer-grid{grid-template-columns:1fr 1fr} }
+@media(max-width:768px) { .hero-inner{padding-top:1.5rem}.hiw-steps{grid-template-columns:1fr}.jobs-grid{grid-template-columns:1fr}.why-grid{grid-template-columns:1fr}.emp-split{grid-template-columns:1fr}.pricing-grid{grid-template-columns:1fr}.cta-grid{grid-template-columns:1fr}.global-inner{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}.sectors-grid{grid-template-columns:repeat(2,1fr)}.testi-card{min-width:290px;max-width:290px} }
+@media(max-width:480px) { .sectors-grid{grid-template-columns:repeat(2,1fr)}.stats-inner{gap:1.5rem}.footer-grid{grid-template-columns:1fr}.countries-grid{grid-template-columns:1fr 1fr} }
+</style>
+</head>
+<body>
+
+<!-- ── NAVBAR ─────────────────────────────────────────────── -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <svg class="nav-logo-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="14.5" stroke="url(#lg1)" stroke-width="1.4"/>
+        <ellipse cx="20" cy="20" rx="7" ry="14.5" stroke="url(#lg1)" stroke-width="1.4"/>
+        <ellipse cx="20" cy="20" rx="14.5" ry="4.5" stroke="url(#lg1)" stroke-width="1.4"/>
+        <ellipse cx="20" cy="20" rx="20" ry="6.5" stroke="url(#lg1)" stroke-width="1.8" stroke-opacity=".7" transform="rotate(-25 20 20)"/>
+        <circle cx="28" cy="8" r="2" fill="url(#lg1)"/>
+        <circle cx="32" cy="12" r="1.1" fill="url(#lg1)" opacity=".6"/>
+        <defs>
+          <linearGradient id="lg1" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#00E599"/><stop offset="1" stop-color="#3B82F6"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="nav-logo-text">
+        <span class="brand text-em">INEZA</span>
+        <span class="tagline">Company Ltd Agencies</span>
+      </div>
+    </a>
+
+    <div class="nav-links">
+      <a href="jobs/board.html" class="nav-link">Find Jobs</a>
+      <a href="employer/dashboard.html" class="nav-link">For Employers</a>
+      <a href="index.html#sectors" class="nav-link">Industries</a>
+      <a href="index.html#pricing" class="nav-link">Pricing</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+
+    <div class="nav-actions" id="nav-auth">
+      <a href="auth/signin.html" class="btn btn-secondary btn-sm">Sign In</a>
+      <a href="auth/signup.html" class="btn btn-primary btn-sm">Get Started Free</a>
+    </div>
+
+    <button class="nav-toggle" id="nav-toggle" onclick="document.getElementById('mobile-menu').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <button class="mm-close" onclick="document.getElementById('mobile-menu').classList.remove('open')">✕</button>
+  <a href="jobs/board.html" class="nav-link" onclick="document.getElementById('mobile-menu').classList.remove('open')">Find Jobs</a>
+  <a href="employer/dashboard.html" class="nav-link" onclick="document.getElementById('mobile-menu').classList.remove('open')">For Employers</a>
+  <a href="index.html#pricing" class="nav-link" onclick="document.getElementById('mobile-menu').classList.remove('open')">Pricing</a>
+  <a href="contact.html" class="nav-link" onclick="document.getElementById('mobile-menu').classList.remove('open')">Contact</a>
+  <div style="display:flex;gap:.75rem;margin-top:1rem">
+    <a href="auth/signin.html" class="btn btn-secondary btn-lg">Sign In</a>
+    <a href="auth/signup.html" class="btn btn-primary btn-lg">Register Free</a>
+  </div>
+</div>
+
+<!-- ── HERO ───────────────────────────────────────────────── -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-eyebrow reveal">
+        <span class="pulse"></span>
+        Rwanda's #1 Employment Platform · Est. Kigali
+      </div>
+      <h1 class="hero-title reveal d1">
+        Where Rwanda's<br>
+        <span class="line-accent text-em">Best Talent</span><br>
+        Meets Opportunity
+      </h1>
+      <p class="hero-desc reveal d2">
+        From Kigali to the world — Ineza connects exceptional professionals with employers who need them most. Fast, verified, built for Africa.
+      </p>
+
+      <!-- SEARCH -->
+      <div class="hero-search reveal d3">
+        <input type="text" id="hero-search" placeholder="Job title, skill, or keyword…">
+        <select id="hero-location">
+          <option value="">All Locations</option>
+          <option>Kigali, Rwanda</option>
+          <option>Northern Province</option>
+          <option>Southern Province</option>
+          <option>Eastern Province</option>
+          <option>Western Province</option>
+          <option>Remote</option>
+          <option>International</option>
+        </select>
+        <button class="btn btn-primary" onclick="Search.init()">Search Jobs</button>
+      </div>
+
+      <div class="hero-popular reveal d4">
+        <span class="pop-label">Trending:</span>
+        <a href="jobs/board.html?q=engineer">Engineer</a>
+        <a href="jobs/board.html?q=finance">Finance</a>
+        <a href="jobs/board.html?q=developer">Developer</a>
+        <a href="jobs/board.html?q=marketing">Marketing</a>
+        <a href="jobs/board.html?q=healthcare">Healthcare</a>
+      </div>
+
+      <div style="height:1.5rem"></div>
+      <div class="hero-actions reveal d5">
+        <a href="auth/signup.html?role=candidate" class="btn btn-primary btn-lg">Find My Next Role 🚀</a>
+        <a href="auth/signup.html?role=employer" class="btn btn-secondary btn-lg">I'm Hiring →</a>
+      </div>
+    </div>
+
+    <!-- GLOBE -->
+    <div class="hero-visual reveal d2">
+      <canvas id="globe-canvas" width="480" height="480"></canvas>
+      <div class="hero-float hf-1">
+        <div class="hf-ico">🌍</div>
+        <div>
+          <span class="hf-val">12 Countries</span>
+          <span class="hf-sub">Global placement network</span>
+        </div>
+      </div>
+      <div class="hero-float hf-2">
+        <div class="hf-ico">✓</div>
+        <div>
+          <span class="hf-val">2,400+ Live Jobs</span>
+          <span class="hf-sub">Updated every day</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TICKER ─────────────────────────────────────────────── -->
+<div class="ticker">
+  <p class="ticker-lbl">Trusted by Rwanda's leading organisations</p>
+  <div class="ticker-wrap">
+    <div class="ticker-track" id="ticker-track">
+      <span class="ticker-item">Bank of Kigali</span><span class="ticker-dot"></span>
+      <span class="ticker-item">MTN Rwanda</span><span class="ticker-dot"></span>
+      <span class="ticker-item">Rwanda Development Board</span><span class="ticker-dot"></span>
+      <span class="ticker-item">Andela</span><span class="ticker-dot"></span>
+      <span class="ticker-item">RwandAir</span><span class="ticker-dot"></span>
+      <span class="ticker-item">Kigali Innovation City</span><span class="ticker-dot"></span>
+      <span class="ticker-item">Equity Bank Rwanda</span><span class="ticker-dot"></span>
+      <span class="ticker-item">Radisson Blu</span><span class="ticker-dot"></span>
+      <span class="ticker-item">MINICT</span><span class="ticker-dot"></span>
+      <span class="ticker-item">Airtel Rwanda</span><span class="ticker-dot"></span>
+      <span class="ticker-item">King Faisal Hospital</span><span class="ticker-dot"></span>
+      <span class="ticker-item">Inyarwanda Capital</span><span class="ticker-dot"></span>
+      <!-- duplicate for seamless loop -->
+      <span class="ticker-item">Bank of Kigali</span><span class="ticker-dot"></span>
+      <span class="ticker-item">MTN Rwanda</span><span class="ticker-dot"></span>
+      <span class="ticker-item">Rwanda Development Board</span><span class="ticker-dot"></span>
+      <span class="ticker-item">Andela</span><span class="ticker-dot"></span>
+      <span class="ticker-item">RwandAir</span><span class="ticker-dot"></span>
+      <span class="ticker-item">Kigali Innovation City</span><span class="ticker-dot"></span>
+      <span class="ticker-item">Equity Bank Rwanda</span><span class="ticker-dot"></span>
+      <span class="ticker-item">Radisson Blu</span><span class="ticker-dot"></span>
+      <span class="ticker-item">MINICT</span><span class="ticker-dot"></span>
+      <span class="ticker-item">Airtel Rwanda</span><span class="ticker-dot"></span>
+      <span class="ticker-item">King Faisal Hospital</span><span class="ticker-dot"></span>
+      <span class="ticker-item">Inyarwanda Capital</span><span class="ticker-dot"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ── STATS BAR ──────────────────────────────────────────── -->
+<div class="stats-bar">
+  <div class="container">
+    <div class="stats-inner">
+      <div class="stat-item">
+        <span class="stat-num text-em" data-counter data-target="4200" data-suffix="+">4,200+</span>
+        <span class="stat-desc">Successful Placements</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num text-em" data-counter data-target="850" data-suffix="+">850+</span>
+        <span class="stat-desc">Partner Employers</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num text-em" data-counter data-target="48" data-suffix="hrs">48hrs</span>
+        <span class="stat-desc">Average Match Time</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num text-em" data-counter data-target="12" data-suffix="">12</span>
+        <span class="stat-desc">Countries Served</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num text-em" data-counter data-target="97" data-suffix="%">97%</span>
+        <span class="stat-desc">Satisfaction Rate</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── HOW IT WORKS ───────────────────────────────────────── -->
+<section class="section hiw" id="how-it-works">
+  <div class="container">
+    <div class="sh reveal">
+      <span class="overline label">Simple Process</span>
+      <h2 class="h1">How <span class="text-em">Ineza</span> Works</h2>
+      <p>Whether you're searching for your dream role or building a world-class team, we make it seamless.</p>
+    </div>
+    <div class="hiw-tabs-wrap reveal d1">
+      <div class="tabs">
+        <button class="tab active" data-tab="seekers" data-group="hiw" onclick="">👤 For Job Seekers</button>
+        <button class="tab" data-tab="employers" data-group="hiw" onclick="">🏢 For Employers</button>
+      </div>
+    </div>
+    <div data-panel="seekers" data-group="hiw">
+      <div class="hiw-steps">
+        <div class="step-card reveal d1">
+          <div class="step-num">01</div>
+          <span class="step-icon">📋</span>
+          <h4>Create Your Profile</h4>
+          <p>Sign up in minutes. Upload your CV, list your skills. Our system builds your professional profile instantly and shows it to relevant employers.</p>
+          <div class="step-arrow">›</div>
+        </div>
+        <div class="step-card reveal d2">
+          <div class="step-num">02</div>
+          <span class="step-icon">🎯</span>
+          <h4>Get Smart Matches</h4>
+          <p>Our expert recruiters and AI-assisted matching connects you with roles that fit your skills, salary expectations, and career trajectory.</p>
+          <div class="step-arrow">›</div>
+        </div>
+        <div class="step-card reveal d3">
+          <div class="step-num">03</div>
+          <span class="step-icon">🚀</span>
+          <h4>Land Your Dream Role</h4>
+          <p>Receive interview coaching, salary negotiation support, and onboarding guidance. We stay with you until day one and beyond.</p>
+        </div>
+      </div>
+    </div>
+    <div data-panel="employers" data-group="hiw" style="display:none">
+      <div class="hiw-steps">
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <span class="step-icon">📝</span>
+          <h4>Post Your Vacancy</h4>
+          <p>Describe your role and requirements. Our team crafts compelling job listings that attract the right calibre of professionals.</p>
+          <div class="step-arrow">›</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <span class="step-icon">🔍</span>
+          <h4>Review Top Talent</h4>
+          <p>We screen, verify, and shortlist the best-fit professionals from our 15,000+ active candidate database. You review only the best.</p>
+          <div class="step-arrow">›</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <span class="step-icon">🤝</span>
+          <h4>Hire With Confidence</h4>
+          <p>Background checks, reference verification, offer negotiation — we handle it all. Backed by our industry-leading replacement guarantee.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURED JOBS ───────────────────────────────────────── -->
+<section class="section jobs-sec" id="jobs">
+  <div class="container">
+    <div class="sh reveal">
+      <span class="overline label">Latest Opportunities</span>
+      <h2 class="h1">Open <span class="text-em">Positions</span></h2>
+      <p>Hundreds of verified roles across Rwanda's fastest-growing sectors and the global market beyond.</p>
+    </div>
+    <div class="job-filter-bar reveal d1">
+      <button class="tag tag-active" onclick="filterJobs('all',this)">All Jobs</button>
+      <button class="tag tag-default" onclick="filterJobs('tech',this)">Technology</button>
+      <button class="tag tag-default" onclick="filterJobs('finance',this)">Finance</button>
+      <button class="tag tag-default" onclick="filterJobs('health',this)">Healthcare</button>
+      <button class="tag tag-default" onclick="filterJobs('engineering',this)">Engineering</button>
+      <button class="tag tag-default" onclick="filterJobs('hospitality',this)">Hospitality</button>
+    </div>
+    <div class="jobs-grid" id="jobs-grid">
+      <!-- CARD 1 -->
+      <div class="job-card featured reveal d1" data-sector="tech">
+        <div class="featured-badge"><span class="badge badge-gd">⭐ Featured</span></div>
+        <div class="jc-header">
+          <div class="jc-logo">AN</div>
+          <div><div class="jc-title">Senior Software Engineer</div><div class="jc-company">Andela Rwanda</div></div>
+        </div>
+        <div class="jc-tags">
+          <span class="badge badge-em">Full-time</span>
+          <span class="badge badge-bl">Remote Eligible</span>
+          <span class="badge badge-gray">Senior Level</span>
+        </div>
+        <p class="jc-desc">Build scalable backend systems for pan-African fintech clients using React, Node.js, PostgreSQL and AWS. Own features from architecture to production.</p>
+        <div class="jc-footer">
+          <span class="jc-salary">$2,000 – $3,200/mo</span>
+          <span class="jc-meta">📍 Kigali · 2 days ago</span>
+        </div>
+      </div>
+      <!-- CARD 2 -->
+      <div class="job-card featured reveal d2" data-sector="finance">
+        <div class="featured-badge"><span class="badge badge-gd">⭐ Featured</span></div>
+        <div class="jc-header">
+          <div class="jc-logo">BK</div>
+          <div><div class="jc-title">Head of Risk & Compliance</div><div class="jc-company">Bank of Kigali</div></div>
+        </div>
+        <div class="jc-tags">
+          <span class="badge badge-em">Full-time</span>
+          <span class="badge badge-gray">Executive</span>
+          <span class="badge badge-gray">Finance</span>
+        </div>
+        <p class="jc-desc">Lead enterprise risk management strategy across BK's retail, corporate, and SME portfolios. CPA or ACCA qualification required.</p>
+        <div class="jc-footer">
+          <span class="jc-salary">RWF 1.8M – 2.5M/mo</span>
+          <span class="jc-meta">📍 Kigali · 3 days ago</span>
+        </div>
+      </div>
+      <!-- CARD 3 -->
+      <div class="job-card reveal d3" data-sector="tech">
+        <div class="jc-header">
+          <div class="jc-logo">MT</div>
+          <div><div class="jc-title">Digital Marketing Lead</div><div class="jc-company">MTN Rwanda</div></div>
+        </div>
+        <div class="jc-tags">
+          <span class="badge badge-em">Full-time</span>
+          <span class="badge badge-gray">Senior</span>
+          <span class="badge badge-gray">Marketing</span>
+        </div>
+        <p class="jc-desc">Own MTN Rwanda's digital channel strategy. Drive mobile money adoption through data-led campaigns across social, search, and programmatic.</p>
+        <div class="jc-footer">
+          <span class="jc-salary">RWF 900K – 1.4M/mo</span>
+          <span class="jc-meta">📍 Kigali · 5 days ago</span>
+        </div>
+      </div>
+      <!-- CARD 4 -->
+      <div class="job-card reveal d4" data-sector="engineering">
+        <div class="jc-header">
+          <div class="jc-logo">RB</div>
+          <div><div class="jc-title">Project Civil Engineer</div><div class="jc-company">Rwanda Building Authority</div></div>
+        </div>
+        <div class="jc-tags">
+          <span class="badge badge-bl">Contract</span>
+          <span class="badge badge-gray">Mid Level</span>
+          <span class="badge badge-gray">Engineering</span>
+        </div>
+        <p class="jc-desc">Oversee structural design and delivery of major mixed-use developments in Greater Kigali. Manage site teams of up to 20 engineers.</p>
+        <div class="jc-footer">
+          <span class="jc-salary">RWF 1.2M – 1.8M/mo</span>
+          <span class="jc-meta">📍 Kigali / Field · 1 week ago</span>
+        </div>
+      </div>
+      <!-- CARD 5 -->
+      <div class="job-card reveal d1" data-sector="health">
+        <div class="jc-header">
+          <div class="jc-logo">KF</div>
+          <div><div class="jc-title">Medical Director</div><div class="jc-company">King Faisal Hospital</div></div>
+        </div>
+        <div class="jc-tags">
+          <span class="badge badge-em">Full-time</span>
+          <span class="badge badge-gray">Executive</span>
+          <span class="badge badge-gray">Healthcare</span>
+        </div>
+        <p class="jc-desc">Provide clinical leadership across multi-specialty departments. Drive quality improvement and mentor senior medical staff at Rwanda's flagship hospital.</p>
+        <div class="jc-footer">
+          <span class="jc-salary">Competitive + Benefits</span>
+          <span class="jc-meta">📍 Kigali · 1 week ago</span>
+        </div>
+      </div>
+      <!-- CARD 6 -->
+      <div class="job-card reveal d2" data-sector="hospitality">
+        <div class="jc-header">
+          <div class="jc-logo">RA</div>
+          <div><div class="jc-title">Director of Operations</div><div class="jc-company">RwandAir</div></div>
+        </div>
+        <div class="jc-tags">
+          <span class="badge badge-em">Full-time</span>
+          <span class="badge badge-gray">Executive</span>
+          <span class="badge badge-gray">Aviation</span>
+        </div>
+        <p class="jc-desc">Manage all ground handling, cargo and passenger operations across RwandAir's 28-route international network. IATA compliance expertise essential.</p>
+        <div class="jc-footer">
+          <span class="jc-salary">$5,000 – $8,000/mo</span>
+          <span class="jc-meta">📍 Kigali International · 2 weeks ago</span>
+        </div>
+      </div>
+    </div>
+    <div class="jobs-cta reveal">
+      <a href="jobs/board.html" class="btn btn-secondary btn-lg">View All 2,400+ Jobs</a>
+      <a href="candidate/register.html" class="btn btn-primary btn-lg">Upload My CV →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTORS ─────────────────────────────────────────────── -->
+<section class="section sectors" id="sectors">
+  <div class="container">
+    <div class="sh reveal">
+      <span class="overline label">Industries</span>
+      <h2 class="h1">Sectors We <span class="text-em">Serve</span></h2>
+      <p>Deep expertise across every pillar of Rwanda's growing economy — and the global market beyond.</p>
+    </div>
+    <div class="sectors-grid">
+      <div class="sector-card reveal d1"><span class="sector-icon">💻</span><div class="sector-name">Technology & ICT</div><div class="sector-count">420+ roles</div></div>
+      <div class="sector-card reveal d2"><span class="sector-icon">🏦</span><div class="sector-name">Finance & Banking</div><div class="sector-count">310+ roles</div></div>
+      <div class="sector-card reveal d3"><span class="sector-icon">🏥</span><div class="sector-name">Healthcare</div><div class="sector-count">280+ roles</div></div>
+      <div class="sector-card reveal d4"><span class="sector-icon">🏗️</span><div class="sector-name">Engineering</div><div class="sector-count">245+ roles</div></div>
+      <div class="sector-card reveal d1"><span class="sector-icon">🌿</span><div class="sector-name">Agriculture</div><div class="sector-count">190+ roles</div></div>
+      <div class="sector-card reveal d2"><span class="sector-icon">🏨</span><div class="sector-name">Tourism & Hospitality</div><div class="sector-count">175+ roles</div></div>
+      <div class="sector-card reveal d3"><span class="sector-icon">📚</span><div class="sector-name">Education</div><div class="sector-count">142+ roles</div></div>
+      <div class="sector-card reveal d4"><span class="sector-icon">🚚</span><div class="sector-name">Logistics & Transport</div><div class="sector-count">130+ roles</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHY INEZA ──────────────────────────────────────────── -->
+<section class="section why" id="why-ineza">
+  <div class="container">
+    <div class="sh reveal">
+      <span class="overline label">Why Choose Us</span>
+      <h2 class="h1">The <span class="text-em">Ineza</span> Difference</h2>
+      <p>We don't just fill positions. We build careers and transform organisations.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal d1" data-number="01">
+        <div class="why-icon">🧠</div>
+        <h4>Deep Local Intelligence</h4>
+        <p>We know Rwanda's job market from the inside out — culture, salary benchmarks, growth sectors, and the unwritten rules of hiring. No one navigates this market better.</p>
+      </div>
+      <div class="why-card reveal d2" data-number="02">
+        <div class="why-icon">🌍</div>
+        <h4>Global Talent Reach</h4>
+        <p>Our network spans 12 countries. We connect Rwandan talent with international employers and bring global expertise back to Rwanda's booming economy.</p>
+      </div>
+      <div class="why-card reveal d3" data-number="03">
+        <div class="why-icon">✅</div>
+        <h4>Rigorous Vetting</h4>
+        <p>Every candidate is background-checked, reference-verified, and skills-assessed before they reach you. Employers trust us because quality is never compromised.</p>
+      </div>
+      <div class="why-card reveal d4" data-number="04">
+        <div class="why-icon">⚡</div>
+        <h4>48-Hour Match Guarantee</h4>
+        <p>Speed matters. Our specialist recruiters present qualified candidates within 48 hours of receiving a vacancy brief — guaranteed, or we waive our fee.</p>
+      </div>
+      <div class="why-card reveal d5" data-number="05">
+        <div class="why-icon">🤲</div>
+        <h4>End-to-End Support</h4>
+        <p>From CV writing to interview prep, salary negotiation, and 90-day post-placement check-ins — we're with you every step of the journey.</p>
+      </div>
+      <div class="why-card reveal d6" data-number="06">
+        <div class="why-icon">📊</div>
+        <h4>Sector Specialists</h4>
+        <p>Our recruiters are industry experts, not generalists. Your tech role is handled by someone who knows tech. Finance by someone who has lived in finance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOR EMPLOYERS ──────────────────────────────────────── -->
+<section class="section for-employers" id="for-employers">
+  <div class="container">
+    <div class="emp-split">
+      <div class="emp-l reveal">
+        <span class="overline label">For Employers</span>
+        <h2 class="h1">Hire Rwanda's Best.<br><span class="text-gd">Fast. Guaranteed.</span></h2>
+        <p>Ineza is Rwanda's most rigorous recruitment partner. We deliver pre-screened, reference-verified candidates within 48 hours — backed by our 90-day replacement guarantee.</p>
+        <div class="emp-points">
+          <div class="emp-point"><div class="ep-ico">✓</div><span>Access 15,000+ pre-screened, active professionals</span></div>
+          <div class="emp-point"><div class="ep-ico">✓</div><span>Dedicated sector-specialist recruiter on every role</span></div>
+          <div class="emp-point"><div class="ep-ico">✓</div><span>Background checks, references, and skills assessments included</span></div>
+          <div class="emp-point"><div class="ep-ico">✓</div><span>90-day free replacement guarantee on every placement</span></div>
+          <div class="emp-point"><div class="ep-ico">✓</div><span>International recruitment and relocation support</span></div>
+        </div>
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+          <a href="employer/post-job.html" class="btn btn-gold btn-lg">Post a Vacancy</a>
+          <a href="employer/pricing.html" class="btn btn-secondary btn-lg">View Pricing</a>
+        </div>
+      </div>
+      <div class="emp-r reveal d2">
+        <div class="emp-metric">
+          <div class="em-icon">⚡</div>
+          <div><span class="em-val">48hrs</span><span class="em-lbl">Average Shortlist Time</span><span class="em-sub">From brief to candidate presentation</span></div>
+        </div>
+        <div class="emp-metric">
+          <div class="em-icon">🎯</div>
+          <div><span class="em-val">91%</span><span class="em-lbl">12-Month Retention Rate</span><span class="em-sub">Candidates still in post after 1 year</span></div>
+        </div>
+        <div class="emp-metric">
+          <div class="em-icon">🌍</div>
+          <div><span class="em-val">15,000+</span><span class="em-lbl">Active Candidates</span><span class="em-sub">Pre-screened and ready to hire</span></div>
+        </div>
+        <div class="emp-metric">
+          <div class="em-icon">🤝</div>
+          <div><span class="em-val">850+</span><span class="em-lbl">Partner Employers</span><span class="em-sub">Companies that hire exclusively through Ineza</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ────────────────────────────────────────────── -->
+<section class="section pricing" id="pricing">
+  <div class="container">
+    <div class="sh reveal">
+      <span class="overline label">Transparent Pricing</span>
+      <h2 class="h1">Plans for Every <span class="text-em">Need</span></h2>
+      <p>Simple, honest pricing. Job seekers always register free. Employers pay only on successful placement.</p>
+    </div>
+
+    <!-- SEEKER / EMPLOYER TOGGLE -->
+    <div style="display:flex;justify-content:center;margin-bottom:2.5rem" class="reveal d1">
+      <div class="tabs">
+        <button class="tab active" data-tab="seeker-plans" data-group="pricing">👤 Job Seeker Plans</button>
+        <button class="tab" data-tab="employer-plans" data-group="pricing">🏢 Employer Plans</button>
+      </div>
+    </div>
+
+    <!-- SEEKER PLANS -->
+    <div data-panel="seeker-plans" data-group="pricing">
+      <div class="pricing-grid">
+        <div class="price-card reveal d1">
+          <span class="pc-icon">🆓</span>
+          <div class="pc-name">Free</div>
+          <div class="pc-desc">Everything you need to start your job search</div>
+          <div class="pc-price"><span class="amount">0</span> <span class="period">forever</span></div>
+          <div class="pc-note">No credit card required</div>
+          <ul class="pc-features">
+            <li class="pc-feat"><span class="check">✓</span>Create your candidate profile</li>
+            <li class="pc-feat"><span class="check">✓</span>Browse all 2,400+ job listings</li>
+            <li class="pc-feat"><span class="check">✓</span>Apply to up to 5 jobs/month</li>
+            <li class="pc-feat"><span class="check">✓</span>Basic CV upload</li>
+            <li class="pc-feat"><span class="check">✓</span>Email job alerts (weekly)</li>
+            <li class="pc-feat"><span class="cross">–</span>Priority recruiter access</li>
+            <li class="pc-feat"><span class="cross">–</span>CV review & coaching</li>
+            <li class="pc-feat"><span class="cross">–</span>Salary negotiation support</li>
+          </ul>
+          <button class="btn btn-secondary btn-block" onclick="window.location.href='auth/signup.html?role=candidate&plan=free'">Get Started Free</button>
+        </div>
+        <div class="price-card popular reveal d2">
+          <div class="popular-badge">Most Popular</div>
+          <span class="pc-icon">🚀</span>
+          <div class="pc-name">Pro Seeker</div>
+          <div class="pc-desc">For serious professionals who want to move fast</div>
+          <div class="pc-price"><span class="currency">RWF</span><span class="amount">5,000</span> <span class="period">/month</span></div>
+          <div class="pc-note">≈ $4/month · Cancel anytime</div>
+          <ul class="pc-features">
+            <li class="pc-feat"><span class="check">✓</span>Everything in Free</li>
+            <li class="pc-feat"><span class="check">✓</span>Unlimited job applications</li>
+            <li class="pc-feat"><span class="check">✓</span>Priority recruiter matching</li>
+            <li class="pc-feat"><span class="check">✓</span>Professional CV review</li>
+            <li class="pc-feat"><span class="check">✓</span>Daily personalised alerts</li>
+            <li class="pc-feat"><span class="check">✓</span>WhatsApp job notifications</li>
+            <li class="pc-feat"><span class="check">✓</span>Salary benchmarking report</li>
+            <li class="pc-feat"><span class="cross">–</span>Interview coaching session</li>
+          </ul>
+          <button class="btn btn-primary btn-block" onclick="Payment.showCheckout('candidate_pro')">Start Pro — RWF 5,000/mo</button>
+        </div>
+        <div class="price-card reveal d3">
+          <span class="pc-icon">💎</span>
+          <div class="pc-name">Premium</div>
+          <div class="pc-desc">The complete career accelerator package</div>
+          <div class="pc-price"><span class="currency">RWF</span><span class="amount">9,900</span> <span class="period">/month</span></div>
+          <div class="pc-note">≈ $8/month · Cancel anytime</div>
+          <ul class="pc-features">
+            <li class="pc-feat"><span class="check">✓</span>Everything in Pro</li>
+            <li class="pc-feat"><span class="check">✓</span>1-on-1 interview coaching session</li>
+            <li class="pc-feat"><span class="check">✓</span>Salary negotiation coaching</li>
+            <li class="pc-feat"><span class="check">✓</span>Profile featured to employers</li>
+            <li class="pc-feat"><span class="check">✓</span>LinkedIn profile optimisation</li>
+            <li class="pc-feat"><span class="check">✓</span>International role access</li>
+            <li class="pc-feat"><span class="check">✓</span>Dedicated career advisor</li>
+            <li class="pc-feat"><span class="check">✓</span>CV professionally rewritten</li>
+          </ul>
+          <button class="btn btn-gold btn-block" onclick="Payment.showCheckout('candidate_premium')">Go Premium — RWF 9,900/mo</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMPLOYER PLANS -->
+    <div data-panel="employer-plans" data-group="pricing" style="display:none">
+      <div class="pricing-grid">
+        <div class="price-card reveal d1">
+          <span class="pc-icon">🌱</span>
+          <div class="pc-name">Starter</div>
+          <div class="pc-desc">For small businesses and first-time hirers</div>
+          <div class="pc-price"><span class="currency">RWF</span><span class="amount">49,000</span> <span class="period">/month</span></div>
+          <div class="pc-note">Post up to 3 jobs · No placement fee</div>
+          <ul class="pc-features">
+            <li class="pc-feat"><span class="check">✓</span>3 active job postings</li>
+            <li class="pc-feat"><span class="check">✓</span>Candidate database search</li>
+            <li class="pc-feat"><span class="check">✓</span>Basic applicant tracking</li>
+            <li class="pc-feat"><span class="check">✓</span>Email support</li>
+            <li class="pc-feat"><span class="cross">–</span>Recruiter shortlisting</li>
+            <li class="pc-feat"><span class="cross">–</span>Background verification</li>
+          </ul>
+          <button class="btn btn-secondary btn-block" onclick="Payment.showCheckout('employer_starter')">Get Starter</button>
+        </div>
+        <div class="price-card popular reveal d2">
+          <div class="popular-badge">Best Value</div>
+          <span class="pc-icon">🏢</span>
+          <div class="pc-name">Business</div>
+          <div class="pc-desc">For growing companies that hire regularly</div>
+          <div class="pc-price"><span class="currency">RWF</span><span class="amount">120,000</span> <span class="period">/month</span></div>
+          <div class="pc-note">15 jobs · 48hr shortlist · 90-day guarantee</div>
+          <ul class="pc-features">
+            <li class="pc-feat"><span class="check">✓</span>15 active job postings</li>
+            <li class="pc-feat"><span class="check">✓</span>Dedicated account manager</li>
+            <li class="pc-feat"><span class="check">✓</span>Recruiter shortlisting service</li>
+            <li class="pc-feat"><span class="check">✓</span>Background & reference checks</li>
+            <li class="pc-feat"><span class="check">✓</span>90-day replacement guarantee</li>
+            <li class="pc-feat"><span class="check">✓</span>Salary benchmarking reports</li>
+            <li class="pc-feat"><span class="check">✓</span>Applicant tracking system</li>
+            <li class="pc-feat"><span class="cross">–</span>Executive search access</li>
+          </ul>
+          <button class="btn btn-primary btn-block" onclick="Payment.showCheckout('employer_business')">Get Business</button>
+        </div>
+        <div class="price-card reveal d3">
+          <span class="pc-icon">🏆</span>
+          <div class="pc-name">Enterprise</div>
+          <div class="pc-desc">For large organisations with complex hiring needs</div>
+          <div class="pc-price"><span class="currency">RWF</span><span class="amount">290,000</span> <span class="period">/month</span></div>
+          <div class="pc-note">Unlimited jobs · Full executive search · 180-day guarantee</div>
+          <ul class="pc-features">
+            <li class="pc-feat"><span class="check">✓</span>Unlimited job postings</li>
+            <li class="pc-feat"><span class="check">✓</span>Executive search included</li>
+            <li class="pc-feat"><span class="check">✓</span>Senior partner recruiter</li>
+            <li class="pc-feat"><span class="check">✓</span>180-day replacement guarantee</li>
+            <li class="pc-feat"><span class="check">✓</span>On-site recruitment support</li>
+            <li class="pc-feat"><span class="check">✓</span>Volume / bulk hiring campaigns</li>
+            <li class="pc-feat"><span class="check">✓</span>Custom HR consulting</li>
+            <li class="pc-feat"><span class="check">✓</span>International recruitment</li>
+          </ul>
+          <button class="btn btn-gold btn-block" onclick="Payment.showCheckout('employer_enterprise')">Get Enterprise</button>
+        </div>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:.82rem;color:var(--tx-600);margin-top:1.5rem" class="reveal">
+      Pay securely via MTN MoMo, Airtel Money, Visa, or Mastercard ·
+      <a href="contact.html" style="color:var(--em-400)">Custom enterprise pricing available →</a>
+    </p>
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ────────────────────────────────────────── -->
+<section class="section testi" id="testimonials">
+  <div class="container">
+    <div class="sh reveal">
+      <span class="overline label">Success Stories</span>
+      <h2 class="h1">Voices of <span class="text-em">Rwanda</span></h2>
+      <p>Real professionals. Real employers. Real transformations across our platform.</p>
+    </div>
+    <div class="testi-track-wrap reveal d1">
+      <div class="testi-track" id="testi-track">
+        <div class="testi-card">
+          <div class="tc-stars">★★★★★</div>
+          <p class="tc-quote">"Ineza found me my dream role as a Senior Developer in just 11 days. Their recruiter knew exactly what companies I'd thrive in. I went from browsing job boards daily to getting two competing offers — and they coached me through the negotiation."</p>
+          <div class="tc-author">
+            <div class="avatar avatar-md" style="color:var(--em-400)">JP</div>
+            <div><div style="font-weight:700;font-size:.9rem;color:var(--tx-100)">Jean-Paul Habimana</div><div class="tc-role">Senior Software Developer · Kigali Innovation City</div></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="tc-stars">★★★★★</div>
+          <p class="tc-quote">"As an HR Director, I've worked with recruitment agencies in three countries. Ineza's candidate quality is on another level. They sent us five shortlisted profiles — all exceptional. We hired two and both became top performers within six months."</p>
+          <div class="tc-author">
+            <div class="avatar avatar-md" style="color:var(--gd-400)">SU</div>
+            <div><div style="font-weight:700;font-size:.9rem;color:var(--tx-100)">Sarah Uwimana</div><div class="tc-role">HR Director · TechServe Rwanda Ltd</div></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="tc-stars">★★★★★</div>
+          <p class="tc-quote">"I relocated back from the UK after 8 years. The job market had changed completely. Ineza found me a Finance Manager position within three weeks, navigated salary expectations, and helped me reintegrate professionally. Invaluable service."</p>
+          <div class="tc-author">
+            <div class="avatar avatar-md" style="color:var(--bl-400)">DM</div>
+            <div><div style="font-weight:700;font-size:.9rem;color:var(--tx-100)">David Mugisha</div><div class="tc-role">Finance Manager · Equity Bank Rwanda</div></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="tc-stars">★★★★★</div>
+          <p class="tc-quote">"We needed a Medical Director within 30 days. Ineza presented credentialed candidates in under 48 hours. The professionalism, confidentiality, and speed were extraordinary. They are now our exclusive recruitment partner for all senior roles."</p>
+          <div class="tc-author">
+            <div class="avatar avatar-md" style="color:var(--em-400)">AM</div>
+            <div><div style="font-weight:700;font-size:.9rem;color:var(--tx-100)">Dr. Alice Mutesi</div><div class="tc-role">CEO · HealthFirst Rwanda Clinics</div></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="tc-stars">★★★★★</div>
+          <p class="tc-quote">"Ineza connected me with an opportunity in Dubai that changed my career trajectory entirely. Their global network is real — not just words on a website. The process was professional from first call to job offer. I highly recommend them."</p>
+          <div class="tc-author">
+            <div class="avatar avatar-md" style="color:var(--gd-400)">GN</div>
+            <div><div style="font-weight:700;font-size:.9rem;color:var(--tx-100)">Grace Nkurunziza</div><div class="tc-role">Operations Manager · Dubai Ports World</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-nav reveal">
+      <button class="testi-btn" id="tp" onclick="moveTesti(-1)">‹</button>
+      <div class="testi-dots" id="tdots">
+        <span class="tdot active" onclick="goTesti(0)"></span>
+        <span class="tdot" onclick="goTesti(1)"></span>
+        <span class="tdot" onclick="goTesti(2)"></span>
+        <span class="tdot" onclick="goTesti(3)"></span>
+        <span class="tdot" onclick="goTesti(4)"></span>
+      </div>
+      <button class="testi-btn" id="tn" onclick="moveTesti(1)">›</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── GLOBAL REACH ────────────────────────────────────────── -->
+<section class="section global" id="global">
+  <div class="container">
+    <div class="global-inner">
+      <div class="reveal">
+        <span class="overline label" style="display:inline-flex;align-items:center;gap:.5rem;margin-bottom:.75rem">Our Reach</span>
+        <h2 class="h1">Rooted in Rwanda.<br><span class="text-em">Connected to the World.</span></h2>
+        <p class="body-lg text-muted" style="margin:.9rem 0 1.5rem">Kigali is one of Africa's fastest-growing cities — a tech hub, a diplomatic centre, a gateway. Ineza was built here because here is where the opportunity is. But our network doesn't stop at the border.</p>
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+          <a href="employer/post-job.html" class="btn btn-primary btn-lg">Partner With Us</a>
+          <a href="jobs/board.html" class="btn btn-secondary btn-lg">Browse Global Roles</a>
+        </div>
+      </div>
+      <div class="reveal d2">
+        <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--tx-800);margin-bottom:1rem">Active Markets</div>
+        <div class="countries-grid">
+          <div class="country-chip hq"><span class="cf">🇷🇼</span><div><span class="cc-name">Rwanda</span><span class="cc-status">Headquarters</span></div></div>
+          <div class="country-chip"><span class="cf">🇺🇬</span><div><span class="cc-name">Uganda</span><span class="cc-status">Kampala</span></div></div>
+          <div class="country-chip"><span class="cf">🇰🇪</span><div><span class="cc-name">Kenya</span><span class="cc-status">Nairobi</span></div></div>
+          <div class="country-chip"><span class="cf">🇹🇿</span><div><span class="cc-name">Tanzania</span><span class="cc-status">Dar es Salaam</span></div></div>
+          <div class="country-chip"><span class="cf">🇨🇩</span><div><span class="cc-name">DR Congo</span><span class="cc-status">Goma / Kinshasa</span></div></div>
+          <div class="country-chip"><span class="cf">🇧🇮</span><div><span class="cc-name">Burundi</span><span class="cc-status">Bujumbura</span></div></div>
+          <div class="country-chip"><span class="cf">🇿🇦</span><div><span class="cc-name">South Africa</span><span class="cc-status">Johannesburg</span></div></div>
+          <div class="country-chip"><span class="cf">🇦🇪</span><div><span class="cc-name">UAE</span><span class="cc-status">Dubai</span></div></div>
+          <div class="country-chip"><span class="cf">🇬🇧</span><div><span class="cc-name">UK</span><span class="cc-status">London</span></div></div>
+          <div class="country-chip"><span class="cf">🇩🇪</span><div><span class="cc-name">Germany</span><span class="cc-status">Berlin</span></div></div>
+          <div class="country-chip"><span class="cf">🇨🇦</span><div><span class="cc-name">Canada</span><span class="cc-status">Toronto</span></div></div>
+          <div class="country-chip"><span class="cf">🇺🇸</span><div><span class="cc-name">USA</span><span class="cc-status">New York</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ────────────────────────────────────────────────── -->
+<section class="cta-section" id="get-started">
+  <div class="container">
+    <div class="sh reveal">
+      <span class="overline label">Get Started Today</span>
+      <h2 class="h1">Your Next Chapter<br>Starts <span class="text-em">Now</span></h2>
+    </div>
+    <div class="cta-grid">
+      <div class="cta-card em reveal d1">
+        <span class="cta-icon">💼</span>
+        <h3>Find Your Next Role</h3>
+        <p>Join 15,000+ professionals who've used Ineza to land roles that match their ambitions, skills, and salary expectations. Free to register.</p>
+        <div class="cta-badges">
+          <span class="cb">Free to Register</span>
+          <span class="cb">CV Review Included</span>
+          <span class="cb">Interview Coaching</span>
+        </div>
+        <a href="auth/signup.html?role=candidate" class="btn btn-primary btn-lg btn-block">Create Candidate Profile →</a>
+      </div>
+      <div class="cta-card gd reveal d2" style="border-color:rgba(251,191,36,.2)">
+        <span class="cta-icon">🏢</span>
+        <h3>Hire Exceptional Talent</h3>
+        <p>Access Rwanda's most thoroughly vetted talent pool. We guarantee qualified candidates within 48 hours and a 90-day replacement on every placement.</p>
+        <div class="cta-badges">
+          <span class="cb">No Upfront Fee</span>
+          <span class="cb">Background Verified</span>
+          <span class="cb">90-Day Guarantee</span>
+        </div>
+        <a href="auth/signup.html?role=employer" class="btn btn-gold btn-lg btn-block">Post a Vacancy →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:.75rem">
+          <svg width="36" height="36" viewBox="0 0 40 40" fill="none">
+            <circle cx="20" cy="20" r="14.5" stroke="url(#lg2)" stroke-width="1.4"/>
+            <ellipse cx="20" cy="20" rx="7" ry="14.5" stroke="url(#lg2)" stroke-width="1.4"/>
+            <ellipse cx="20" cy="20" rx="14.5" ry="4.5" stroke="url(#lg2)" stroke-width="1.4"/>
+            <ellipse cx="20" cy="20" rx="20" ry="6.5" stroke="url(#lg2)" stroke-width="1.8" stroke-opacity=".65" transform="rotate(-25 20 20)"/>
+            <defs><linearGradient id="lg2" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#00E599"/><stop offset="1" stop-color="#3B82F6"/></linearGradient></defs>
+          </svg>
+          <div><div class="brand text-em" style="font-size:1.1rem;font-weight:800;letter-spacing:.08em">INEZA</div><div style="font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-800)">Company Ltd Agencies</div></div>
+        </div>
+        <p>Employee & Employer Agencies. Rwanda's most trusted employment platform — local knowledge, global reach.</p>
+        <div class="footer-socials">
+          <div class="fs-btn">in</div>
+          <div class="fs-btn">𝕏</div>
+          <div class="fs-btn">f</div>
+          <div class="fs-btn">📱</div>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Job Seekers</h5>
+        <div class="footer-links">
+          <a href="jobs/board.html">Browse All Jobs</a>
+          <a href="candidate/register.html">Create Profile</a>
+          <a href="candidate/register.html">Upload Your CV</a>
+          <a href="#">Salary Guide</a>
+          <a href="#">Interview Tips</a>
+          <a href="#">Career Advice</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Employers</h5>
+        <div class="footer-links">
+          <a href="employer/post-job.html">Post a Vacancy</a>
+          <a href="employer/dashboard.html">Employer Dashboard</a>
+          <a href="employer/pricing.html">Pricing Plans</a>
+          <a href="#">Executive Search</a>
+          <a href="#">Bulk Hiring</a>
+          <a href="#">HR Consulting</a>
+        </div>
+      </div>
+      <div class="footer-col footer-contact">
+        <h5>Contact Us</h5>
+        <div class="fc-item"><span class="fc-icon">📍</span><span class="fc-text">KG 7 Ave, Kacyiru<br>Kigali, Rwanda</span></div>
+        <div class="fc-item"><span class="fc-icon">📞</span><span class="fc-text">+250 788 000 000</span></div>
+        <div class="fc-item"><span class="fc-icon">✉️</span><span class="fc-text">info@inezaagencies.rw</span></div>
+        <div class="fc-item"><span class="fc-icon">🕐</span><span class="fc-text">Mon–Fri: 8am–6pm<br>Sat: 9am–1pm</span></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Ineza Company Ltd Agencies. All rights reserved. Registered in Rwanda.</p>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Cookie Policy</a>
+        <a href="#">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ── PAYMENT MODAL ──────────────────────────────────────── -->
+<div class="modal-overlay" id="payment-modal">
+  <div class="modal" style="max-width:540px">
+    <div class="modal-header">
+      <h3>Complete Your Subscription</h3>
+      <button class="modal-close" onclick="Modal.close('payment-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="pm-summary">
+        <div class="pm-summary-row">
+          <span class="pm-label">Plan</span>
+          <span class="pm-val" id="pm-plan-name">Pro Seeker</span>
+        </div>
+        <div class="pm-summary-row">
+          <span class="pm-label">Billing period</span>
+          <span class="pm-val" id="pm-plan-period">monthly</span>
+        </div>
+        <div class="pm-summary-row">
+          <span class="pm-label">Total</span>
+          <span class="pm-val" id="pm-plan-price">RWF 5,000</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-label">Choose Payment Method</div>
+        <div class="pm-grid">
+          <label class="pm-method selected">
+            <input type="radio" name="pm" value="momo" checked>
+            <div>
+              <div class="pm-method-name">📱 MTN MoMo</div>
+              <div style="font-size:.73rem;color:var(--tx-600)">Mobile money</div>
+            </div>
+          </label>
+          <label class="pm-method">
+            <input type="radio" name="pm" value="airtel">
+            <div>
+              <div class="pm-method-name">📲 Airtel Money</div>
+              <div style="font-size:.73rem;color:var(--tx-600)">Mobile money</div>
+            </div>
+          </label>
+          <label class="pm-method">
+            <input type="radio" name="pm" value="card">
+            <div>
+              <div class="pm-method-name">💳 Debit / Credit Card</div>
+              <div style="font-size:.73rem;color:var(--tx-600)">Visa / Mastercard</div>
+            </div>
+          </label>
+          <label class="pm-method">
+            <input type="radio" name="pm" value="bank">
+            <div>
+              <div class="pm-method-name">🏦 Bank Transfer</div>
+              <div style="font-size:.73rem;color:var(--tx-600)">Direct deposit</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div id="momo-fields">
+        <div class="form-group">
+          <label class="form-label">MTN MoMo Phone Number <span class="req">*</span></label>
+          <input type="tel" class="form-control" placeholder="+250 78X XXX XXX" id="momo-phone">
+        </div>
+        <div style="background:rgba(0,229,153,.06);border:1px solid var(--bd-em);border-radius:var(--r-md);padding:.85rem 1rem;font-size:.8rem;color:var(--tx-400);line-height:1.6">
+          📱 You will receive a payment prompt on your MTN MoMo phone. Enter your PIN to confirm.
+        </div>
+      </div>
+
+      <input type="hidden" id="pm-plan-id">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="Modal.close('payment-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="processPaymentModal()" id="pay-btn">
+        <span class="btn-text">Pay Now 🔒</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
+
+<script src="js/app.js"></script>
+<script>
+/* ── INIT GLOBE ─────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  Globe.init('globe-canvas');
+});
+
+/* ── JOB FILTER ─────────────────────────── */
+function filterJobs(sector, btn) {
+  document.querySelectorAll('.job-filter-bar button').forEach(b => {
+    b.className = 'tag tag-default';
+  });
+  btn.className = 'tag tag-active';
+  document.querySelectorAll('.job-card').forEach(c => {
+    if (sector === 'all' || c.dataset.sector === sector) {
+      c.style.display = '';
+      c.style.animation = 'none';
+      setTimeout(() => c.style.animation = '', 10);
+    } else {
+      c.style.display = 'none';
+    }
+  });
+}
+
+/* ── TESTIMONIAL CAROUSEL ───────────────── */
+let tIdx = 0;
+const tCards = document.querySelectorAll('.testi-card');
+const tDots = document.querySelectorAll('.tdot');
+function goTesti(i) {
+  tIdx = i;
+  const cw = tCards[0] ? tCards[0].offsetWidth + 19 : 400;
+  document.getElementById('testi-track').style.transform = `translateX(-${tIdx * cw}px)`;
+  tDots.forEach((d,j) => d.classList.toggle('active', j === tIdx));
+}
+function moveTesti(dir) {
+  tIdx = Math.max(0, Math.min(tIdx + dir, tCards.length - 1));
+  goTesti(tIdx);
+}
+setInterval(() => { tIdx = (tIdx + 1) % tCards.length; goTesti(tIdx); }, 5500);
+
+/* ── PAYMENT METHOD TOGGLE ──────────────── */
+document.querySelectorAll('.pm-method').forEach(m => {
+  m.addEventListener('click', () => {
+    document.querySelectorAll('.pm-method').forEach(x => x.classList.remove('selected'));
+    m.classList.add('selected');
+    const val = m.querySelector('input').value;
+    document.getElementById('momo-fields').style.display = val === 'momo' ? 'block' : val === 'airtel' ? 'block' : 'none';
+  });
+});
+
+/* ── PROCESS PAYMENT ────────────────────── */
+async function processPaymentModal() {
+  const planId = document.getElementById('pm-plan-id').value;
+  const btn = document.getElementById('pay-btn');
+  btn.classList.add('loading');
+  try {
+    const result = await Payment.processPayment(planId, {});
+    Modal.close('payment-modal');
+    Toast.success(`🎉 Payment successful! Transaction: ${result.transactionId}`);
+    setTimeout(() => {
+      window.location.href = 'auth/signup.html?plan=' + planId;
+    }, 2000);
+  } catch (err) {
+    Toast.error(err.error || 'Payment failed. Please try again.');
+  } finally {
+    btn.classList.remove('loading');
+  }
+}
+
+/* ── HERO SEARCH ────────────────────────── */
+document.getElementById('hero-search').addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    const q = e.target.value.trim();
+    const loc = document.getElementById('hero-location').value;
+    if (q) window.location.href = `jobs/board.html?q=${encodeURIComponent(q)}&loc=${encodeURIComponent(loc)}`;
+  }
+});
+</script>
+</body>
+</html>

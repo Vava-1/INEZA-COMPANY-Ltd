@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Ineza | Rwanda's #1 Employment Platform</title>
+<meta name="description" content="Get in touch with Ineza Company Ltd Agencies. Kigali office open Mon–Sat. Respond within 2 hours.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+<style>
+body { background:var(--bg-deep); }
+
+/* NAV */
+.navbar { background:rgba(7,12,24,.96); backdrop-filter:blur(20px); border-bottom:1px solid var(--bd-subtle); padding:.65rem 0; position:sticky; top:0; z-index:200; }
+.nav-inner { max-width:1240px; margin:0 auto; padding:0 1.5rem; display:flex; align-items:center; gap:1.2rem; }
+.nav-links { display:flex; gap:.2rem; margin-left:auto; }
+.nav-link { padding:.45rem .8rem; border-radius:var(--r-sm); font-size:.84rem; font-weight:500; color:var(--tx-400); transition:all var(--ease); text-decoration:none; display:inline-block; }
+.nav-link:hover { color:var(--tx-100); background:var(--bg-raised); }
+.nav-link.active { color:var(--em-400); }
+.nav-actions { display:flex; gap:.5rem; flex-shrink:0; }
+.btn { display:inline-flex; align-items:center; gap:.4rem; padding:.6rem 1.4rem; border-radius:var(--r-md); font-size:.84rem; font-weight:600; font-family:var(--ff-body); transition:all var(--ease); border:none; cursor:pointer; white-space:nowrap; }
+.btn-primary { background:linear-gradient(135deg,#00E599,#00C97D); color:#020f08; }
+.btn-primary:hover { opacity:.92; transform:translateY(-1px); }
+.btn-secondary { background:var(--bg-raised); color:var(--tx-100); border:1.5px solid var(--bd-subtle); }
+.btn-secondary:hover { border-color:var(--bd-em); }
+.btn-sm { padding:.48rem 1rem; font-size:.8rem; border-radius:var(--r-sm); }
+.btn-block { width:100%; justify-content:center; }
+.btn.loading { pointer-events:none; opacity:.7; position:relative; }
+.btn.loading::before { content:''; position:absolute; width:15px; height:15px; border:2px solid rgba(255,255,255,.3); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+@media(max-width:768px){.nav-links,.nav-actions{display:none}}
+
+/* HERO */
+.ct-hero { background:var(--bg-base); border-bottom:1px solid var(--bd-subtle); padding:3.5rem 0 2.8rem; text-align:center; position:relative; overflow:hidden; }
+.ct-hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(0,229,153,.07),transparent 65%); }
+.ct-hero-inner { position:relative; z-index:1; }
+.ct-hero h1 { font-family:'Playfair Display',serif; font-size:clamp(2rem,4.5vw,3.2rem); font-weight:900; margin-bottom:.55rem; line-height:1.08; }
+.ct-hero p { font-size:.95rem; color:var(--tx-400); max-width:500px; margin:0 auto 2.2rem; line-height:1.75; }
+.contact-channels { display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; }
+.cc-btn { display:flex; align-items:center; gap:.65rem; padding:.9rem 1.4rem; background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-xl); transition:all var(--ease); cursor:pointer; text-decoration:none; }
+.cc-btn:hover { border-color:var(--bd-em); transform:translateY(-2px); box-shadow:var(--shadow-em); }
+.cc-icon { width:40px; height:40px; background:rgba(0,229,153,.1); border:1px solid var(--bd-em); border-radius:var(--r-md); display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0; }
+.cc-val { font-size:.9rem; font-weight:700; color:var(--tx-100); display:block; line-height:1.2; }
+.cc-sub { font-size:.72rem; color:var(--tx-600); display:block; }
+
+/* RESPONSE TIMES */
+.resp-bar { background:var(--bg-base); border-bottom:1px solid var(--bd-subtle); }
+.resp-inner { max-width:1240px; margin:0 auto; padding:1.8rem 1.5rem; display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+.resp-item { background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-xl); padding:1.3rem; text-align:center; transition:all var(--ease); }
+.resp-item:hover { border-color:var(--bd-em); }
+.resp-icon { font-size:1.7rem; display:block; margin-bottom:.5rem; }
+.resp-val  { font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:900; color:var(--em-400); margin-bottom:.15rem; display:block; }
+.resp-lbl  { font-size:.82rem; font-weight:700; color:var(--tx-200); margin-bottom:.12rem; display:block; }
+.resp-sub  { font-size:.72rem; color:var(--tx-600); }
+
+/* MAIN GRID */
+.ct-main { max-width:1240px; margin:0 auto; padding:4rem 1.5rem; display:grid; grid-template-columns:1fr 1.15fr; gap:3rem; align-items:start; }
+
+/* LEFT INFO */
+.ci h2 { font-family:'Playfair Display',serif; font-size:clamp(1.6rem,3vw,2.2rem); font-weight:900; margin-bottom:.5rem; line-height:1.08; }
+.ci > p { font-size:.9rem; color:var(--tx-400); margin-bottom:2.2rem; line-height:1.78; }
+.info-block { margin-bottom:2rem; }
+.ib-label { font-size:.68rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--em-400); margin-bottom:.9rem; display:flex; align-items:center; gap:.4rem; }
+.ib-label::before { content:''; width:14px; height:1.5px; background:var(--em-400); border-radius:99px; }
+.info-item { display:flex; align-items:flex-start; gap:.75rem; margin-bottom:.95rem; }
+.ii-icon { width:40px; height:40px; flex-shrink:0; background:rgba(0,229,153,.08); border:1px solid var(--bd-em); border-radius:var(--r-md); display:flex; align-items:center; justify-content:center; font-size:1.1rem; }
+.ii-label { font-size:.68rem; font-weight:600; color:var(--tx-800); text-transform:uppercase; letter-spacing:.07em; display:block; margin-bottom:.18rem; }
+.ii-val   { font-size:.9rem; font-weight:600; color:var(--tx-100); display:block; line-height:1.45; }
+.ii-sub   { font-size:.76rem; color:var(--tx-600); display:block; margin-top:.08rem; }
+
+/* HOURS */
+.hours-grid { display:grid; grid-template-columns:1fr 1fr; gap:.35rem; }
+.hr-row { display:flex; align-items:center; justify-content:space-between; padding:.45rem .75rem; background:var(--bg-surface); border-radius:var(--r-sm); border:1px solid var(--bd-subtle); }
+.hr-row.open { border-color:rgba(0,229,153,.2); background:rgba(0,229,153,.04); }
+.hr-day  { font-size:.8rem; color:var(--tx-400); }
+.hr-time { font-size:.78rem; font-weight:600; color:var(--tx-200); }
+.hr-row.open .hr-time { color:var(--em-400); }
+.hr-closed { color:var(--tx-800) !important; font-style:italic; }
+
+/* SOCIALS */
+.social-row { display:flex; gap:.5rem; flex-wrap:wrap; }
+.soc-card { display:flex; align-items:center; gap:.5rem; padding:.5rem .9rem; background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-lg); transition:all var(--ease); cursor:pointer; text-decoration:none; }
+.soc-card:hover { border-color:var(--bd-em); }
+.soc-name { font-size:.8rem; font-weight:600; color:var(--tx-200); }
+.soc-handle { font-size:.7rem; color:var(--tx-600); }
+
+/* SVG MAP */
+.map-box { background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-xl); overflow:hidden; margin-top:2rem; }
+.map-bar { padding:.8rem 1.2rem; border-bottom:1px solid var(--bd-subtle); display:flex; align-items:center; justify-content:space-between; }
+.map-bar span { font-size:.8rem; font-weight:600; color:var(--tx-400); }
+.map-bar a { font-size:.76rem; color:var(--em-400); }
+.map-canvas { width:100%; height:200px; background:var(--bg-raised); position:relative; overflow:hidden; }
+.map-foot { padding:.7rem 1.2rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.5rem; }
+.map-foot span { font-size:.76rem; color:var(--tx-600); }
+.map-foot a { font-size:.76rem; color:var(--em-400); }
+
+/* RIGHT FORM */
+.cf-card { background:var(--bg-surface); border:1px solid var(--bd-muted); border-radius:var(--r-2xl); padding:2.2rem; }
+.cf-card h3 { font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:800; color:var(--tx-100); margin-bottom:.3rem; }
+.cf-card .cf-sub { font-size:.85rem; color:var(--tx-400); margin-bottom:1.6rem; line-height:1.6; }
+.form-group { margin-bottom:1.05rem; }
+.form-label { display:block; font-size:.73rem; font-weight:600; color:var(--tx-400); margin-bottom:.38rem; letter-spacing:.06em; text-transform:uppercase; }
+.form-label .req { color:var(--em-400); margin-left:2px; }
+.form-control { width:100%; background:var(--bg-raised); border:1.5px solid var(--bd-subtle); border-radius:var(--r-md); padding:.72rem 1rem; font-size:.9rem; color:var(--tx-100); outline:none; transition:all var(--ease); font-family:var(--ff-body); }
+.form-control::placeholder { color:var(--tx-800); }
+.form-control:focus { border-color:var(--bd-em); box-shadow:0 0 0 3px var(--em-glow); }
+select.form-control { cursor:pointer; } select.form-control option { background:var(--bg-raised); }
+textarea.form-control { resize:vertical; min-height:130px; line-height:1.65; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:.9rem; }
+.type-grid { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; margin-bottom:1.1rem; }
+.type-opt { padding:.68rem .85rem; background:var(--bg-raised); border:1.5px solid var(--bd-subtle); border-radius:var(--r-md); display:flex; align-items:center; gap:.55rem; cursor:pointer; transition:all var(--ease); }
+.type-opt:hover { border-color:var(--bd-em); }
+.type-opt input { accent-color:var(--em-400); cursor:pointer; }
+.type-opt span { font-size:.83rem; color:var(--tx-200); cursor:pointer; }
+.type-opt:has(input:checked) { border-color:var(--bd-em); background:rgba(0,229,153,.05); }
+.type-opt:has(input:checked) span { color:var(--em-400); }
+.pref-row { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:1rem; }
+.pref-opt { display:flex; align-items:center; gap:.45rem; padding:.45rem .9rem; background:var(--bg-raised); border:1.5px solid var(--bd-subtle); border-radius:99px; cursor:pointer; transition:all var(--ease); }
+.pref-opt:hover { border-color:var(--bd-em); }
+.pref-opt input { accent-color:var(--em-400); }
+.pref-opt span { font-size:.8rem; color:var(--tx-200); cursor:pointer; }
+.pref-opt:has(input:checked) { border-color:var(--bd-em); background:rgba(0,229,153,.07); }
+.pref-opt:has(input:checked) span { color:var(--em-400); }
+.form-note { font-size:.74rem; color:var(--tx-600); line-height:1.6; margin-bottom:1.2rem; }
+.form-note a { color:var(--em-400); }
+.submit-btn { width:100%; padding:.82rem; background:linear-gradient(135deg,#00E599,#00C97D); color:#020f08; border:none; border-radius:var(--r-lg); font-family:'Playfair Display',serif; font-size:1rem; font-weight:800; cursor:pointer; transition:all var(--ease); letter-spacing:.02em; position:relative; }
+.submit-btn:hover { opacity:.92; }
+.cf-success { display:none; text-align:center; padding:2.5rem 1rem; }
+.cf-success.show { display:block; }
+.cf-success .ss-ico { font-size:3rem; margin-bottom:.9rem; display:block; }
+
+/* TEAM */
+.team-section { background:var(--bg-base); border-top:1px solid var(--bd-subtle); padding:5rem 0; }
+.team-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.2rem; }
+.tm-card { background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-xl); padding:1.6rem; text-align:center; transition:all var(--ease); }
+.tm-card:hover { border-color:var(--bd-em); transform:translateY(-3px); }
+.tm-avatar { width:64px; height:64px; border-radius:50%; background:rgba(0,229,153,.1); border:2px solid var(--bd-em); display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:800; font-size:1.2rem; color:var(--em-400); margin:0 auto .9rem; }
+.tm-name  { font-size:.95rem; font-weight:700; color:var(--tx-100); margin-bottom:.15rem; }
+.tm-role  { font-size:.76rem; color:var(--tx-400); margin-bottom:.35rem; }
+.tm-spec  { font-size:.7rem; font-weight:600; padding:.15rem .6rem; background:rgba(0,229,153,.1); border:1px solid var(--bd-em); border-radius:99px; color:var(--em-400); display:inline-block; }
+.tm-contact { display:flex; justify-content:center; gap:.4rem; margin-top:.75rem; }
+.tmc { width:28px; height:28px; background:var(--bg-raised); border:1px solid var(--bd-subtle); border-radius:var(--r-sm); display:flex; align-items:center; justify-content:center; font-size:.72rem; color:var(--tx-600); cursor:pointer; transition:all var(--ease); }
+.tmc:hover { border-color:var(--bd-em); color:var(--em-400); }
+
+/* FAQ */
+.faq-section { padding:5rem 0; background:var(--bg-deep); }
+.faq-list { max-width:800px; margin:0 auto; display:flex; flex-direction:column; gap:.6rem; }
+.faq-item { background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-lg); overflow:hidden; transition:border-color var(--ease); }
+.faq-item.open { border-color:var(--bd-em); }
+.faq-trigger { width:100%; background:none; border:none; padding:1.1rem 1.4rem; display:flex; align-items:center; justify-content:space-between; text-align:left; font-family:var(--ff-body); font-size:.91rem; font-weight:600; color:var(--tx-100); cursor:pointer; gap:1rem; }
+.faq-trigger:hover { color:var(--em-400); }
+.faq-arrow { font-size:1rem; color:var(--em-400); flex-shrink:0; transition:transform var(--ease); }
+.faq-item.open .faq-arrow { transform:rotate(45deg); }
+.faq-body { max-height:0; overflow:hidden; transition:max-height .4s ease; }
+.faq-item.open .faq-body { max-height:220px; }
+.faq-body p { padding:.1rem 1.4rem 1.1rem; font-size:.86rem; color:var(--tx-400); line-height:1.72; }
+
+/* FOOTER */
+footer { background:var(--bg-base); border-top:1px solid var(--bd-subtle); padding:2.5rem 0; text-align:center; }
+footer p { font-size:.78rem; color:var(--tx-800); }
+footer a { color:var(--em-400); }
+
+/* REVEAL */
+.reveal { opacity:0; transform:translateY(22px); transition:opacity .6s ease,transform .6s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+.reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}
+
+@media(max-width:1024px) { .ct-main{grid-template-columns:1fr}.team-grid{grid-template-columns:repeat(2,1fr)} }
+@media(max-width:768px) { .contact-channels{flex-direction:column;align-items:center}.form-row{grid-template-columns:1fr}.type-grid{grid-template-columns:1fr 1fr}.resp-inner{grid-template-columns:1fr} }
+@media(max-width:480px) { .hours-grid{grid-template-columns:1fr}.team-grid{grid-template-columns:1fr 1fr} }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" style="display:flex;align-items:center;gap:.55rem;text-decoration:none">
+      <svg width="32" height="32" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14.5" stroke="url(#lgc)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="7" ry="14.5" stroke="url(#lgc)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="14.5" ry="4.5" stroke="url(#lgc)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="20" ry="6.5" stroke="url(#lgc)" stroke-width="1.8" stroke-opacity=".65" transform="rotate(-25 20 20)"/><defs><linearGradient id="lgc" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#00E599"/><stop offset="1" stop-color="#3B82F6"/></linearGradient></defs></svg>
+      <div style="margin-left:.5rem"><div style="font-size:.9rem;font-weight:800;letter-spacing:.08em;background:linear-gradient(135deg,#4DFFA6,#00E599);-webkit-background-clip:text;-webkit-text-fill-color:transparent">INEZA</div><div style="font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-800)">Agencies</div></div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="jobs/board.html" class="nav-link">Find Jobs</a>
+      <a href="employer/dashboard.html" class="nav-link">For Employers</a>
+      <a href="index.html#pricing" class="nav-link">Pricing</a>
+      <a href="contact.html" class="nav-link active">Contact</a>
+    </div>
+    <div class="nav-actions" id="nav-auth">
+      <a href="auth/signin.html" class="btn btn-secondary btn-sm">Sign In</a>
+      <a href="auth/signup.html" class="btn btn-primary btn-sm">Get Started Free</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="ct-hero">
+  <div class="container ct-hero-inner">
+    <div class="reveal">
+      <span style="font-size:.7rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--em-400);display:inline-flex;align-items:center;gap:.4rem;margin-bottom:.65rem">Get In Touch</span>
+      <h1>We're Here to<br><span style="background:var(--grad-text-em);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Help You Succeed</span></h1>
+      <p>Whether you're a job seeker, an employer, or just curious — our specialist team in Kigali is ready to help. We respond fast, every time.</p>
+    </div>
+    <div class="contact-channels reveal d1">
+      <a href="tel:+250788000000" class="cc-btn">
+        <div class="cc-icon">📞</div>
+        <div><span class="cc-val">+250 788 000 000</span><span class="cc-sub">Call us directly</span></div>
+      </a>
+      <a href="https://wa.me/250788000000" class="cc-btn">
+        <div class="cc-icon">💬</div>
+        <div><span class="cc-val">WhatsApp Us</span><span class="cc-sub">Usually within 1 hour</span></div>
+      </a>
+      <a href="mailto:info@inezaagencies.rw" class="cc-btn">
+        <div class="cc-icon">✉️</div>
+        <div><span class="cc-val">info@inezaagencies.rw</span><span class="cc-sub">2 hour email response</span></div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- RESPONSE TIMES -->
+<div class="resp-bar">
+  <div class="resp-inner">
+    <div class="resp-item reveal d1">
+      <span class="resp-icon">📞</span>
+      <span class="resp-val">Instant</span>
+      <span class="resp-lbl">Phone Response</span>
+      <span class="resp-sub">During business hours</span>
+    </div>
+    <div class="resp-item reveal d2">
+      <span class="resp-icon">💬</span>
+      <span class="resp-val">&lt; 1 Hour</span>
+      <span class="resp-lbl">WhatsApp Response</span>
+      <span class="resp-sub">Mon–Sat · 8am–8pm</span>
+    </div>
+    <div class="resp-item reveal d3">
+      <span class="resp-icon">✉️</span>
+      <span class="resp-val">2 Hours</span>
+      <span class="resp-lbl">Email Response</span>
+      <span class="resp-sub">All business days</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTACT GRID -->
+<div class="ct-main">
+
+  <!-- LEFT INFO -->
+  <div class="ci reveal">
+    <h2>Visit Our<br><span style="background:var(--grad-text-em);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Kigali Office</span></h2>
+    <p>We welcome walk-ins during business hours. Our team is always ready to discuss your goals and match you with the right opportunities — whether you're a candidate or an employer.</p>
+
+    <div class="info-block">
+      <div class="ib-label">Office & Contact</div>
+      <div class="info-item">
+        <div class="ii-icon">📍</div>
+        <div><span class="ii-label">Address</span><span class="ii-val">KG 7 Ave, Kacyiru, Kigali</span><span class="ii-sub">Near the RDB building · Parking available</span></div>
+      </div>
+      <div class="info-item">
+        <div class="ii-icon">📞</div>
+        <div><span class="ii-label">Main Line</span><span class="ii-val">+250 788 000 000</span><span class="ii-sub">Also available on WhatsApp</span></div>
+      </div>
+      <div class="info-item">
+        <div class="ii-icon">✉️</div>
+        <div><span class="ii-label">General Email</span><span class="ii-val">info@inezaagencies.rw</span></div>
+      </div>
+      <div class="info-item">
+        <div class="ii-icon">💼</div>
+        <div><span class="ii-label">Employer Enquiries</span><span class="ii-val">employers@inezaagencies.rw</span></div>
+      </div>
+    </div>
+
+    <div class="info-block">
+      <div class="ib-label">Office Hours</div>
+      <div class="hours-grid">
+        <div class="hr-row open"><span class="hr-day">Monday</span><span class="hr-time">8:00 – 18:00</span></div>
+        <div class="hr-row open"><span class="hr-day">Tuesday</span><span class="hr-time">8:00 – 18:00</span></div>
+        <div class="hr-row open"><span class="hr-day">Wednesday</span><span class="hr-time">8:00 – 18:00</span></div>
+        <div class="hr-row open"><span class="hr-day">Thursday</span><span class="hr-time">8:00 – 18:00</span></div>
+        <div class="hr-row open"><span class="hr-day">Friday</span><span class="hr-time">8:00 – 18:00</span></div>
+        <div class="hr-row open"><span class="hr-day">Saturday</span><span class="hr-time">9:00 – 13:00</span></div>
+        <div class="hr-row" style="grid-column:1/-1"><span class="hr-day">Sunday</span><span class="hr-time hr-closed">Closed</span></div>
+      </div>
+      <p style="font-size:.74rem;color:var(--tx-600);margin-top:.6rem;line-height:1.55">WhatsApp available outside hours for urgent enquiries. Public holidays may affect times.</p>
+    </div>
+
+    <div class="info-block">
+      <div class="ib-label">Follow Us</div>
+      <div class="social-row">
+        <a href="#" class="soc-card"><span style="font-size:1rem">in</span><div><span class="soc-name">LinkedIn</span><span class="soc-handle">Ineza Company Ltd</span></div></a>
+        <a href="#" class="soc-card"><span style="font-size:1rem">𝕏</span><div><span class="soc-name">Twitter / X</span><span class="soc-handle">@InezaRwanda</span></div></a>
+        <a href="#" class="soc-card"><span style="font-size:1rem">f</span><div><span class="soc-name">Facebook</span><span class="soc-handle">@InezaAgencies</span></div></a>
+        <a href="#" class="soc-card"><span style="font-size:1rem">📱</span><div><span class="soc-name">Instagram</span><span class="soc-handle">@ineza.agencies</span></div></a>
+      </div>
+    </div>
+
+    <!-- MAP -->
+    <div class="map-box">
+      <div class="map-bar">
+        <span>📍 KG 7 Ave, Kacyiru, Kigali</span>
+        <a href="https://maps.google.com/?q=Kacyiru+Kigali+Rwanda" target="_blank">Open in Maps →</a>
+      </div>
+      <div class="map-canvas">
+        <svg width="100%" height="200" viewBox="0 0 600 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="600" height="200" fill="#0C1525"/>
+          <!-- Roads -->
+          <g stroke="#172032" stroke-width="14" stroke-linecap="round">
+            <line x1="0" y1="100" x2="600" y2="100"/><line x1="300" y1="0" x2="300" y2="200"/>
+            <line x1="0" y1="150" x2="600" y2="150"/><line x1="0" y1="50" x2="600" y2="50"/>
+            <line x1="150" y1="0" x2="150" y2="200"/><line x1="450" y1="0" x2="450" y2="200"/>
+          </g>
+          <!-- City blocks -->
+          <g fill="#0F1E33">
+            <rect x="158" y="108" width="134" height="34" rx="4"/>
+            <rect x="308" y="108" width="134" height="34" rx="4"/>
+            <rect x="158" y="58" width="134" height="34" rx="4"/>
+            <rect x="308" y="58" width="134" height="34" rx="4"/>
+            <rect x="8" y="58" width="134" height="34" rx="4"/>
+            <rect x="458" y="58" width="134" height="34" rx="4"/>
+            <rect x="8" y="108" width="134" height="34" rx="4"/>
+            <rect x="458" y="108" width="134" height="34" rx="4"/>
+          </g>
+          <!-- Road labels -->
+          <text x="308" y="98" fill="rgba(0,229,153,.25)" font-size="8" font-family="Inter">KG 7 Ave</text>
+          <text x="158" y="98" fill="rgba(0,229,153,.2)" font-size="8" font-family="Inter">KN 5 Rd</text>
+          <!-- Pin location -->
+          <circle cx="300" cy="100" r="18" fill="rgba(0,229,153,.12)" stroke="rgba(0,229,153,.4)" stroke-width="1.5">
+            <animate attributeName="r" from="14" to="28" dur="2.2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" from=".5" to="0" dur="2.2s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="300" cy="100" r="7" fill="#00E599"/>
+          <circle cx="300" cy="100" r="3" fill="#020f08"/>
+          <!-- RDB label -->
+          <rect x="316" y="66" width="38" height="20" rx="3" fill="#172032" stroke="rgba(0,229,153,.2)"/>
+          <text x="335" y="80" fill="rgba(0,229,153,.45)" font-size="7" font-family="Inter" text-anchor="middle">RDB</text>
+        </svg>
+      </div>
+      <div class="map-foot">
+        <span>Walking distance from Kacyiru roundabout · Free parking on site</span>
+        <a href="https://maps.google.com/?q=Kacyiru+Kigali+Rwanda" target="_blank">Get Directions →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT FORM -->
+  <div class="reveal d2">
+    <div class="cf-card" id="cf-card">
+      <h3>Send Us a Message</h3>
+      <p class="cf-sub">Tell us what you need and the right specialist will contact you within 2 business hours. No obligations, no pressure.</p>
+
+      <div class="form-group">
+        <label class="form-label">I am a… <span class="req">*</span></label>
+        <div class="type-grid">
+          <label class="type-opt"><input type="radio" name="utype" value="seeker" checked><span>👤 Job Seeker</span></label>
+          <label class="type-opt"><input type="radio" name="utype" value="employer"><span>🏢 Employer</span></label>
+          <label class="type-opt"><input type="radio" name="utype" value="partner"><span>🤝 Partner</span></label>
+          <label class="type-opt"><input type="radio" name="utype" value="other"><span>💬 Other</span></label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name <span class="req">*</span></label>
+          <input class="form-control" id="cf-fname" placeholder="Jean-Paul">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name <span class="req">*</span></label>
+          <input class="form-control" placeholder="Habimana">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address <span class="req">*</span></label>
+        <input type="email" class="form-control" id="cf-email" placeholder="you@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input type="tel" class="form-control" placeholder="+250 788 000 000">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Subject <span class="req">*</span></label>
+        <select class="form-control">
+          <option value="">What can we help with?</option>
+          <optgroup label="Job Seekers">
+            <option>Register as a candidate</option>
+            <option>CV review request</option>
+            <option>Question about a specific job</option>
+            <option>Interview coaching</option>
+            <option>International opportunities</option>
+          </optgroup>
+          <optgroup label="Employers">
+            <option>Post a vacancy</option>
+            <option>Executive search enquiry</option>
+            <option>Temporary / contract staffing</option>
+            <option>Bulk / volume recruitment</option>
+            <option>HR consulting services</option>
+            <option>Pricing enquiry</option>
+          </optgroup>
+          <optgroup label="General">
+            <option>Partnership or media enquiry</option>
+            <option>Complaint or feedback</option>
+            <option>Other</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Message <span class="req">*</span></label>
+        <textarea class="form-control" id="cf-msg" placeholder="Tell us as much as you can — the more detail you share, the better we can help. For employers: include the role title, seniority and timeline. For candidates: your current role and what you're looking for next…"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Preferred Contact Method</label>
+        <div class="pref-row">
+          <label class="pref-opt"><input type="checkbox"><span>📧 Email</span></label>
+          <label class="pref-opt"><input type="checkbox" checked><span>📞 Phone</span></label>
+          <label class="pref-opt"><input type="checkbox"><span>💬 WhatsApp</span></label>
+        </div>
+      </div>
+      <p class="form-note">By submitting, you agree to our <a href="#">Privacy Policy</a>. We'll respond within 2 business hours and never share your details without consent.</p>
+      <button class="submit-btn" id="cf-submit" onclick="sendMessage()">Send Message →</button>
+    </div>
+
+    <div class="cf-success" id="cf-success">
+      <span class="ss-ico">✉️</span>
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:800;color:var(--tx-100);margin-bottom:.5rem">Message Sent!</h3>
+      <p style="font-size:.88rem;color:var(--tx-400);max-width:380px;margin:0 auto 1.8rem;line-height:1.75">Thank you, <strong id="cf-name-out" style="color:var(--em-400)">there</strong>! A specialist from our team will be in touch within 2 business hours.</p>
+      <div style="display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap">
+        <a href="jobs/board.html" class="btn btn-primary">Browse Jobs →</a>
+        <a href="index.html" class="btn btn-secondary">Return Home</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TEAM -->
+<section class="team-section">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:3rem" class="reveal">
+      <span style="font-size:.7rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--em-400);display:inline-flex;align-items:center;gap:.4rem;margin-bottom:.65rem">Our Team</span>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,2.5rem);font-weight:900;margin-bottom:.6rem">Meet Your <span style="background:var(--grad-text-em);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Recruiter Team</span></h2>
+      <p style="font-size:.9rem;color:var(--tx-400);max-width:460px;margin:0 auto">Sector specialists with deep market knowledge. One of these experts will be your dedicated recruiter from day one.</p>
+    </div>
+    <div class="team-grid">
+      <div class="tm-card reveal d1">
+        <div class="tm-avatar">GM</div>
+        <div class="tm-name">Grace Mukamana</div>
+        <div class="tm-role">Senior Recruiter</div>
+        <div class="tm-spec">Technology & ICT</div>
+        <div class="tm-contact">
+          <div class="tmc" onclick="Toast.info('grace@inezaagencies.rw')">✉</div>
+          <div class="tmc" onclick="Toast.info('Connect on LinkedIn')">in</div>
+          <div class="tmc" onclick="Toast.info('WhatsApp: +250 788 111 001')">💬</div>
+        </div>
+      </div>
+      <div class="tm-card reveal d2">
+        <div class="tm-avatar" style="color:var(--gd-400);background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.4)">PN</div>
+        <div class="tm-name">Patrick Nzeyimana</div>
+        <div class="tm-role">Senior Recruiter</div>
+        <div class="tm-spec">Finance & Banking</div>
+        <div class="tm-contact">
+          <div class="tmc" onclick="Toast.info('patrick@inezaagencies.rw')">✉</div>
+          <div class="tmc">in</div>
+          <div class="tmc">💬</div>
+        </div>
+      </div>
+      <div class="tm-card reveal d3">
+        <div class="tm-avatar" style="color:var(--bl-400);background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.4)">AC</div>
+        <div class="tm-name">Alice Cyuzuzo</div>
+        <div class="tm-role">Recruiter</div>
+        <div class="tm-spec">Healthcare & NGO</div>
+        <div class="tm-contact">
+          <div class="tmc">✉</div>
+          <div class="tmc">in</div>
+          <div class="tmc">💬</div>
+        </div>
+      </div>
+      <div class="tm-card reveal d4">
+        <div class="tm-avatar" style="color:#A78BFA;background:rgba(147,51,234,.1);border-color:rgba(147,51,234,.35)">RU</div>
+        <div class="tm-name">Rodrigue Uwimana</div>
+        <div class="tm-role">Recruiter</div>
+        <div class="tm-spec">Engineering & Hospitality</div>
+        <div class="tm-contact">
+          <div class="tmc">✉</div>
+          <div class="tmc">in</div>
+          <div class="tmc">💬</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:3rem" class="reveal">
+      <span style="font-size:.7rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--em-400)">FAQ</span>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.7rem,3vw,2.3rem);font-weight:900;margin:.6rem 0">Quick Answers</h2>
+      <p style="font-size:.9rem;color:var(--tx-400);max-width:430px;margin:0 auto">The most common questions we get — answered honestly.</p>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item open">
+        <button class="faq-trigger" onclick="toggleFAQ(this)">Is it free to register as a candidate?<span class="faq-arrow">+</span></button>
+        <div class="faq-body"><p>Yes, completely free. Registering, uploading your CV and receiving recruiter support is 100% free for job seekers forever. Employers pay our fees, not candidates. We also offer optional Pro and Premium plans for candidates who want faster matching and career coaching.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-trigger" onclick="toggleFAQ(this)">How quickly will I hear from a recruiter after registering?<span class="faq-arrow">+</span></button>
+        <div class="faq-body"><p>Our team contacts every new candidate within 24 working hours of registration. You'll receive a call or WhatsApp message from your dedicated sector-specialist recruiter to discuss your profile and the best-fit opportunities.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-trigger" onclick="toggleFAQ(this)">Do I need to come to your office to register?<span class="faq-arrow">+</span></button>
+        <div class="faq-body"><p>Not at all. You can register entirely online using this platform. However, you're always welcome to visit our Kigali office — many candidates find the in-person meeting extremely valuable for career guidance. Walk-ins welcome during business hours.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-trigger" onclick="toggleFAQ(this)">Can Ineza help me find a job outside Rwanda?<span class="faq-arrow">+</span></button>
+        <div class="faq-body"><p>Yes. We have active employer partnerships in the UAE, UK, Germany, Canada and across East Africa. We also have a specific pipeline of Rwandan diaspora professionals seeking to return home. Indicate your international preference when you register.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-trigger" onclick="toggleFAQ(this)">How does your replacement guarantee work for employers?<span class="faq-arrow">+</span></button>
+        <div class="faq-body"><p>If a placed candidate leaves or is let go within the guarantee period (60–180 days depending on your plan), we conduct a full replacement search at no additional cost. This guarantee covers resignation, performance issues, or any other reason for departure.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-trigger" onclick="toggleFAQ(this)">What payment methods do you accept?<span class="faq-arrow">+</span></button>
+        <div class="faq-body"><p>We accept MTN Mobile Money (MoMo), Airtel Money, Visa, Mastercard, and direct bank transfer to our RWF account at Bank of Kigali. For employer invoices, we also offer 30-day payment terms for Business and Enterprise plan clients.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <p>© 2025 Ineza Company Ltd Agencies · KG 7 Ave, Kacyiru, Kigali, Rwanda · <a href="index.html">Home</a> · <a href="jobs/board.html">Jobs</a> · <a href="employer/post-job.html">Employers</a> · <a href="#">Privacy Policy</a> · <a href="#">Terms</a></p>
+  </div>
+</footer>
+
+<div id="toast-container"></div>
+<script src="js/app.js"></script>
+<script>
+// Reveal observer
+const ro = new IntersectionObserver(e => e.forEach(x => { if(x.isIntersecting){x.target.classList.add('visible');ro.unobserve(x.target);}}),{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+function toggleFAQ(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+function sendMessage() {
+  const fname = document.getElementById('cf-fname').value.trim();
+  const email = document.getElementById('cf-email').value.trim();
+  const msg   = document.getElementById('cf-msg').value.trim();
+  if (!fname || !email || !msg) {
+    Toast.error('Please fill in all required fields marked with *');
+    return;
+  }
+  const btn = document.getElementById('cf-submit');
+  btn.classList.add('loading');
+  btn.style.position = 'relative';
+  setTimeout(() => {
+    btn.classList.remove('loading');
+    document.getElementById('cf-name-out').textContent = fname;
+    document.getElementById('cf-card').style.display = 'none';
+    document.getElementById('cf-success').classList.add('show');
+    Toast.success('Message sent! We will be in touch within 2 hours. 🎉');
+  }, 1800);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings | Ineza Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/base.css">
+<style>
+body{background:var(--bg-deep)}
+.sidebar{background:var(--bg-surface);border-right:1px solid var(--bd-subtle);position:fixed;top:0;left:0;bottom:0;width:260px;display:flex;flex-direction:column;z-index:300;overflow-y:auto}
+.sb-brand{padding:1.4rem 1.25rem;border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;gap:.65rem}
+.sb-nav{padding:.75rem .65rem;flex:1}
+.sb-section{margin-bottom:1.5rem}
+.sb-section-lbl{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-800);padding:.3rem .65rem;margin-bottom:.35rem}
+.sb-link{display:flex;align-items:center;gap:.65rem;padding:.62rem .8rem;border-radius:var(--r-md);font-size:.86rem;font-weight:500;color:var(--tx-400);transition:all var(--ease);text-decoration:none}
+.sb-link:hover{background:var(--bg-raised);color:var(--tx-100)}
+.sb-link.active{background:rgba(0,229,153,.1);color:var(--em-400);border:1px solid var(--bd-em)}
+.dash-main{margin-left:260px;min-height:100vh}
+.topbar{padding:.9rem 2rem;background:var(--bg-surface);border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.content{padding:2rem;max-width:780px}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.62rem 1.4rem;border-radius:var(--r-md);font-size:.84rem;font-weight:600;font-family:var(--ff-body);transition:all var(--ease);border:none;cursor:pointer;white-space:nowrap}
+.btn-primary{background:linear-gradient(135deg,#00E599,#00C97D);color:#020f08}
+.btn-primary:hover{opacity:.92}
+.btn-secondary{background:var(--bg-raised);color:var(--tx-100);border:1.5px solid var(--bd-subtle)}
+.btn-secondary:hover{border-color:var(--bd-em)}
+.btn-danger{background:rgba(248,113,113,.12);color:var(--danger);border:1px solid rgba(248,113,113,.25)}
+.btn-danger:hover{background:rgba(248,113,113,.22)}
+.btn-sm{padding:.44rem .95rem;font-size:.8rem;border-radius:var(--r-sm)}
+.btn.loading{pointer-events:none;opacity:.7;position:relative}
+.btn.loading::before{content:'';position:absolute;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* SETTINGS NAV */
+.settings-nav{display:flex;gap:.3rem;flex-direction:column;margin-bottom:2rem;background:var(--bg-surface);border:1px solid var(--bd-subtle);border-radius:var(--r-xl);padding:.4rem;width:fit-content}
+.sn-tab{padding:.55rem 1.3rem;border-radius:var(--r-md);font-size:.84rem;font-weight:600;color:var(--tx-400);cursor:pointer;transition:all var(--ease);border:none;background:none;font-family:var(--ff-body);text-align:left;white-space:nowrap}
+.sn-tab:hover{color:var(--tx-100);background:var(--bg-raised)}
+.sn-tab.active{background:rgba(0,229,153,.1);color:var(--em-400)}
+/* SETTINGS LAYOUT */
+.settings-layout{display:grid;grid-template-columns:200px 1fr;gap:1.5rem;align-items:start}
+/* SECTION CARDS */
+.settings-card{background:var(--bg-surface);border:1px solid var(--bd-subtle);border-radius:var(--r-xl);overflow:hidden;margin-bottom:1.2rem}
+.sc-header{padding:1.2rem 1.5rem;border-bottom:1px solid var(--bd-subtle)}
+.sc-header h3{font-size:.92rem;font-weight:700;color:var(--tx-100);margin-bottom:.2rem}
+.sc-header p{font-size:.78rem;color:var(--tx-600)}
+.sc-body{padding:1.5rem}
+/* FORM */
+.form-group{margin-bottom:1.1rem}
+.form-group:last-child{margin-bottom:0}
+.form-label{display:block;font-size:.72rem;font-weight:600;color:var(--tx-400);margin-bottom:.38rem;letter-spacing:.06em;text-transform:uppercase}
+.form-label .req{color:var(--em-400);margin-left:2px}
+.form-control{width:100%;background:var(--bg-raised);border:1.5px solid var(--bd-subtle);border-radius:var(--r-md);padding:.7rem .95rem;font-family:var(--ff-body);font-size:.88rem;color:var(--tx-100);outline:none;transition:all var(--ease)}
+.form-control::placeholder{color:var(--tx-800)}
+.form-control:focus{border-color:var(--bd-em);box-shadow:0 0 0 3px var(--em-glow)}
+.form-control:disabled{opacity:.5;cursor:not-allowed}
+.form-hint{font-size:.72rem;color:var(--tx-600);margin-top:.3rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+/* TOGGLE */
+.toggle-row{display:flex;align-items:flex-start;justify-content:space-between;gap:1.5rem;padding:.9rem 0;border-bottom:1px solid var(--bd-subtle)}
+.toggle-row:last-child{border-bottom:none}
+.tr-info h4{font-size:.88rem;font-weight:600;color:var(--tx-100);margin-bottom:.18rem}
+.tr-info p{font-size:.77rem;color:var(--tx-600);line-height:1.55;max-width:380px}
+.toggle-switch{width:44px;height:24px;border-radius:12px;background:var(--bg-raised);border:1px solid var(--bd-subtle);position:relative;cursor:pointer;transition:all var(--ease);flex-shrink:0;margin-top:.15rem}
+.toggle-switch.on{background:var(--em-400);border-color:var(--em-400)}
+.toggle-switch::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:2px;left:2px;transition:transform var(--ease);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.toggle-switch.on::after{transform:translateX(20px)}
+/* SECURITY */
+.security-item{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.9rem 0;border-bottom:1px solid var(--bd-subtle);flex-wrap:wrap}
+.security-item:last-child{border-bottom:none}
+.si-left h4{font-size:.88rem;font-weight:600;color:var(--tx-100);margin-bottom:.18rem}
+.si-left p{font-size:.76rem;color:var(--tx-600)}
+.si-status{display:inline-flex;align-items:center;gap:.3rem;font-size:.72rem;font-weight:700;padding:.2rem .65rem;border-radius:99px}
+.si-enabled{background:rgba(0,229,153,.1);color:var(--em-400);border:1px solid var(--bd-em)}
+.si-disabled{background:var(--bg-raised);color:var(--tx-600);border:1px solid var(--bd-subtle)}
+/* SESSION LIST */
+.session-item{background:var(--bg-raised);border:1px solid var(--bd-subtle);border-radius:var(--r-lg);padding:1rem 1.2rem;margin-bottom:.65rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.session-item:last-child{margin-bottom:0}
+.session-item.current{border-color:var(--bd-em);background:rgba(0,229,153,.04)}
+.si-icon{font-size:1.4rem;flex-shrink:0}
+.si-device{font-size:.86rem;font-weight:600;color:var(--tx-100);margin-bottom:.1rem}
+.si-meta{font-size:.74rem;color:var(--tx-600)}
+.si-current-badge{font-size:.66rem;font-weight:700;padding:.12rem .55rem;background:rgba(0,229,153,.1);border:1px solid var(--bd-em);border-radius:99px;color:var(--em-400)}
+/* DANGER ZONE */
+.danger-card{background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.2);border-radius:var(--r-xl);overflow:hidden;margin-bottom:1.2rem}
+.danger-header{padding:1.2rem 1.5rem;border-bottom:1px solid rgba(248,113,113,.15)}
+.danger-header h3{font-size:.92rem;font-weight:700;color:var(--danger)}
+.danger-item{display:flex;align-items:flex-start;justify-content:space-between;gap:1.5rem;padding:1.1rem 1.5rem;border-bottom:1px solid rgba(248,113,113,.1);flex-wrap:wrap}
+.danger-item:last-child{border-bottom:none}
+.di-info h4{font-size:.88rem;font-weight:600;color:var(--tx-100);margin-bottom:.2rem}
+.di-info p{font-size:.76rem;color:var(--tx-600);line-height:1.55;max-width:380px}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(3,6,13,.9);backdrop-filter:blur(8px);z-index:500;display:none;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg-surface);border:1px solid var(--bd-muted);border-radius:var(--r-2xl);width:100%;max-width:500px;animation:mIn .3s ease}
+@keyframes mIn{from{transform:translateY(-14px);opacity:0}to{transform:translateY(0);opacity:1}}
+.m-head{padding:1.4rem 1.6rem;border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;justify-content:space-between}
+.m-head h3{font-size:1rem;font-weight:700;color:var(--tx-100)}
+.m-close{width:28px;height:28px;border-radius:50%;background:var(--bg-raised);border:1px solid var(--bd-subtle);color:var(--tx-400);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.m-body{padding:1.5rem 1.6rem}
+.m-foot{padding:1rem 1.6rem;border-top:1px solid var(--bd-subtle);display:flex;gap:.65rem;justify-content:flex-end}
+@media(max-width:768px){.dash-main{margin-left:0}.sidebar{display:none}.content{padding:1.2rem}.settings-layout{grid-template-columns:1fr}.settings-nav{flex-direction:row;overflow-x:auto;width:100%}.form-row{grid-template-columns:1fr}.topbar{padding:.75rem 1.2rem}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sb-brand">
+    <a href="../index.html" style="display:flex;align-items:center;gap:.5rem;text-decoration:none">
+      <svg width="28" height="28" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14.5" stroke="url(#lgs)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="7" ry="14.5" stroke="url(#lgs)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="14.5" ry="4.5" stroke="url(#lgs)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="20" ry="6.5" stroke="url(#lgs)" stroke-width="1.8" stroke-opacity=".65" transform="rotate(-25 20 20)"/><defs><linearGradient id="lgs" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#00E599"/><stop offset="1" stop-color="#3B82F6"/></linearGradient></defs></svg>
+      <div style="margin-left:.4rem"><div style="font-size:.85rem;font-weight:800;letter-spacing:.08em;background:linear-gradient(135deg,#4DFFA6,#00E599);-webkit-background-clip:text;-webkit-text-fill-color:transparent">INEZA</div></div>
+    </a>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">
+      <div class="sb-section-lbl">Main</div>
+      <a href="dashboard.html" class="sb-link">🏠 Dashboard</a>
+      <a href="../jobs/board.html" class="sb-link">💼 Browse Jobs</a>
+      <a href="applications.html" class="sb-link">📋 Applications</a>
+      <a href="messages.html" class="sb-link">💬 Messages</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Profile</div>
+      <a href="profile.html" class="sb-link">👤 My Profile</a>
+      <a href="cv.html" class="sb-link">📄 My CV</a>
+      <a href="alerts.html" class="sb-link">🔔 Job Alerts</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Account</div>
+      <a href="billing.html" class="sb-link">💳 Billing</a>
+      <a href="settings.html" class="sb-link active">⚙️ Settings</a>
+      <a href="#" class="sb-link" onclick="API.auth.logout()">🚪 Sign Out</a>
+    </div>
+  </nav>
+  <div class="sb-footer">
+    <div style="display:flex;align-items:center;gap:.6rem;padding:.6rem;background:var(--bg-raised);border-radius:var(--r-md);border:1px solid var(--bd-subtle)">
+      <div style="width:32px;height:32px;border-radius:50%;background:rgba(0,229,153,.1);border:2px solid var(--bd-em);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem;color:var(--em-400)" id="sb-av">JP</div>
+      <div><span style="font-size:.84rem;font-weight:700;color:var(--tx-100);display:block" id="sb-nm">—</span><span style="font-size:.66rem;color:var(--em-400);display:block" id="sb-pl">—</span></div>
+    </div>
+  </div>
+</aside>
+
+<main class="dash-main">
+  <div class="topbar">
+    <div>
+      <div style="font-size:1rem;font-weight:800;color:var(--tx-100)">Account Settings</div>
+      <div style="font-size:.76rem;color:var(--tx-600)">Manage your account, security, and preferences</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="settings-layout">
+      <!-- SETTINGS NAV -->
+      <div>
+        <div class="settings-nav">
+          <button class="sn-tab active" onclick="showTab('account',this)">👤 Account</button>
+          <button class="sn-tab" onclick="showTab('security',this)">🔐 Security</button>
+          <button class="sn-tab" onclick="showTab('notifications',this)">🔔 Notifications</button>
+          <button class="sn-tab" onclick="showTab('privacy',this)">🔒 Privacy</button>
+          <button class="sn-tab" onclick="showTab('danger',this)" style="color:var(--danger)">⚠️ Danger Zone</button>
+        </div>
+      </div>
+
+      <!-- SETTINGS CONTENT -->
+      <div>
+
+        <!-- ACCOUNT TAB -->
+        <div id="tab-account">
+          <div class="settings-card">
+            <div class="sc-header">
+              <h3>Account Information</h3>
+              <p>Your basic account details. Email cannot be changed — contact support if needed.</p>
+            </div>
+            <div class="sc-body">
+              <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input class="form-control" id="acc-email" disabled>
+                <div class="form-hint">To change your email, contact info@inezaagencies.rw</div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Account Role</label>
+                  <input class="form-control" id="acc-role" disabled style="text-transform:capitalize">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Current Plan</label>
+                  <input class="form-control" id="acc-plan" disabled>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Account Created</label>
+                <input class="form-control" id="acc-created" disabled>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Preferred Language</label>
+                <select class="form-control" id="acc-language">
+                  <option value="en">English</option>
+                  <option value="fr">Français</option>
+                  <option value="rw">Kinyarwanda</option>
+                </select>
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="saveAccountSettings()">Save Changes</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECURITY TAB -->
+        <div id="tab-security" style="display:none">
+          <!-- CHANGE PASSWORD -->
+          <div class="settings-card">
+            <div class="sc-header">
+              <h3>🔑 Change Password</h3>
+              <p>Use a strong password with a mix of letters, numbers, and symbols.</p>
+            </div>
+            <div class="sc-body">
+              <div class="form-group">
+                <label class="form-label">Current Password <span class="req">*</span></label>
+                <input type="password" class="form-control" id="pw-current" placeholder="Enter current password">
+              </div>
+              <div class="form-group">
+                <label class="form-label">New Password <span class="req">*</span></label>
+                <input type="password" class="form-control" id="pw-new" placeholder="Minimum 8 characters" oninput="checkPasswordStrength(this.value)">
+                <div id="pw-strength" style="margin-top:.4rem;height:3px;background:var(--bd-subtle);border-radius:99px;overflow:hidden">
+                  <div id="pw-strength-fill" style="height:100%;border-radius:99px;width:0;transition:all .3s ease"></div>
+                </div>
+                <div class="form-hint" id="pw-strength-label">Enter a password to check its strength</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Confirm New Password <span class="req">*</span></label>
+                <input type="password" class="form-control" id="pw-confirm" placeholder="Repeat new password">
+              </div>
+              <button class="btn btn-primary btn-sm" id="change-pw-btn" onclick="changePassword()">Update Password</button>
+            </div>
+          </div>
+
+          <!-- TWO-FACTOR AUTH -->
+          <div class="settings-card">
+            <div class="sc-header">
+              <h3>🛡️ Two-Factor Authentication</h3>
+              <p>Add an extra layer of security to your account.</p>
+            </div>
+            <div class="sc-body">
+              <div class="security-item">
+                <div class="si-left">
+                  <h4>SMS / WhatsApp 2FA</h4>
+                  <p>Receive a verification code via SMS or WhatsApp when signing in from a new device.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:.75rem;flex-shrink:0">
+                  <span class="si-status si-disabled" id="2fa-status">● Disabled</span>
+                  <button class="btn btn-secondary btn-sm" id="2fa-btn" onclick="toggle2FA()">Enable 2FA</button>
+                </div>
+              </div>
+              <div class="security-item">
+                <div class="si-left">
+                  <h4>Login Notifications</h4>
+                  <p>Get an email alert whenever your account is accessed from a new location or device.</p>
+                </div>
+                <div class="toggle-switch on" id="login-notif" onclick="this.classList.toggle('on')"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ACTIVE SESSIONS -->
+          <div class="settings-card">
+            <div class="sc-header">
+              <h3>💻 Active Sessions</h3>
+              <p>Devices currently signed in to your account. Sign out from unfamiliar devices immediately.</p>
+            </div>
+            <div class="sc-body">
+              <div class="session-item current">
+                <span class="si-icon">💻</span>
+                <div style="flex:1">
+                  <div class="si-device">Chrome on Windows · Kigali, Rwanda</div>
+                  <div class="si-meta">This device · Active now</div>
+                </div>
+                <span class="si-current-badge">Current</span>
+              </div>
+              <div class="session-item">
+                <span class="si-icon">📱</span>
+                <div style="flex:1">
+                  <div class="si-device">Safari on iPhone · Kigali, Rwanda</div>
+                  <div class="si-meta">Last active 3 hours ago</div>
+                </div>
+                <button class="btn btn-danger btn-sm" onclick="revokeSession(this,'mobile')">Sign Out</button>
+              </div>
+              <div style="margin-top:1rem;padding-top:.85rem;border-top:1px solid var(--bd-subtle)">
+                <button class="btn btn-danger btn-sm" onclick="revokeAllSessions()">Sign Out All Other Devices</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOTIFICATIONS TAB -->
+        <div id="tab-notifications" style="display:none">
+          <div class="settings-card">
+            <div class="sc-header">
+              <h3>📧 Email Notifications</h3>
+              <p>Choose which emails you want to receive from Ineza.</p>
+            </div>
+            <div class="sc-body">
+              <div class="toggle-row">
+                <div class="tr-info"><h4>Job Alert Emails</h4><p>Receive personalised job matches based on your profile and saved searches.</p></div>
+                <div class="toggle-switch on" onclick="this.classList.toggle('on')"></div>
+              </div>
+              <div class="toggle-row">
+                <div class="tr-info"><h4>Application Status Updates</h4><p>Get notified when your application status changes or an employer takes action.</p></div>
+                <div class="toggle-switch on" onclick="this.classList.toggle('on')"></div>
+              </div>
+              <div class="toggle-row">
+                <div class="tr-info"><h4>Recruiter Messages</h4><p>Email notifications when your Ineza recruiter sends you a message.</p></div>
+                <div class="toggle-switch on" onclick="this.classList.toggle('on')"></div>
+              </div>
+              <div class="toggle-row">
+                <div class="tr-info"><h4>Interview Reminders</h4><p>Reminder emails 24 hours and 1 hour before scheduled interviews.</p></div>
+                <div class="toggle-switch on" onclick="this.classList.toggle('on')"></div>
+              </div>
+              <div class="toggle-row">
+                <div class="tr-info"><h4>Career Tips & Resources</h4><p>Occasional emails with interview tips, salary guides, and career advice.</p></div>
+                <div class="toggle-switch" onclick="this.classList.toggle('on')"></div>
+              </div>
+              <div class="toggle-row">
+                <div class="tr-info"><h4>Platform Updates & News</h4><p>New features, improvements, and important platform announcements.</p></div>
+                <div class="toggle-switch" onclick="this.classList.toggle('on')"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <div class="sc-header">
+              <h3>📱 WhatsApp & SMS Notifications</h3>
+              <p>Instant notifications sent directly to your phone.</p>
+            </div>
+            <div class="sc-body">
+              <div class="toggle-row">
+                <div class="tr-info"><h4>WhatsApp Job Alerts</h4><p>Receive matching job notifications directly on WhatsApp for instant visibility.</p></div>
+                <div class="toggle-switch" onclick="this.classList.toggle('on')"></div>
+              </div>
+              <div class="toggle-row">
+                <div class="tr-info"><h4>WhatsApp Application Updates</h4><p>Real-time application status changes sent to your WhatsApp.</p></div>
+                <div class="toggle-switch on" onclick="this.classList.toggle('on')"></div>
+              </div>
+              <div class="toggle-row">
+                <div class="tr-info"><h4>Interview Alerts via SMS</h4><p>SMS backup for interview reminders in case WhatsApp is unavailable.</p></div>
+                <div class="toggle-switch" onclick="this.classList.toggle('on')"></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:flex-end;margin-top:.5rem">
+            <button class="btn btn-primary btn-sm" onclick="saveNotificationSettings()">Save Notification Settings</button>
+          </div>
+        </div>
+
+        <!-- PRIVACY TAB -->
+        <div id="tab-privacy" style="display:none">
+          <div class="settings-card">
+            <div class="sc-header">
+              <h3>👁️ Profile Visibility</h3>
+              <p>Control who can see your profile and how it appears to employers.</p>
+            </div>
+            <div class="sc-body">
+              <div class="toggle-row">
+                <div class="tr-info"><h4>Profile Visible to Employers</h4><p>Allow Ineza to share your profile with employers seeking candidates with your skills. Disable for a confidential job search.</p></div>
+                <div class="toggle-switch on" id="profile-visible-toggle" onclick="this.classList.toggle('on')"></div>
+              </div>
+              <div class="toggle-row">
+                <div class="tr-info"><h4>Show Salary Expectations</h4><p>Display your salary expectations to employers viewing your profile through Ineza.</p></div>
+                <div class="toggle-switch" onclick="this.classList.toggle('on')"></div>
+              </div>
+              <div class="toggle-row">
+                <div class="tr-info"><h4>Show Current Employer</h4><p>Display your current employer name on your public profile. Disable if your job search is confidential.</p></div>
+                <div class="toggle-switch on" onclick="this.classList.toggle('on')"></div>
+              </div>
+              <div class="toggle-row">
+                <div class="tr-info"><h4>Allow Recruiter Outreach</h4><p>Allow Ineza recruiters to proactively contact you about relevant opportunities that match your profile.</p></div>
+                <div class="toggle-switch on" onclick="this.classList.toggle('on')"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <div class="sc-header">
+              <h3>📊 Data & Analytics</h3>
+              <p>Control how Ineza uses your data to improve your experience.</p>
+            </div>
+            <div class="sc-body">
+              <div class="toggle-row">
+                <div class="tr-info"><h4>Usage Analytics</h4><p>Allow Ineza to collect anonymous usage data to improve the platform for all users.</p></div>
+                <div class="toggle-switch on" onclick="this.classList.toggle('on')"></div>
+              </div>
+              <div class="toggle-row">
+                <div class="tr-info"><h4>Profile Improvement Suggestions</h4><p>Allow Ineza to analyse your profile and suggest improvements to increase your match rate.</p></div>
+                <div class="toggle-switch on" onclick="this.classList.toggle('on')"></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.5rem">
+            <button class="btn btn-secondary btn-sm" onclick="downloadData()">📥 Download My Data</button>
+            <button class="btn btn-primary btn-sm" onclick="savePrivacySettings()">Save Privacy Settings</button>
+          </div>
+        </div>
+
+        <!-- DANGER ZONE TAB -->
+        <div id="tab-danger" style="display:none">
+          <div class="danger-card">
+            <div class="danger-header"><h3>⚠️ Danger Zone</h3></div>
+            <div class="danger-item">
+              <div class="di-info">
+                <h4>Export All My Data</h4>
+                <p>Download a complete copy of all your data on Ineza in JSON format. This includes your profile, applications, messages, and payment history.</p>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="downloadData()">Export Data</button>
+            </div>
+            <div class="danger-item">
+              <div class="di-info">
+                <h4>Deactivate Account</h4>
+                <p>Temporarily deactivate your account. Your profile will be hidden from employers but all your data will be preserved. You can reactivate at any time.</p>
+              </div>
+              <button class="btn btn-danger btn-sm" onclick="openDeactivateModal()">Deactivate Account</button>
+            </div>
+            <div class="danger-item">
+              <div class="di-info">
+                <h4>Delete Account Permanently</h4>
+                <p>Permanently delete your Ineza account and all associated data. This action is irreversible. All applications, messages, and profile data will be permanently removed.</p>
+              </div>
+              <button class="btn btn-danger btn-sm" onclick="openDeleteModal()">Delete Account</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- DEACTIVATE MODAL -->
+<div class="modal-overlay" id="deactivate-modal" onclick="if(event.target===this)closeModal('deactivate-modal')">
+  <div class="modal">
+    <div class="m-head"><h3>Deactivate Account</h3><button class="m-close" onclick="closeModal('deactivate-modal')">✕</button></div>
+    <div class="m-body">
+      <div style="background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);border-radius:var(--r-md);padding:1rem;margin-bottom:1.2rem">
+        <div style="font-size:.88rem;font-weight:700;color:var(--tx-100);margin-bottom:.3rem">⏸ Your account will be hidden</div>
+        <div style="font-size:.8rem;color:var(--tx-400);line-height:1.65">Employers and recruiters will not be able to find your profile. Your data is safe and you can reactivate at any time by signing back in.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Enter your password to confirm</label>
+        <input type="password" class="form-control" id="deactivate-pw" placeholder="Your current password">
+      </div>
+    </div>
+    <div class="m-foot">
+      <button class="btn btn-secondary btn-sm" onclick="closeModal('deactivate-modal')">Cancel</button>
+      <button class="btn btn-danger btn-sm" onclick="confirmDeactivate()">Deactivate Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-overlay" id="delete-modal" onclick="if(event.target===this)closeModal('delete-modal')">
+  <div class="modal">
+    <div class="m-head"><h3>Delete Account Permanently</h3><button class="m-close" onclick="closeModal('delete-modal')">✕</button></div>
+    <div class="m-body">
+      <div style="background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);border-radius:var(--r-md);padding:1rem;margin-bottom:1.2rem">
+        <div style="font-size:.88rem;font-weight:700;color:var(--danger);margin-bottom:.3rem">🚨 This action is permanent and irreversible</div>
+        <div style="font-size:.8rem;color:var(--tx-400);line-height:1.65">All your profile data, applications, messages, and payment history will be permanently deleted. Active subscriptions will be cancelled.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Type <strong style="color:var(--danger)">DELETE</strong> to confirm</label>
+        <input class="form-control" id="delete-confirm-text" placeholder="Type DELETE">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Enter your password</label>
+        <input type="password" class="form-control" id="delete-pw" placeholder="Your current password">
+      </div>
+    </div>
+    <div class="m-foot">
+      <button class="btn btn-secondary btn-sm" onclick="closeModal('delete-modal')">Keep My Account</button>
+      <button class="btn btn-danger btn-sm" onclick="confirmDelete()">Permanently Delete</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script src="../js/api.js"></script>
+<script>
+let currentUser = null;
+
+document.addEventListener('DOMContentLoaded', async () => {
+  currentUser = requireLogin();
+  if (!currentUser) return;
+  document.getElementById('sb-av').textContent = Format.initials(currentUser.name || currentUser.email);
+  document.getElementById('sb-nm').textContent = currentUser.name?.split(' ')[0] || '—';
+  const planMap = { candidate_free:'Free Plan', candidate_pro:'✨ Pro Seeker', candidate_premium:'💎 Premium', employer_starter:'Starter', employer_business:'Business', employer_enterprise:'Enterprise' };
+  document.getElementById('sb-pl').textContent = planMap[currentUser.plan] || currentUser.plan;
+
+  // Fill account tab
+  document.getElementById('acc-email').value   = currentUser.email || '—';
+  document.getElementById('acc-role').value    = currentUser.role || '—';
+  document.getElementById('acc-plan').value    = planMap[currentUser.plan] || currentUser.plan;
+
+  try {
+    const { user } = await API.auth.me();
+    if (user?.created_at) {
+      document.getElementById('acc-created').value = Format.date(user.created_at);
+    }
+  } catch {}
+});
+
+function showTab(name, btn) {
+  document.querySelectorAll('[id^="tab-"]').forEach(t => t.style.display = 'none');
+  document.getElementById('tab-' + name).style.display = 'block';
+  document.querySelectorAll('.sn-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+// PASSWORD STRENGTH
+function checkPasswordStrength(pw) {
+  const fill  = document.getElementById('pw-strength-fill');
+  const label = document.getElementById('pw-strength-label');
+  let score = 0;
+  if (pw.length >= 8)  score++;
+  if (pw.length >= 12) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+  const levels = [
+    { pct:'20%', color:'var(--danger)', label:'Very weak' },
+    { pct:'40%', color:'#F97316',       label:'Weak' },
+    { pct:'60%', color:var_('--gd-400'),'label':'Fair' },
+    { pct:'80%', color:'#A3E635',       label:'Strong' },
+    { pct:'100%',color:'var(--em-400)', label:'Very strong' }
+  ];
+  const lvl = levels[Math.max(0, Math.min(score - 1, 4))] || levels[0];
+  fill.style.width     = lvl.pct;
+  fill.style.background = lvl.color;
+  label.textContent    = `Password strength: ${lvl.label}`;
+  label.style.color    = lvl.color;
+}
+function var_(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+async function changePassword() {
+  const current = document.getElementById('pw-current').value;
+  const newPw   = document.getElementById('pw-new').value;
+  const confirm = document.getElementById('pw-confirm').value;
+  if (!current || !newPw || !confirm) { Toast.error('All password fields are required'); return; }
+  if (newPw !== confirm)  { Toast.error('New passwords do not match'); return; }
+  if (newPw.length < 8)  { Toast.error('Password must be at least 8 characters'); return; }
+  const btn = document.getElementById('change-pw-btn');
+  btn.classList.add('loading'); btn.style.position = 'relative';
+  try {
+    await API.auth.changePassword(current, newPw);
+    Toast.success('Password updated successfully! Please sign in again.');
+    setTimeout(() => API.auth.logout(), 2500);
+  } catch (err) {
+    Toast.error(err.message || 'Failed to change password');
+  } finally { btn.classList.remove('loading'); }
+}
+
+function toggle2FA() {
+  const status = document.getElementById('2fa-status');
+  const btn    = document.getElementById('2fa-btn');
+  const isEnabled = status.classList.contains('si-enabled');
+  if (isEnabled) {
+    status.textContent = '● Disabled'; status.className = 'si-status si-disabled';
+    btn.textContent = 'Enable 2FA'; Toast.info('Two-factor authentication disabled');
+  } else {
+    status.textContent = '● Enabled'; status.className = 'si-status si-enabled';
+    btn.textContent = 'Disable 2FA'; Toast.success('Two-factor authentication enabled! You will receive SMS codes on sign-in.');
+  }
+}
+
+function revokeSession(btn, type) {
+  btn.closest('.session-item').style.opacity = '.5';
+  setTimeout(() => {
+    btn.closest('.session-item').remove();
+    Toast.success(`${type === 'mobile' ? 'Mobile device' : 'Device'} signed out successfully`);
+  }, 800);
+}
+
+function revokeAllSessions() {
+  if (!confirm('Sign out of all other devices? You will remain signed in here.')) return;
+  document.querySelectorAll('.session-item:not(.current)').forEach(s => s.remove());
+  Toast.success('All other sessions terminated');
+}
+
+function saveAccountSettings() { Toast.success('Account settings saved'); }
+function saveNotificationSettings() { Toast.success('Notification preferences saved'); }
+function savePrivacySettings() { Toast.success('Privacy settings saved'); }
+
+function downloadData() {
+  Toast.info('Preparing your data export… You will receive an email with a download link within 24 hours.');
+}
+
+function openDeactivateModal() {
+  document.getElementById('deactivate-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function openDeleteModal() {
+  document.getElementById('delete-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+async function confirmDeactivate() {
+  const pw = document.getElementById('deactivate-pw').value;
+  if (!pw) { Toast.error('Please enter your password'); return; }
+  try {
+    Toast.info('Account deactivated. Sign in again to reactivate.');
+    setTimeout(() => API.auth.logout(), 2000);
+  } catch (err) { Toast.error(err.message || 'Failed to deactivate account'); }
+}
+
+async function confirmDelete() {
+  const confirmText = document.getElementById('delete-confirm-text').value;
+  const pw          = document.getElementById('delete-pw').value;
+  if (confirmText !== 'DELETE') { Toast.error('Please type DELETE exactly to confirm'); return; }
+  if (!pw) { Toast.error('Please enter your password'); return; }
+  try {
+    Toast.success('Account deletion request submitted. You will receive a confirmation email.');
+    setTimeout(() => API.auth.logout(), 2500);
+  } catch (err) { Toast.error(err.message || 'Failed to submit deletion request. Contact support.'); }
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+</script>
+</body>
+</html>

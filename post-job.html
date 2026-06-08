@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post a Job | Ineza Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/base.css">
+<style>
+body { background:var(--bg-deep); }
+.navbar { background:rgba(7,12,24,.96); backdrop-filter:blur(20px); border-bottom:1px solid var(--bd-subtle); padding:.65rem 0; position:sticky; top:0; z-index:200; }
+.nav-inner { max-width:1200px; margin:0 auto; padding:0 1.5rem; display:flex; align-items:center; gap:1.2rem; }
+.btn { display:inline-flex; align-items:center; gap:.4rem; padding:.6rem 1.4rem; border-radius:var(--r-md); font-size:.84rem; font-weight:600; font-family:var(--ff-body); transition:all var(--ease); border:none; cursor:pointer; }
+.btn-primary { background:linear-gradient(135deg,#00E599,#00C97D); color:#020f08; }
+.btn-primary:hover { opacity:.92; transform:translateY(-1px); }
+.btn-secondary { background:var(--bg-raised); color:var(--tx-100); border:1.5px solid var(--bd-subtle); }
+.btn-secondary:hover { border-color:var(--bd-em); }
+.btn-gold { background:linear-gradient(135deg,#FCD34D,#F59E0B); color:#1a0d00; }
+.btn-gold:hover { opacity:.92; }
+.btn-sm { padding:.48rem 1rem; font-size:.8rem; border-radius:var(--r-sm); }
+.btn-lg { padding:.88rem 2.2rem; font-size:.96rem; }
+.btn-block { width:100%; justify-content:center; }
+.btn.loading { pointer-events:none; opacity:.7; }
+.btn.loading::before { content:''; position:absolute; width:16px; height:16px; border:2px solid rgba(255,255,255,.3); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+.form-group { margin-bottom:1.2rem; }
+.form-label { display:block; font-size:.74rem; font-weight:600; color:var(--tx-400); margin-bottom:.38rem; letter-spacing:.06em; text-transform:uppercase; }
+.form-label .req { color:var(--em-400); margin-left:2px; }
+.form-control { width:100%; background:var(--bg-raised); border:1.5px solid var(--bd-subtle); border-radius:var(--r-md); padding:.72rem 1rem; font-size:.9rem; color:var(--tx-100); outline:none; transition:all var(--ease); }
+.form-control::placeholder { color:var(--tx-800); }
+.form-control:focus { border-color:rgba(251,191,36,.4); box-shadow:0 0 0 3px rgba(251,191,36,.08); }
+select.form-control { cursor:pointer; } select.form-control option { background:var(--bg-raised); }
+textarea.form-control { resize:vertical; line-height:1.65; }
+.form-hint { font-size:.72rem; color:var(--tx-600); margin-top:.3rem; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+.form-row-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:.85rem; }
+
+/* PAGE */
+.page-wrap { max-width:1100px; margin:0 auto; padding:2.5rem 1.5rem; display:grid; grid-template-columns:1fr 360px; gap:2.5rem; align-items:start; }
+.form-card { background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-2xl); padding:2.2rem; }
+.form-card h2 { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:var(--tx-100); margin-bottom:.35rem; }
+.form-card > p { font-size:.88rem; color:var(--tx-400); margin-bottom:1.8rem; line-height:1.65; }
+
+/* SECTION DIVIDER */
+.sect-div { border-top:1px solid var(--bd-subtle); margin:1.8rem 0; padding-top:1.5rem; }
+.sect-label { font-size:.72rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--tx-600); margin-bottom:1rem; }
+
+/* RICH TEXT TOOLBAR */
+.rte-toolbar { display:flex; gap:.3rem; padding:.5rem; background:var(--bg-raised); border:1.5px solid var(--bd-subtle); border-bottom:none; border-radius:var(--r-md) var(--r-md) 0 0; flex-wrap:wrap; }
+.rte-btn { padding:.3rem .6rem; background:none; border:1px solid transparent; border-radius:var(--r-sm); font-size:.8rem; color:var(--tx-400); cursor:pointer; transition:all var(--ease); font-family:var(--ff-body); }
+.rte-btn:hover { background:var(--bg-overlay); color:var(--tx-100); }
+.rte-btn.active { background:rgba(251,191,36,.1); border-color:rgba(251,191,36,.3); color:var(--gd-400); }
+.rte-area { border:1.5px solid var(--bd-subtle); border-radius:0 0 var(--r-md) var(--r-md); min-height:180px; }
+.rte-area textarea.form-control { border:none; border-radius:0 0 var(--r-md) var(--r-md); min-height:180px; }
+.rte-area textarea.form-control:focus { box-shadow:none; border-color:transparent; }
+.rte-area:focus-within { border-color:rgba(251,191,36,.4); }
+
+/* TAGS INPUT */
+.tags-wrap { background:var(--bg-raised); border:1.5px solid var(--bd-subtle); border-radius:var(--r-md); padding:.55rem; display:flex; flex-wrap:wrap; gap:.38rem; cursor:text; transition:border-color var(--ease); min-height:52px; }
+.tags-wrap:focus-within { border-color:rgba(251,191,36,.4); }
+.job-tag { display:inline-flex; align-items:center; gap:.3rem; padding:.2rem .6rem; background:rgba(251,191,36,.1); border:1px solid rgba(251,191,36,.25); border-radius:99px; font-size:.76rem; font-weight:600; color:var(--gd-400); }
+.job-tag button { background:none; border:none; color:rgba(251,191,36,.6); cursor:pointer; font-size:.85rem; padding:0; line-height:1; }
+.tags-real-input { background:none; border:none; outline:none; font-family:var(--ff-body); font-size:.85rem; color:var(--tx-100); flex:1; min-width:120px; padding:.2rem .3rem; }
+.tags-real-input::placeholder { color:var(--tx-800); }
+.tag-suggestions { display:flex; flex-wrap:wrap; gap:.3rem; margin-top:.5rem; }
+.ts-chip { padding:.18rem .62rem; background:var(--bg-raised); border:1px solid var(--bd-subtle); border-radius:99px; font-size:.72rem; color:var(--tx-600); cursor:pointer; transition:all var(--ease); }
+.ts-chip:hover { border-color:rgba(251,191,36,.3); color:var(--gd-400); }
+
+/* CHECKBOX GROUP */
+.check-grid { display:grid; grid-template-columns:1fr 1fr; gap:.45rem; }
+.check-opt { display:flex; align-items:center; gap:.55rem; padding:.52rem .7rem; background:var(--bg-raised); border:1.5px solid var(--bd-subtle); border-radius:var(--r-sm); cursor:pointer; transition:all var(--ease); }
+.check-opt:hover { border-color:rgba(251,191,36,.3); }
+.check-opt input { accent-color:var(--gd-400); width:14px; height:14px; cursor:pointer; }
+.check-opt span { font-size:.83rem; color:var(--tx-200); }
+.check-opt:has(input:checked) { border-color:rgba(251,191,36,.3); background:rgba(251,191,36,.05); }
+.check-opt:has(input:checked) span { color:var(--gd-400); }
+
+/* RADIO GROUP */
+.radio-row { display:flex; gap:.5rem; flex-wrap:wrap; }
+.radio-opt { display:flex; align-items:center; gap:.5rem; padding:.5rem 1rem; background:var(--bg-raised); border:1.5px solid var(--bd-subtle); border-radius:99px; cursor:pointer; transition:all var(--ease); }
+.radio-opt:hover { border-color:rgba(251,191,36,.3); }
+.radio-opt input { accent-color:var(--gd-400); cursor:pointer; }
+.radio-opt span { font-size:.83rem; color:var(--tx-200); cursor:pointer; }
+.radio-opt:has(input:checked) { border-color:rgba(251,191,36,.35); background:rgba(251,191,36,.07); }
+.radio-opt:has(input:checked) span { color:var(--gd-400); }
+
+/* SALARY TOGGLE */
+.salary-row { display:grid; grid-template-columns:1fr auto 1fr; gap:.6rem; align-items:center; }
+.salary-sep { text-align:center; font-size:.8rem; color:var(--tx-800); }
+.hide-sal-wrap { display:flex; align-items:center; gap:.6rem; margin-top:.6rem; }
+.hide-sal-wrap input { accent-color:var(--gd-400); cursor:pointer; }
+.hide-sal-wrap label { font-size:.82rem; color:var(--tx-400); cursor:pointer; }
+
+/* RIGHT SIDEBAR */
+.sidebar-card { background:var(--bg-surface); border:1px solid var(--bd-subtle); border-radius:var(--r-xl); overflow:hidden; margin-bottom:1.2rem; }
+.sc-header { padding:1.1rem 1.3rem; border-bottom:1px solid var(--bd-subtle); }
+.sc-header h4 { font-size:.88rem; font-weight:700; color:var(--tx-100); }
+.sc-body { padding:1.1rem 1.3rem; }
+
+/* PLAN PILLS */
+.plan-pills { display:flex; flex-direction:column; gap:.6rem; }
+.plan-pill { padding:.85rem 1rem; border:1.5px solid var(--bd-subtle); border-radius:var(--r-lg); cursor:pointer; transition:all var(--ease); display:flex; align-items:center; gap:.75rem; }
+.plan-pill:hover { border-color:rgba(251,191,36,.3); }
+.plan-pill.selected { border-color:rgba(251,191,36,.4); background:rgba(251,191,36,.05); }
+.plan-pill input { accent-color:var(--gd-400); flex-shrink:0; }
+.pp-name { font-size:.86rem; font-weight:700; color:var(--tx-100); display:block; }
+.pp-price { font-size:.72rem; color:var(--tx-600); display:block; }
+.pp-limit { font-size:.7rem; color:var(--gd-400); display:block; margin-top:.08rem; }
+
+/* JOB PREVIEW */
+.preview-card { background:var(--bg-raised); border:1px solid var(--bd-subtle); border-radius:var(--r-lg); padding:1.1rem; transition:all var(--ease); }
+.preview-card:hover { border-color:rgba(251,191,36,.3); }
+.pv-header { display:flex; gap:.75rem; align-items:flex-start; margin-bottom:.7rem; }
+.pv-logo { width:42px; height:42px; border-radius:var(--r-sm); background:rgba(251,191,36,.1); border:1px solid rgba(251,191,36,.25); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.82rem; color:var(--gd-400); flex-shrink:0; }
+.pv-title { font-size:.92rem; font-weight:700; color:var(--tx-100); margin-bottom:.1rem; }
+.pv-company { font-size:.78rem; color:var(--tx-400); }
+.pv-tags { display:flex; gap:.3rem; flex-wrap:wrap; margin-bottom:.65rem; }
+.pv-tag { font-size:.65rem; font-weight:700; padding:.15rem .52rem; border-radius:99px; background:rgba(0,229,153,.1); color:#00E599; border:1px solid rgba(0,229,153,.2); }
+.pv-footer { display:flex; justify-content:space-between; align-items:center; padding-top:.6rem; border-top:1px solid var(--bd-subtle); }
+.pv-salary { font-size:.86rem; font-weight:700; color:#00E599; }
+.pv-meta { font-size:.7rem; color:var(--tx-800); }
+
+/* TIPS */
+.tip-item { display:flex; gap:.6rem; margin-bottom:.75rem; }
+.tip-item:last-child { margin-bottom:0; }
+.tip-ico { width:26px; height:26px; flex-shrink:0; background:rgba(0,229,153,.08); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.8rem; margin-top:.05rem; }
+.tip-text { font-size:.8rem; color:var(--tx-400); line-height:1.6; }
+.tip-text strong { color:var(--tx-100); display:block; margin-bottom:.1rem; }
+
+/* SUCCESS STATE */
+.success-state { display:none; text-align:center; padding:3rem 1.5rem; }
+.success-state.show { display:block; }
+
+@media(max-width:1024px) { .page-wrap{grid-template-columns:1fr} }
+@media(max-width:768px) { .form-row,.form-row-3{grid-template-columns:1fr}.check-grid{grid-template-columns:1fr 1fr}.page-wrap{padding:1.5rem 1rem} }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" style="display:flex;align-items:center;gap:.55rem;text-decoration:none">
+      <svg width="30" height="30" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14.5" stroke="url(#lgp)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="7" ry="14.5" stroke="url(#lgp)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="14.5" ry="4.5" stroke="url(#lgp)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="20" ry="6.5" stroke="url(#lgp)" stroke-width="1.8" stroke-opacity=".65" transform="rotate(-25 20 20)"/><defs><linearGradient id="lgp" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#FBBF24"/><stop offset="1" stop-color="#F59E0B"/></linearGradient></defs></svg>
+      <div style="margin-left:.4rem"><div style="font-size:.88rem;font-weight:800;letter-spacing:.08em;background:linear-gradient(135deg,#FCD34D,#F59E0B);-webkit-background-clip:text;-webkit-text-fill-color:transparent">INEZA</div></div>
+    </a>
+    <div style="display:flex;align-items:center;gap:.6rem;margin-left:auto">
+      <a href="dashboard.html" class="btn btn-secondary btn-sm">← Dashboard</a>
+      <a href="../jobs/board.html" class="btn btn-secondary btn-sm">View Live Jobs</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- FORM -->
+  <div>
+    <div class="form-card" id="job-form-card">
+      <h2>Post a New Job</h2>
+      <p>Fill in the details below to post your vacancy. Our team reviews every posting within 2 hours to ensure quality and attract the right candidates.</p>
+
+      <!-- BASIC INFO -->
+      <div class="sect-label">Basic Information</div>
+      <div class="form-group">
+        <label class="form-label">Job Title <span class="req">*</span></label>
+        <input class="form-control" id="job-title" placeholder="e.g. Senior Software Engineer" oninput="updatePreview()">
+        <div class="form-hint">Be specific — "Senior Backend Engineer" gets 40% more applications than "Developer"</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Department / Function <span class="req">*</span></label>
+          <select class="form-control" id="job-dept" onchange="updatePreview()">
+            <option value="">Select department…</option>
+            <option>Engineering & Technology</option>
+            <option>Finance & Accounting</option>
+            <option>Marketing & Communications</option>
+            <option>Human Resources</option>
+            <option>Operations & Logistics</option>
+            <option>Sales & Business Development</option>
+            <option>Healthcare & Medical</option>
+            <option>Legal & Compliance</option>
+            <option>Customer Service</option>
+            <option>Executive / Leadership</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Industry / Sector <span class="req">*</span></label>
+          <select class="form-control">
+            <option value="">Select sector…</option>
+            <option>Technology & ICT</option>
+            <option>Finance & Banking</option>
+            <option>Healthcare</option>
+            <option>Engineering & Construction</option>
+            <option>Agriculture & Agri-tech</option>
+            <option>Tourism & Hospitality</option>
+            <option>Education</option>
+            <option>Logistics & Transport</option>
+            <option>NGO & Development</option>
+            <option>Government / Public Sector</option>
+            <option>Telecoms & Media</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Experience Level <span class="req">*</span></label>
+          <select class="form-control">
+            <option>Entry Level (0–2 years)</option>
+            <option>Mid Level (3–5 years)</option>
+            <option selected>Senior Level (5–10 years)</option>
+            <option>Executive / Director (10+ years)</option>
+            <option>Internship</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Number of Positions</label>
+          <select class="form-control">
+            <option>1</option><option>2</option><option>3</option>
+            <option>4–5</option><option>6–10</option><option>10+</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="sect-div">
+        <div class="sect-label">Employment Type & Location</div>
+        <div class="form-group">
+          <label class="form-label">Employment Type <span class="req">*</span></label>
+          <div class="check-grid">
+            <label class="check-opt"><input type="radio" name="emptype" value="fulltime" checked><span>Full-time Permanent</span></label>
+            <label class="check-opt"><input type="radio" name="emptype" value="parttime"><span>Part-time</span></label>
+            <label class="check-opt"><input type="radio" name="emptype" value="contract"><span>Contract / Temporary</span></label>
+            <label class="check-opt"><input type="radio" name="emptype" value="freelance"><span>Freelance / Consulting</span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Work Arrangement</label>
+          <div class="radio-row">
+            <label class="radio-opt"><input type="radio" name="workarr" value="onsite" checked><span>On-site</span></label>
+            <label class="radio-opt"><input type="radio" name="workarr" value="hybrid"><span>Hybrid</span></label>
+            <label class="radio-opt"><input type="radio" name="workarr" value="remote"><span>Fully Remote</span></label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Primary Location <span class="req">*</span></label>
+            <select class="form-control">
+              <option>Kigali, Rwanda</option>
+              <option>Northern Province</option>
+              <option>Southern Province</option>
+              <option>Eastern Province</option>
+              <option>Western Province</option>
+              <option>Multiple locations</option>
+              <option>Remote — Rwanda</option>
+              <option>Remote — Any location</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Application Deadline</label>
+            <input type="date" class="form-control" id="deadline">
+          </div>
+        </div>
+      </div>
+
+      <div class="sect-div">
+        <div class="sect-label">Salary & Compensation</div>
+        <div class="form-group">
+          <label class="form-label">Currency</label>
+          <div class="radio-row">
+            <label class="radio-opt"><input type="radio" name="curr" value="rwf" checked><span>RWF</span></label>
+            <label class="radio-opt"><input type="radio" name="curr" value="usd"><span>USD</span></label>
+            <label class="radio-opt"><input type="radio" name="curr" value="eur"><span>EUR</span></label>
+            <label class="radio-opt"><input type="radio" name="curr" value="gbp"><span>GBP</span></label>
+          </div>
+        </div>
+        <div class="salary-row">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Minimum Salary <span class="req">*</span></label>
+            <input class="form-control" id="sal-min" type="text" placeholder="e.g. 800,000" oninput="updatePreview()">
+          </div>
+          <div class="salary-sep">—</div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Maximum Salary</label>
+            <input class="form-control" id="sal-max" type="text" placeholder="e.g. 1,400,000" oninput="updatePreview()">
+          </div>
+        </div>
+        <div class="hide-sal-wrap">
+          <input type="checkbox" id="hide-sal">
+          <label for="hide-sal">Hide exact salary — show "Competitive" instead</label>
+        </div>
+        <div class="form-group" style="margin-top:1rem">
+          <label class="form-label">Additional Benefits</label>
+          <div class="check-grid">
+            <label class="check-opt"><input type="checkbox"><span>Health Insurance</span></label>
+            <label class="check-opt"><input type="checkbox"><span>Annual Leave (25+ days)</span></label>
+            <label class="check-opt"><input type="checkbox"><span>Performance Bonus</span></label>
+            <label class="check-opt"><input type="checkbox"><span>Professional Development</span></label>
+            <label class="check-opt"><input type="checkbox"><span>Company Car / Allowance</span></label>
+            <label class="check-opt"><input type="checkbox"><span>Remote / Flexible Work</span></label>
+            <label class="check-opt"><input type="checkbox"><span>Equity / Share Options</span></label>
+            <label class="check-opt"><input type="checkbox"><span>Housing Allowance</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="sect-div">
+        <div class="sect-label">Job Description</div>
+        <div class="form-group">
+          <label class="form-label">About the Role <span class="req">*</span></label>
+          <div class="rte-toolbar">
+            <button class="rte-btn" onclick="formatText('bold')"><strong>B</strong></button>
+            <button class="rte-btn" onclick="formatText('italic')"><em>I</em></button>
+            <button class="rte-btn" onclick="formatText('ul')">• List</button>
+            <button class="rte-btn" onclick="formatText('ol')">1. List</button>
+            <button class="rte-btn" onclick="formatText('h3')">H3</button>
+            <span style="width:1px;background:var(--bd-subtle);margin:0 .2rem;align-self:stretch"></span>
+            <span style="font-size:.72rem;color:var(--tx-800);align-self:center;margin-left:.3rem">Tip: Use bullet points for responsibilities</span>
+          </div>
+          <div class="rte-area">
+            <textarea class="form-control" id="job-desc" rows="8" placeholder="Describe the role, team, and what makes this opportunity exciting. Include: what the candidate will do day-to-day, who they'll work with, and what impact they'll have…"></textarea>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Key Responsibilities</label>
+          <textarea class="form-control" rows="5" placeholder="• Responsibility one&#10;• Responsibility two&#10;• Responsibility three&#10;(Use bullet points for clarity)"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Requirements & Qualifications <span class="req">*</span></label>
+          <textarea class="form-control" rows="5" placeholder="• Minimum qualification required&#10;• Years of experience needed&#10;• Technical skills required&#10;• Any certifications needed"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nice-to-Have (Optional)</label>
+          <textarea class="form-control" rows="3" placeholder="Skills or experience that would be a bonus but aren't required…"></textarea>
+        </div>
+      </div>
+
+      <div class="sect-div">
+        <div class="sect-label">Skills & Keywords</div>
+        <div class="form-group">
+          <label class="form-label">Required Skills <span style="color:var(--tx-600);font-size:.7rem;font-weight:400;text-transform:none;letter-spacing:0">(type & press Enter)</span></label>
+          <div class="tags-wrap" id="skills-wrap2" onclick="document.getElementById('skills-inp2').focus()">
+            <span class="job-tag">JavaScript <button onclick="this.parentElement.remove()">×</button></span>
+            <span class="job-tag">Node.js <button onclick="this.parentElement.remove()">×</button></span>
+            <input type="text" class="tags-real-input" id="skills-inp2" placeholder="Add a skill…" onkeydown="addJobTag(event)">
+          </div>
+          <div class="tag-suggestions">
+            <span style="font-size:.7rem;color:var(--tx-800);align-self:center">Suggestions:</span>
+            <span class="ts-chip" onclick="quickAddTag('Python')">Python</span>
+            <span class="ts-chip" onclick="quickAddTag('SQL')">SQL</span>
+            <span class="ts-chip" onclick="quickAddTag('React')">React</span>
+            <span class="ts-chip" onclick="quickAddTag('AWS')">AWS</span>
+            <span class="ts-chip" onclick="quickAddTag('Project Management')">Project Mgmt</span>
+            <span class="ts-chip" onclick="quickAddTag('Leadership')">Leadership</span>
+            <span class="ts-chip" onclick="quickAddTag('Excel')">Excel</span>
+            <span class="ts-chip" onclick="quickAddTag('Communication')">Communication</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Required Languages</label>
+          <div class="check-grid">
+            <label class="check-opt"><input type="checkbox" checked><span>🇬🇧 English (Required)</span></label>
+            <label class="check-opt"><input type="checkbox"><span>🇫🇷 French</span></label>
+            <label class="check-opt"><input type="checkbox" checked><span>🇷🇼 Kinyarwanda</span></label>
+            <label class="check-opt"><input type="checkbox"><span>🇰🇪 Swahili</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="sect-div">
+        <div class="sect-label">Contact & Ineza Settings</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Contact Name (Internal)</label>
+            <input class="form-control" placeholder="HR Manager name (not shown publicly)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contact Email (Internal)</label>
+            <input type="email" class="form-control" placeholder="hr@yourcompany.rw">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ineza Recruiter Services</label>
+          <div class="check-grid">
+            <label class="check-opt"><input type="checkbox" checked><span>✓ Ineza screens all applicants</span></label>
+            <label class="check-opt"><input type="checkbox" checked><span>✓ Ineza shortlists top 5–8</span></label>
+            <label class="check-opt"><input type="checkbox" checked><span>✓ Background verification</span></label>
+            <label class="check-opt"><input type="checkbox"><span>📌 Mark as urgent (48hr SLA)</span></label>
+            <label class="check-opt"><input type="checkbox"><span>🔒 Confidential posting</span></label>
+            <label class="check-opt"><input type="checkbox"><span>🌍 International candidates</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;padding-top:1rem">
+        <button class="btn btn-gold btn-lg" id="submit-job-btn" onclick="submitJob()">
+          <span class="btn-text">🚀 Post This Job</span>
+        </button>
+        <button class="btn btn-secondary" onclick="saveDraft()">Save Draft</button>
+        <span style="font-size:.76rem;color:var(--tx-600)">Your job will go live after a 2-hour quality review</span>
+      </div>
+    </div>
+
+    <!-- SUCCESS STATE -->
+    <div class="success-state" id="success-state">
+      <div style="width:80px;height:80px;background:rgba(251,191,36,.1);border:2px solid rgba(251,191,36,.35);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 1.5rem">🎉</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;color:var(--tx-100);margin-bottom:.5rem">Job Posted Successfully!</h2>
+      <p style="font-size:.9rem;color:var(--tx-400);max-width:440px;margin:0 auto 2rem;line-height:1.75">Your job is now under review. Our team will approve it within 2 hours and you'll start receiving applications. Your dedicated recruiter will begin shortlisting immediately.</p>
+      <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">
+        <a href="dashboard.html" class="btn btn-gold btn-lg">View Dashboard →</a>
+        <button onclick="postAnother()" class="btn btn-secondary btn-lg">Post Another Job</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div>
+    <!-- PLAN SELECTOR -->
+    <div class="sidebar-card">
+      <div class="sc-header"><h4>📋 Posting Plan</h4></div>
+      <div class="sc-body">
+        <div class="plan-pills">
+          <label class="plan-pill selected" onclick="selectPostPlan(this,'basic')">
+            <input type="radio" name="postplan" value="basic" checked>
+            <div>
+              <span class="pp-name">Standard Post</span>
+              <span class="pp-price">Included in your Business Plan</span>
+              <span class="pp-limit">Active for 30 days · Up to 200 applicants</span>
+            </div>
+          </label>
+          <label class="plan-pill" onclick="selectPostPlan(this,'featured')">
+            <input type="radio" name="postplan" value="featured">
+            <div>
+              <span class="pp-name">⭐ Featured Post</span>
+              <span class="pp-price" style="color:var(--gd-400)">+RWF 15,000</span>
+              <span class="pp-limit">Top placement · 3× more views</span>
+            </div>
+          </label>
+          <label class="plan-pill" onclick="selectPostPlan(this,'urgent')">
+            <input type="radio" name="postplan" value="urgent">
+            <div>
+              <span class="pp-name">🔥 Urgent + Featured</span>
+              <span class="pp-price" style="color:var(--gd-400)">+RWF 28,000</span>
+              <span class="pp-limit">48hr shortlist · Email blast to 15K candidates</span>
+            </div>
+          </label>
+        </div>
+        <div id="plan-payment-note" style="display:none;margin-top:.85rem;background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);border-radius:var(--r-md);padding:.85rem;font-size:.8rem;color:var(--tx-400);line-height:1.6">
+          💳 This upgrade will be charged to your Business Plan billing method (MTN MoMo ****0012).
+        </div>
+      </div>
+    </div>
+
+    <!-- JOB PREVIEW -->
+    <div class="sidebar-card">
+      <div class="sc-header"><h4>👁 Live Preview</h4></div>
+      <div class="sc-body">
+        <div class="preview-card">
+          <div class="pv-header">
+            <div class="pv-logo" id="pv-logo">TC</div>
+            <div>
+              <div class="pv-title" id="pv-title">Your Job Title</div>
+              <div class="pv-company">Your Company · Kigali</div>
+            </div>
+          </div>
+          <div class="pv-tags">
+            <span class="pv-tag">Full-time</span>
+            <span class="pv-tag" id="pv-type-tag">Senior Level</span>
+          </div>
+          <div class="pv-footer">
+            <span class="pv-salary" id="pv-salary">Salary TBD</span>
+            <span class="pv-meta">Just posted</span>
+          </div>
+        </div>
+        <p style="font-size:.74rem;color:var(--tx-800);margin-top:.65rem;line-height:1.5">This is how your job will appear to candidates. Complete the form to see your preview update.</p>
+      </div>
+    </div>
+
+    <!-- TIPS -->
+    <div class="sidebar-card">
+      <div class="sc-header"><h4>💡 Tips for Better Results</h4></div>
+      <div class="sc-body">
+        <div class="tip-item">
+          <div class="tip-ico">📝</div>
+          <div class="tip-text"><strong>Be specific with the title</strong>Jobs with specific titles receive 40% more qualified applications.</div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-ico">💰</div>
+          <div class="tip-text"><strong>Show the salary</strong>Jobs with visible salaries get 2.5× more applications and attract better candidates.</div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-ico">🎯</div>
+          <div class="tip-text"><strong>List 5–8 requirements max</strong>Shorter requirements lists reduce drop-off. Add the rest as "nice-to-haves".</div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-ico">🌍</div>
+          <div class="tip-text"><strong>Mention remote options</strong>Roles with remote options get 60% more applications from top candidates.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INEZA PROMISE -->
+    <div style="background:linear-gradient(135deg,rgba(0,229,153,.08),rgba(59,130,246,.05));border:1px solid var(--bd-em);border-radius:var(--r-xl);padding:1.3rem;font-size:.82rem;color:var(--tx-400);line-height:1.7">
+      <div style="font-weight:700;color:var(--tx-100);margin-bottom:.5rem">🛡️ The Ineza Guarantee</div>
+      Your recruiter will present a shortlist of pre-screened candidates within <strong style="color:var(--em-400)">48 hours</strong>. If we can't find suitable candidates, your posting fee is fully refunded.
+    </div>
+  </div>
+
+</div>
+
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script>
+// Set default deadline to 30 days from now
+const d = new Date(); d.setDate(d.getDate() + 30);
+document.getElementById('deadline').value = d.toISOString().split('T')[0];
+
+// Load company initials
+const user = Auth.getUser();
+const initials = user ? Format.initials(user.name || 'TC') : 'TC';
+document.getElementById('pv-logo').textContent = initials;
+
+function updatePreview() {
+  const title = document.getElementById('job-title').value.trim();
+  document.getElementById('pv-title').textContent = title || 'Your Job Title';
+  const minSal = document.getElementById('sal-min').value.trim();
+  const maxSal = document.getElementById('sal-max').value.trim();
+  if (document.getElementById('hide-sal').checked) {
+    document.getElementById('pv-salary').textContent = 'Competitive Package';
+  } else if (minSal && maxSal) {
+    document.getElementById('pv-salary').textContent = `RWF ${minSal} – ${maxSal}/mo`;
+  } else if (minSal) {
+    document.getElementById('pv-salary').textContent = `RWF ${minSal}+/mo`;
+  } else {
+    document.getElementById('pv-salary').textContent = 'Salary TBD';
+  }
+}
+document.getElementById('hide-sal').addEventListener('change', updatePreview);
+
+function addJobTag(e) {
+  if (['Enter', ','].includes(e.key)) {
+    e.preventDefault();
+    const val = document.getElementById('skills-inp2').value.trim().replace(/,$/,'');
+    if (val) quickAddTag(val);
+    document.getElementById('skills-inp2').value = '';
+  }
+}
+
+function quickAddTag(name) {
+  const wrap = document.getElementById('skills-wrap2');
+  const inp  = document.getElementById('skills-inp2');
+  const existing = wrap.querySelectorAll('.job-tag');
+  if (existing.length >= 15) { Toast.warning('Maximum 15 skills'); return; }
+  for (const t of existing) { if (t.textContent.trim().replace('×','').trim() === name) return; }
+  const tag = document.createElement('span');
+  tag.className = 'job-tag';
+  tag.innerHTML = `${name} <button onclick="this.parentElement.remove()">×</button>`;
+  wrap.insertBefore(tag, inp);
+}
+
+function formatText(type) {
+  const ta = document.getElementById('job-desc');
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  const sel = ta.value.substring(start, end);
+  let replacement = sel;
+  if (type === 'bold')   replacement = `**${sel}**`;
+  if (type === 'italic') replacement = `_${sel}_`;
+  if (type === 'ul')     replacement = `\n• ${sel}`;
+  if (type === 'ol')     replacement = `\n1. ${sel}`;
+  if (type === 'h3')     replacement = `\n### ${sel}`;
+  ta.value = ta.value.substring(0, start) + replacement + ta.value.substring(end);
+}
+
+function selectPostPlan(el, plan) {
+  document.querySelectorAll('.plan-pill').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('plan-payment-note').style.display = plan !== 'basic' ? 'block' : 'none';
+}
+
+async function submitJob() {
+  const title = document.getElementById('job-title').value.trim();
+  if (!title) { Toast.error('Please enter a job title'); document.getElementById('job-title').focus(); return; }
+
+  const btn = document.getElementById('submit-job-btn');
+  btn.classList.add('loading');
+  btn.style.position = 'relative';
+
+  // Check for paid plan
+  const selectedPlan = document.querySelector('input[name="postplan"]:checked')?.value;
+  try {
+    if (selectedPlan === 'featured') await Payment.processPayment('employer_starter', { amount: 15000 });
+    if (selectedPlan === 'urgent')   await Payment.processPayment('employer_starter', { amount: 28000 });
+    // Simulate posting
+    await new Promise(r => setTimeout(r, 1500));
+    btn.classList.remove('loading');
+    document.getElementById('job-form-card').style.display = 'none';
+    document.getElementById('success-state').classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch(err) {
+    btn.classList.remove('loading');
+    Toast.error(err.error || 'Failed to post job. Please try again.');
+  }
+}
+
+function saveDraft() {
+  const title = document.getElementById('job-title').value.trim();
+  Toast.info(`Draft saved: "${title || 'Untitled Job'}"`);
+}
+
+function postAnother() {
+  document.getElementById('success-state').classList.remove('show');
+  document.getElementById('job-form-card').style.display = 'block';
+  document.getElementById('job-title').value = '';
+  updatePreview();
+}
+</script>
+</body>
+</html>

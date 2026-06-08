@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile | Ineza Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/base.css">
+<style>
+body{background:var(--bg-deep)}
+.sidebar{background:var(--bg-surface);border-right:1px solid var(--bd-subtle);position:fixed;top:0;left:0;bottom:0;width:260px;display:flex;flex-direction:column;z-index:300;overflow-y:auto}
+.sb-brand{padding:1.4rem 1.25rem;border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;gap:.65rem}
+.sb-nav{padding:.75rem .65rem;flex:1}
+.sb-section{margin-bottom:1.5rem}
+.sb-section-lbl{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-800);padding:.3rem .65rem;margin-bottom:.35rem}
+.sb-link{display:flex;align-items:center;gap:.65rem;padding:.62rem .8rem;border-radius:var(--r-md);font-size:.86rem;font-weight:500;color:var(--tx-400);transition:all var(--ease);text-decoration:none}
+.sb-link:hover{background:var(--bg-raised);color:var(--tx-100)}
+.sb-link.active{background:rgba(0,229,153,.1);color:var(--em-400);border:1px solid var(--bd-em)}
+.dash-main{margin-left:260px;min-height:100vh}
+.topbar{padding:.9rem 2rem;background:var(--bg-surface);border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.content{padding:2rem;max-width:960px}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.62rem 1.4rem;border-radius:var(--r-md);font-size:.84rem;font-weight:600;font-family:var(--ff-body);transition:all var(--ease);border:none;cursor:pointer;white-space:nowrap}
+.btn-primary{background:linear-gradient(135deg,#00E599,#00C97D);color:#020f08}
+.btn-primary:hover{opacity:.92}
+.btn-secondary{background:var(--bg-raised);color:var(--tx-100);border:1.5px solid var(--bd-subtle)}
+.btn-secondary:hover{border-color:var(--bd-em)}
+.btn-danger{background:rgba(248,113,113,.12);color:var(--danger);border:1px solid rgba(248,113,113,.25)}
+.btn-sm{padding:.44rem 1rem;font-size:.8rem;border-radius:var(--r-sm)}
+.btn-xs{padding:.26rem .65rem;font-size:.72rem;border-radius:var(--r-sm)}
+.btn.loading{pointer-events:none;opacity:.7;position:relative}
+.btn.loading::before{content:'';position:absolute;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* PROFILE HEADER */
+.profile-hero{background:var(--bg-surface);border:1px solid var(--bd-subtle);border-radius:var(--r-2xl);padding:2rem;margin-bottom:1.5rem;display:flex;gap:1.5rem;align-items:flex-start;position:relative;overflow:hidden}
+.profile-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:80px;background:linear-gradient(135deg,rgba(0,229,153,.06),rgba(59,130,246,.04))}
+.ph-photo{width:88px;height:88px;border-radius:50%;background:rgba(0,229,153,.1);border:3px solid var(--bd-em);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:800;color:var(--em-400);position:relative;flex-shrink:0;overflow:hidden;cursor:pointer}
+.ph-photo img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.ph-photo-overlay{position:absolute;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;font-size:.7rem;font-weight:600;color:#fff;border-radius:50%}
+.ph-photo:hover .ph-photo-overlay{display:flex}
+.ph-body{flex:1;position:relative;z-index:1}
+.ph-name{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--tx-100);margin-bottom:.2rem}
+.ph-headline{font-size:.9rem;color:var(--tx-400);margin-bottom:.6rem}
+.ph-meta{display:flex;gap:.85rem;flex-wrap:wrap}
+.pm-item{display:flex;align-items:center;gap:.35rem;font-size:.8rem;color:var(--tx-600)}
+.pm-dot{color:var(--em-400)}
+/* SCORE CIRCLE */
+.score-circle{width:72px;height:72px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:3px solid var(--bd-em);background:rgba(0,229,153,.05);flex-shrink:0}
+.sc-num{font-size:1.1rem;font-weight:900;color:var(--em-400);line-height:1}
+.sc-lbl{font-size:.58rem;color:var(--tx-600);text-transform:uppercase;letter-spacing:.06em}
+/* SECTION CARDS */
+.profile-section{background:var(--bg-surface);border:1px solid var(--bd-subtle);border-radius:var(--r-xl);overflow:hidden;margin-bottom:1.2rem}
+.ps-header{padding:1.2rem 1.5rem;border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;justify-content:space-between}
+.ps-header h3{font-size:.92rem;font-weight:700;color:var(--tx-100)}
+.ps-body{padding:1.5rem}
+/* FORM GRID */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.85rem}
+.form-group{margin-bottom:1rem}
+.form-group:last-child{margin-bottom:0}
+.form-label{display:block;font-size:.72rem;font-weight:600;color:var(--tx-400);margin-bottom:.38rem;letter-spacing:.06em;text-transform:uppercase}
+.form-label .req{color:var(--em-400);margin-left:2px}
+.form-control{width:100%;background:var(--bg-raised);border:1.5px solid var(--bd-subtle);border-radius:var(--r-md);padding:.7rem .95rem;font-family:var(--ff-body);font-size:.88rem;color:var(--tx-100);outline:none;transition:all var(--ease)}
+.form-control::placeholder{color:var(--tx-800)}
+.form-control:focus{border-color:var(--bd-em);box-shadow:0 0 0 3px var(--em-glow)}
+select.form-control{cursor:pointer}select.form-control option{background:var(--bg-raised)}
+textarea.form-control{resize:vertical;min-height:110px;line-height:1.65}
+.form-hint{font-size:.72rem;color:var(--tx-600);margin-top:.3rem}
+.form-full{grid-column:1/-1}
+/* SKILLS */
+.skills-wrap{background:var(--bg-raised);border:1.5px solid var(--bd-subtle);border-radius:var(--r-md);padding:.55rem;min-height:52px;display:flex;flex-wrap:wrap;gap:.38rem;cursor:text;transition:border-color var(--ease)}
+.skills-wrap:focus-within{border-color:var(--bd-em);box-shadow:0 0 0 3px var(--em-glow)}
+.skill-tag{display:inline-flex;align-items:center;gap:.3rem;padding:.22rem .65rem;background:rgba(0,229,153,.1);border:1px solid rgba(0,229,153,.22);border-radius:99px;font-size:.77rem;font-weight:600;color:var(--em-400)}
+.skill-tag button{background:none;border:none;color:rgba(0,229,153,.6);cursor:pointer;font-size:.9rem;padding:0;line-height:1;transition:color var(--ease)}
+.skill-tag button:hover{color:var(--em-400)}
+.skill-input{background:none;border:none;outline:none;font-family:var(--ff-body);font-size:.85rem;color:var(--tx-100);flex:1;min-width:120px;padding:.22rem .3rem}
+.skill-input::placeholder{color:var(--tx-800)}
+.skill-suggs{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.55rem}
+.ss{padding:.18rem .62rem;background:var(--bg-raised);border:1px solid var(--bd-subtle);border-radius:99px;font-size:.72rem;color:var(--tx-600);cursor:pointer;transition:all var(--ease)}
+.ss:hover{border-color:var(--bd-em);color:var(--em-400)}
+/* EXPERIENCE ITEM */
+.exp-item{background:var(--bg-raised);border:1px solid var(--bd-subtle);border-radius:var(--r-lg);padding:1.1rem 1.2rem;margin-bottom:.75rem;transition:all var(--ease)}
+.exp-item:hover{border-color:var(--bd-muted)}
+.exp-item:last-child{margin-bottom:0}
+.exp-title{font-size:.9rem;font-weight:700;color:var(--tx-100);margin-bottom:.12rem}
+.exp-company{font-size:.82rem;color:var(--em-400);margin-bottom:.18rem}
+.exp-dates{font-size:.76rem;color:var(--tx-600);margin-bottom:.3rem}
+.exp-desc{font-size:.82rem;color:var(--tx-400);line-height:1.65}
+.exp-actions{display:flex;gap:.4rem;margin-top:.65rem}
+/* CV SECTION */
+.cv-zone{border:2px dashed var(--bd-em);border-radius:var(--r-xl);padding:2.2rem;text-align:center;cursor:pointer;transition:all var(--ease);background:rgba(0,229,153,.02)}
+.cv-zone:hover{border-color:var(--em-400);background:rgba(0,229,153,.05)}
+.cv-uploaded-bar{display:none;align-items:center;gap:.85rem;padding:1rem 1.2rem;background:rgba(0,229,153,.06);border:1px solid var(--bd-em);border-radius:var(--r-lg);margin-top:.85rem}
+.cv-uploaded-bar.show{display:flex}
+/* LANGUAGE CHECKBOXES */
+.lang-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}
+.lang-opt{display:flex;align-items:center;gap:.5rem;padding:.5rem .7rem;background:var(--bg-raised);border:1.5px solid var(--bd-subtle);border-radius:var(--r-sm);cursor:pointer;transition:all var(--ease)}
+.lang-opt:hover{border-color:var(--bd-em)}
+.lang-opt input{accent-color:var(--em-400);width:14px;height:14px;cursor:pointer}
+.lang-opt:has(input:checked){border-color:var(--bd-em);background:rgba(0,229,153,.06)}
+.lang-opt span{font-size:.82rem;color:var(--tx-200)}
+.lang-opt:has(input:checked) span{color:var(--em-400)}
+/* SAVE BAR */
+.save-bar{position:fixed;bottom:0;left:260px;right:0;background:var(--bg-surface);border-top:1px solid var(--bd-em);padding:1rem 2rem;display:none;align-items:center;justify-content:space-between;gap:1rem;z-index:100;box-shadow:0 -4px 24px rgba(0,229,153,.08)}
+.save-bar.visible{display:flex}
+.save-bar p{font-size:.85rem;color:var(--tx-400)}
+/* ADD EXP MODAL */
+.modal-ov{position:fixed;inset:0;background:rgba(3,6,13,.9);backdrop-filter:blur(8px);z-index:500;display:none;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto}
+.modal-ov.open{display:flex}
+.modal{background:var(--bg-surface);border:1px solid var(--bd-muted);border-radius:var(--r-2xl);width:100%;max-width:540px;animation:mIn .3s ease}
+@keyframes mIn{from{transform:translateY(-14px);opacity:0}to{transform:translateY(0);opacity:1}}
+.m-head{padding:1.4rem 1.6rem;border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;justify-content:space-between}
+.m-head h3{font-size:1rem;font-weight:700;color:var(--tx-100)}
+.m-close{width:28px;height:28px;border-radius:50%;background:var(--bg-raised);border:1px solid var(--bd-subtle);color:var(--tx-400);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.m-body{padding:1.5rem 1.6rem}
+.m-foot{padding:1rem 1.6rem;border-top:1px solid var(--bd-subtle);display:flex;gap:.65rem;justify-content:flex-end}
+@media(max-width:768px){.dash-main{margin-left:0}.sidebar{display:none}.content{padding:1.2rem}.form-grid,.form-grid-3{grid-template-columns:1fr}.save-bar{left:0}.lang-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sb-brand">
+    <a href="../index.html" style="display:flex;align-items:center;gap:.55rem;text-decoration:none">
+      <svg width="30" height="30" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14.5" stroke="url(#lgp)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="7" ry="14.5" stroke="url(#lgp)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="14.5" ry="4.5" stroke="url(#lgp)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="20" ry="6.5" stroke="url(#lgp)" stroke-width="1.8" stroke-opacity=".65" transform="rotate(-25 20 20)"/><defs><linearGradient id="lgp" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#00E599"/><stop offset="1" stop-color="#3B82F6"/></linearGradient></defs></svg>
+      <div style="margin-left:.4rem"><div style="font-size:.88rem;font-weight:800;letter-spacing:.08em;background:linear-gradient(135deg,#4DFFA6,#00E599);-webkit-background-clip:text;-webkit-text-fill-color:transparent">INEZA</div><div style="font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-800)">Candidate Portal</div></div>
+    </a>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">
+      <div class="sb-section-lbl">Main</div>
+      <a href="dashboard.html" class="sb-link">🏠 Dashboard</a>
+      <a href="../jobs/board.html" class="sb-link">💼 Browse Jobs</a>
+      <a href="applications.html" class="sb-link">📋 Applications</a>
+      <a href="saved.html" class="sb-link">🔖 Saved Jobs</a>
+      <a href="messages.html" class="sb-link">💬 Messages</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Profile</div>
+      <a href="profile.html" class="sb-link active">👤 My Profile</a>
+      <a href="cv.html" class="sb-link">📄 My CV</a>
+      <a href="preferences.html" class="sb-link">🎯 Job Preferences</a>
+      <a href="alerts.html" class="sb-link">🔔 Job Alerts</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Account</div>
+      <a href="settings.html" class="sb-link">⚙️ Settings</a>
+      <a href="billing.html" class="sb-link">💳 Billing</a>
+      <a href="#" class="sb-link" onclick="API.auth.logout()">🚪 Sign Out</a>
+    </div>
+  </nav>
+  <div class="sb-footer">
+    <div style="display:flex;align-items:center;gap:.65rem;padding:.65rem;background:var(--bg-raised);border-radius:var(--r-md);border:1px solid var(--bd-subtle)">
+      <div style="width:34px;height:34px;border-radius:50%;background:rgba(0,229,153,.1);border:2px solid var(--bd-em);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:var(--em-400)" id="sb-avatar">JP</div>
+      <div><span style="font-size:.86rem;font-weight:700;color:var(--tx-100);display:block" id="sb-name">Loading…</span><span style="font-size:.68rem;color:var(--em-400);display:block" id="sb-plan">Free Plan</span></div>
+    </div>
+  </div>
+</aside>
+
+<main class="dash-main">
+  <div class="topbar">
+    <div>
+      <div style="font-size:1rem;font-weight:800;color:var(--tx-100)">My Profile</div>
+      <div style="font-size:.76rem;color:var(--tx-600)">Keep your profile complete for better job matches</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:.6rem">
+      <a href="../jobs/board.html" class="btn btn-secondary btn-sm">Browse Jobs</a>
+      <button class="btn btn-primary btn-sm" onclick="saveAll()" id="save-all-btn">Save All Changes</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- Loading state -->
+    <div id="loading-state" style="text-align:center;padding:4rem;color:var(--tx-600)">
+      <div style="font-size:2rem;margin-bottom:.75rem">⏳</div>
+      <div>Loading your profile…</div>
+    </div>
+
+    <!-- Profile content -->
+    <div id="profile-content" style="display:none">
+
+      <!-- PROFILE HEADER -->
+      <div class="profile-hero">
+        <div class="ph-photo" id="photo-circle" onclick="document.getElementById('photo-file').click()">
+          <span id="photo-initials">JP</span>
+          <div class="ph-photo-overlay">📷 Change</div>
+        </div>
+        <input type="file" id="photo-file" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="uploadPhoto(this)">
+        <div class="ph-body">
+          <div class="ph-name" id="ph-name">Your Name</div>
+          <div class="ph-headline" id="ph-headline">Add a professional headline…</div>
+          <div class="ph-meta">
+            <div class="pm-item"><span class="pm-dot">📍</span><span id="ph-location">—</span></div>
+            <div class="pm-item"><span class="pm-dot">💼</span><span id="ph-industry">—</span></div>
+            <div class="pm-item"><span class="pm-dot">📅</span><span id="ph-availability">—</span></div>
+          </div>
+        </div>
+        <div style="text-align:center;flex-shrink:0">
+          <div class="score-circle">
+            <span class="sc-num" id="score-num">0%</span>
+            <span class="sc-lbl">Score</span>
+          </div>
+          <div style="font-size:.7rem;color:var(--tx-600);margin-top:.4rem">Profile<br>Strength</div>
+        </div>
+      </div>
+
+      <!-- PERSONAL INFO -->
+      <div class="profile-section">
+        <div class="ps-header">
+          <h3>👤 Personal Information</h3>
+          <span style="font-size:.76rem;color:var(--tx-600)">Visible to recruiters only</span>
+        </div>
+        <div class="ps-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">First Name <span class="req">*</span></label>
+              <input class="form-control" id="f-first_name" placeholder="Jean-Paul" oninput="markDirty()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name <span class="req">*</span></label>
+              <input class="form-control" id="f-last_name" placeholder="Habimana" oninput="markDirty()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input class="form-control" id="f-email" disabled style="opacity:.6">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input class="form-control" id="f-phone" placeholder="+250 788 000 000" oninput="markDirty()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nationality</label>
+              <select class="form-control" id="f-nationality" onchange="markDirty()">
+                <option value="">Select…</option>
+                <option>Rwandan</option><option>Ugandan</option><option>Kenyan</option>
+                <option>Tanzanian</option><option>Burundian</option><option>Congolese (DRC)</option>
+                <option>South African</option><option>British</option><option>American</option><option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Current Location</label>
+              <select class="form-control" id="f-location" onchange="markDirty()">
+                <option value="">Select…</option>
+                <option>Kigali, Rwanda</option><option>Northern Province</option>
+                <option>Southern Province</option><option>Eastern Province</option>
+                <option>Western Province</option><option>Kampala, Uganda</option>
+                <option>Nairobi, Kenya</option><option>London, UK</option>
+                <option>Dubai, UAE</option><option>Other — International</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">LinkedIn Profile URL</label>
+              <input class="form-control" id="f-linkedin_url" placeholder="linkedin.com/in/your-name" oninput="markDirty()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Languages Spoken</label>
+              <div class="lang-grid">
+                <label class="lang-opt"><input type="checkbox" value="Kinyarwanda" onchange="markDirty()"><span>🇷🇼 Kinyarwanda</span></label>
+                <label class="lang-opt"><input type="checkbox" value="English" onchange="markDirty()"><span>🇬🇧 English</span></label>
+                <label class="lang-opt"><input type="checkbox" value="French" onchange="markDirty()"><span>🇫🇷 French</span></label>
+                <label class="lang-opt"><input type="checkbox" value="Swahili" onchange="markDirty()"><span>🇰🇪 Swahili</span></label>
+                <label class="lang-opt"><input type="checkbox" value="Arabic" onchange="markDirty()"><span>🇸🇦 Arabic</span></label>
+                <label class="lang-opt"><input type="checkbox" value="Other" onchange="markDirty()"><span>🌐 Other</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROFESSIONAL INFO -->
+      <div class="profile-section">
+        <div class="ps-header"><h3>💼 Professional Background</h3></div>
+        <div class="ps-body">
+          <div class="form-group">
+            <label class="form-label">Professional Headline</label>
+            <input class="form-control" id="f-headline" placeholder="e.g. Senior Software Engineer | Python | AWS | 7 years exp" oninput="markDirty()">
+            <div class="form-hint">This is the first line recruiters see under your name</div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Current Job Title</label>
+              <input class="form-control" id="f-current_title" placeholder="e.g. Senior Software Engineer" oninput="markDirty()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Current Employer</label>
+              <input class="form-control" id="f-current_employer" placeholder="e.g. MTN Rwanda" oninput="markDirty()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Industry / Sector</label>
+              <select class="form-control" id="f-industry" onchange="markDirty()">
+                <option value="">Select…</option>
+                <option>Technology & ICT</option><option>Finance & Banking</option>
+                <option>Healthcare</option><option>Engineering & Construction</option>
+                <option>Agriculture & Agri-tech</option><option>Tourism & Hospitality</option>
+                <option>Education</option><option>Logistics & Transport</option>
+                <option>NGO & Development</option><option>Government / Public Sector</option>
+                <option>Telecoms & Media</option><option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Years of Experience</label>
+              <select class="form-control" id="f-years_experience" onchange="markDirty()">
+                <option value="">Select…</option>
+                <option value="0">Less than 1 year</option><option value="1">1–2 years</option>
+                <option value="3">3–5 years</option><option value="6">6–8 years</option>
+                <option value="9">9–12 years</option><option value="13">13–20 years</option>
+                <option value="20">20+ years</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Professional Summary <span class="req">*</span></label>
+            <textarea class="form-control" id="f-summary" placeholder="Describe your professional background and key achievements in 3–5 sentences. Be specific: 'Increased revenue by 30%' beats 'Responsible for sales'…" oninput="markDirty()"></textarea>
+            <div class="form-hint" id="summary-count">0 / 1000 characters</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EDUCATION -->
+      <div class="profile-section">
+        <div class="ps-header"><h3>🎓 Education</h3></div>
+        <div class="ps-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Highest Qualification</label>
+              <select class="form-control" id="f-highest_qualification" onchange="markDirty()">
+                <option value="">Select…</option>
+                <option>Secondary / A-Level</option><option>Certificate / Diploma</option>
+                <option>Advanced Diploma / HND</option><option>Bachelor's Degree (BSc / BA / BEng)</option>
+                <option>Postgraduate Diploma</option><option>Master's Degree (MSc / MBA / MA)</option>
+                <option>Doctorate (PhD / DPhil)</option><option>Professional Qualification (CPA / ACCA / CFA)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Field of Study</label>
+              <input class="form-control" id="f-field_of_study" placeholder="e.g. Computer Science" oninput="markDirty()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Institution Name</label>
+              <input class="form-control" id="f-institution" placeholder="e.g. University of Rwanda" oninput="markDirty()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Year of Completion</label>
+              <input type="number" class="form-control" id="f-graduation_year" placeholder="e.g. 2019" min="1970" max="2030" oninput="markDirty()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SKILLS -->
+      <div class="profile-section">
+        <div class="ps-header">
+          <h3>⚡ Skills & Competencies</h3>
+          <span style="font-size:.76rem;color:var(--tx-600)" id="skill-count">0 skills added</span>
+        </div>
+        <div class="ps-body">
+          <div class="form-group">
+            <label class="form-label">Key Skills <span style="color:var(--tx-600);font-weight:400;letter-spacing:0;text-transform:none;font-size:.7rem">(type & press Enter or comma)</span></label>
+            <div class="skills-wrap" id="skills-wrap" onclick="document.getElementById('skill-input').focus()">
+              <input type="text" class="skill-input" id="skill-input" placeholder="Add a skill and press Enter…" onkeydown="addSkillKey(event)">
+            </div>
+            <div class="skill-suggs">
+              <span style="font-size:.7rem;color:var(--tx-800);align-self:center">Quick add:</span>
+              <span class="ss" onclick="addSkillName('Python')">Python</span>
+              <span class="ss" onclick="addSkillName('SQL')">SQL</span>
+              <span class="ss" onclick="addSkillName('Project Management')">Project Mgmt</span>
+              <span class="ss" onclick="addSkillName('Excel')">Excel</span>
+              <span class="ss" onclick="addSkillName('Leadership')">Leadership</span>
+              <span class="ss" onclick="addSkillName('Financial Modelling')">Financial Modelling</span>
+              <span class="ss" onclick="addSkillName('React')">React</span>
+              <span class="ss" onclick="addSkillName('AWS')">AWS</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Professional Certifications</label>
+            <input class="form-control" id="f-certifications" placeholder="e.g. CPA (ICPAR), AWS Solutions Architect, PMP, ACCA…" oninput="markDirty()">
+          </div>
+        </div>
+      </div>
+
+      <!-- WORK EXPERIENCE -->
+      <div class="profile-section">
+        <div class="ps-header">
+          <h3>🏢 Work Experience</h3>
+          <button class="btn btn-secondary btn-sm" onclick="openExpModal()">+ Add Experience</button>
+        </div>
+        <div class="ps-body" id="exp-list">
+          <div style="text-align:center;padding:1.5rem;color:var(--tx-600);font-size:.84rem">
+            No experience added yet. Add your work history to improve your profile score.
+          </div>
+        </div>
+      </div>
+
+      <!-- CV UPLOAD -->
+      <div class="profile-section">
+        <div class="ps-header">
+          <h3>📄 CV / Resume</h3>
+          <span id="cv-status" style="font-size:.76rem;color:var(--tx-600)">Not uploaded</span>
+        </div>
+        <div class="ps-body">
+          <div class="cv-zone" id="cv-zone" onclick="document.getElementById('cv-file').click()" ondragover="event.preventDefault();this.style.borderColor='var(--em-400)'" ondragleave="this.style.borderColor=''" ondrop="handleCVDrop(event)">
+            <div style="font-size:2rem;margin-bottom:.6rem">📄</div>
+            <div style="font-size:.92rem;font-weight:700;color:var(--tx-100);margin-bottom:.25rem">Drag & drop your CV here</div>
+            <div style="font-size:.78rem;color:var(--tx-600);margin-bottom:.85rem">PDF or Word (.docx) · Max 10MB</div>
+            <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation()">Browse Files</button>
+            <input type="file" id="cv-file" accept=".pdf,.doc,.docx,.rtf" style="display:none" onchange="uploadCV(this)">
+          </div>
+          <div class="cv-uploaded-bar" id="cv-bar">
+            <span style="font-size:1.5rem">📋</span>
+            <div style="flex:1">
+              <div style="font-size:.86rem;font-weight:600;color:var(--tx-100)" id="cv-filename">—</div>
+              <div style="font-size:.72rem;color:var(--tx-600)">Uploaded successfully · Visible to matched employers</div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('cv-file').click()">Replace</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- JOB PREFERENCES -->
+      <div class="profile-section">
+        <div class="ps-header"><h3>🎯 Job Preferences</h3></div>
+        <div class="ps-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Target Job Title(s)</label>
+              <input class="form-control" id="f-desired_title" placeholder="e.g. Senior Engineer, Tech Lead, CTO" oninput="markDirty()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Availability to Start</label>
+              <select class="form-control" id="f-availability" onchange="markDirty()">
+                <option value="immediately">Immediately available</option>
+                <option value="2 weeks notice">2 weeks notice</option>
+                <option value="1 month notice">1 month notice</option>
+                <option value="2 months notice">2 months notice</option>
+                <option value="3 months notice">3 months notice</option>
+                <option value="open">Currently employed — open to right offer</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Minimum Monthly Salary (RWF)</label>
+              <input type="number" class="form-control" id="f-desired_salary_min" placeholder="e.g. 800000" oninput="markDirty()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Target Monthly Salary (RWF)</label>
+              <input type="number" class="form-control" id="f-desired_salary_max" placeholder="e.g. 1400000" oninput="markDirty()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Preferred Work Location</label>
+              <select class="form-control" id="f-preferred_location" onchange="markDirty()">
+                <option value="Kigali, Rwanda">Kigali, Rwanda</option>
+                <option value="Any location in Rwanda">Any location in Rwanda</option>
+                <option value="Remote">Remote / Work from home</option>
+                <option value="Hybrid">Hybrid (part remote, part office)</option>
+                <option value="International">Open to international relocation</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Work Arrangement Preference</label>
+              <select class="form-control" id="f-preferred_arrangement" onchange="markDirty()">
+                <option value="onsite">On-site preferred</option>
+                <option value="hybrid">Hybrid (flexible)</option>
+                <option value="remote">Fully remote</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:.5rem">
+            <label style="display:flex;align-items:center;gap:.55rem;cursor:pointer">
+              <input type="checkbox" id="f-open_to_relocation" style="accent-color:var(--em-400);width:14px;height:14px" onchange="markDirty()">
+              <span style="font-size:.84rem;color:var(--tx-200)">Open to relocation within Rwanda</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:.55rem;cursor:pointer">
+              <input type="checkbox" id="f-open_to_international" style="accent-color:var(--em-400);width:14px;height:14px" onchange="markDirty()">
+              <span style="font-size:.84rem;color:var(--tx-200)">Open to international opportunities</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:.55rem;cursor:pointer">
+              <input type="checkbox" id="f-salary_negotiable" style="accent-color:var(--em-400);width:14px;height:14px" onchange="markDirty()" checked>
+              <span style="font-size:.84rem;color:var(--tx-200)">Salary is negotiable</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRIVACY -->
+      <div class="profile-section" style="margin-bottom:4rem">
+        <div class="ps-header"><h3>🔒 Privacy & Notifications</h3></div>
+        <div class="ps-body" style="display:flex;flex-direction:column;gap:.75rem">
+          <label style="display:flex;align-items:flex-start;gap:.65rem;cursor:pointer">
+            <input type="checkbox" id="f-profile_visible" style="accent-color:var(--em-400);width:15px;height:15px;margin-top:2px" onchange="markDirty()" checked>
+            <div><span style="font-size:.86rem;font-weight:600;color:var(--tx-100);display:block">Profile visible to employers</span><span style="font-size:.76rem;color:var(--tx-600)">Allow Ineza to share your profile with relevant employers. Disable for confidential job search.</span></div>
+          </label>
+          <label style="display:flex;align-items:flex-start;gap:.65rem;cursor:pointer">
+            <input type="checkbox" id="f-alerts_email" style="accent-color:var(--em-400);width:15px;height:15px;margin-top:2px" onchange="markDirty()" checked>
+            <div><span style="font-size:.86rem;font-weight:600;color:var(--tx-100);display:block">Email job alerts</span><span style="font-size:.76rem;color:var(--tx-600)">Receive personalised job matches directly to your inbox.</span></div>
+          </label>
+          <label style="display:flex;align-items:flex-start;gap:.65rem;cursor:pointer">
+            <input type="checkbox" id="f-alerts_whatsapp" style="accent-color:var(--em-400);width:15px;height:15px;margin-top:2px" onchange="markDirty()">
+            <div><span style="font-size:.86rem;font-weight:600;color:var(--tx-100);display:block">WhatsApp notifications</span><span style="font-size:.76rem;color:var(--tx-600)">Get instant alerts on WhatsApp when new roles match your profile.</span></div>
+          </label>
+        </div>
+      </div>
+
+    </div><!-- /profile-content -->
+  </div>
+
+  <!-- SAVE BAR -->
+  <div class="save-bar" id="save-bar">
+    <p>You have unsaved changes</p>
+    <div style="display:flex;gap:.65rem">
+      <button class="btn btn-secondary btn-sm" onclick="loadProfile()">Discard</button>
+      <button class="btn btn-primary btn-sm" id="save-bar-btn" onclick="saveAll()">Save Changes</button>
+    </div>
+  </div>
+</main>
+
+<!-- ADD EXPERIENCE MODAL -->
+<div class="modal-ov" id="exp-modal" onclick="if(event.target===this)closeExpModal()">
+  <div class="modal">
+    <div class="m-head"><h3>Add Work Experience</h3><button class="m-close" onclick="closeExpModal()">✕</button></div>
+    <div class="m-body">
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Job Title <span class="req">*</span></label><input class="form-control" id="exp-title" placeholder="e.g. Senior Software Engineer"></div>
+        <div class="form-group"><label class="form-label">Company <span class="req">*</span></label><input class="form-control" id="exp-company" placeholder="e.g. MTN Rwanda"></div>
+        <div class="form-group"><label class="form-label">Location</label><input class="form-control" id="exp-location" placeholder="e.g. Kigali, Rwanda"></div>
+        <div class="form-group"><label class="form-label">Start Date <span class="req">*</span></label><input type="month" class="form-control" id="exp-start"></div>
+        <div class="form-group"><label class="form-label">End Date</label><input type="month" class="form-control" id="exp-end"></div>
+        <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:.75rem">
+          <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer">
+            <input type="checkbox" id="exp-current" style="accent-color:var(--em-400)" onchange="document.getElementById('exp-end').disabled=this.checked">
+            <span style="font-size:.84rem;color:var(--tx-200)">Currently working here</span>
+          </label>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-control" id="exp-desc" rows="3" placeholder="Describe your responsibilities and key achievements…"></textarea></div>
+    </div>
+    <div class="m-foot">
+      <button class="btn btn-secondary btn-sm" onclick="closeExpModal()">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="save-exp-btn" onclick="saveExperience()">Add Experience</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script src="../js/api.js"></script>
+<script>
+let profileData   = {};
+let skillsList    = [];
+let experienceList = [];
+let isDirty       = false;
+
+// ── INIT ──────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = requireLogin('candidate');
+  if (!user) return;
+  updateSidebarUser(user);
+  await loadProfile();
+});
+
+function updateSidebarUser(user) {
+  document.getElementById('sb-name').textContent = user.name?.split(' ').slice(0,2).join(' ') || user.email.split('@')[0];
+  document.getElementById('sb-avatar').textContent = Format.initials(user.name || user.email);
+  const planMap = { candidate_free:'Free Plan', candidate_pro:'✨ Pro Seeker', candidate_premium:'💎 Premium' };
+  document.getElementById('sb-plan').textContent = planMap[user.plan] || user.plan;
+}
+
+// ── LOAD PROFILE ──────────────────────────────────────────────
+async function loadProfile() {
+  try {
+    const { profile } = await API.candidates.getProfile();
+    const { user }    = await API.auth.me();
+    profileData = profile;
+    isDirty = false;
+    document.getElementById('save-bar').classList.remove('visible');
+    document.getElementById('loading-state').style.display  = 'none';
+    document.getElementById('profile-content').style.display = 'block';
+    populateForm(profile, user);
+    renderSkills(profile.skills || []);
+    renderExperiences(profile.experiences || []);
+    updateHeader(profile);
+  } catch (err) {
+    document.getElementById('loading-state').innerHTML = `<div style="color:var(--danger)">⚠️ Failed to load profile. <button onclick="loadProfile()" style="color:var(--em-400);background:none;border:none;cursor:pointer;text-decoration:underline">Retry</button></div>`;
+    Toast.error('Failed to load profile');
+  }
+}
+
+function populateForm(p, u) {
+  const set = (id, val) => { const el = document.getElementById(id); if (el && val !== null && val !== undefined) el.value = val; };
+  set('f-first_name', p.first_name); set('f-last_name', p.last_name);
+  set('f-phone', p.phone); set('f-nationality', p.nationality);
+  set('f-location', p.location); set('f-linkedin_url', p.linkedin_url);
+  set('f-headline', p.headline); set('f-summary', p.summary);
+  set('f-current_title', p.current_title); set('f-current_employer', p.current_employer);
+  set('f-industry', p.industry); set('f-years_experience', p.years_experience);
+  set('f-highest_qualification', p.highest_qualification);
+  set('f-field_of_study', p.field_of_study); set('f-institution', p.institution);
+  set('f-graduation_year', p.graduation_year); set('f-desired_title', p.desired_title);
+  set('f-desired_salary_min', p.desired_salary_min); set('f-desired_salary_max', p.desired_salary_max);
+  set('f-preferred_location', p.preferred_location || 'Kigali, Rwanda');
+  set('f-preferred_arrangement', p.preferred_arrangement || 'onsite');
+  set('f-availability', p.availability || 'immediately');
+  if (u?.email) set('f-email', u.email);
+  // Checkboxes
+  document.getElementById('f-open_to_relocation').checked    = !!p.open_to_relocation;
+  document.getElementById('f-open_to_international').checked = !!p.open_to_international;
+  document.getElementById('f-salary_negotiable').checked     = p.salary_negotiable !== false;
+  document.getElementById('f-profile_visible').checked       = p.profile_visible !== false;
+  document.getElementById('f-alerts_email').checked          = p.alerts_email !== false;
+  document.getElementById('f-alerts_whatsapp').checked       = !!p.alerts_whatsapp;
+  // Languages
+  const langs = Array.isArray(p.languages) ? p.languages.map(l => typeof l === 'string' ? l : l.language) : [];
+  document.querySelectorAll('.lang-opt input[type=checkbox]').forEach(cb => { cb.checked = langs.includes(cb.value); });
+  // CV status
+  if (p.cv_url) {
+    document.getElementById('cv-zone').style.display = 'none';
+    document.getElementById('cv-bar').classList.add('show');
+    document.getElementById('cv-filename').textContent = p.cv_filename || 'CV uploaded';
+    document.getElementById('cv-status').textContent = '✓ CV uploaded';
+    document.getElementById('cv-status').style.color = 'var(--em-400)';
+  }
+  // Photo
+  if (p.profile_photo_url) {
+    const circle = document.getElementById('photo-circle');
+    circle.innerHTML = `<img src="${p.profile_photo_url}" alt="Profile photo"><div class="ph-photo-overlay">📷 Change</div>`;
+  }
+  // Score
+  document.getElementById('score-num').textContent = (p.profile_score || 0) + '%';
+  // Summary counter
+  updateSummaryCount();
+}
+
+function updateHeader(p) {
+  document.getElementById('ph-name').textContent = [p.first_name, p.last_name].filter(Boolean).join(' ') || 'Your Name';
+  document.getElementById('ph-headline').textContent = p.headline || 'Add a professional headline…';
+  document.getElementById('ph-location').textContent = p.location || '—';
+  document.getElementById('ph-industry').textContent = p.industry || '—';
+  document.getElementById('ph-availability').textContent = p.availability || '—';
+  document.getElementById('photo-initials').textContent = Format.initials([p.first_name, p.last_name].filter(Boolean).join(' ') || 'JP');
+}
+
+// ── SKILLS ────────────────────────────────────────────────────
+function renderSkills(skills) {
+  skillsList = Array.isArray(skills) ? skills.map(s => typeof s === 'string' ? s : s.name).filter(Boolean) : [];
+  const wrap  = document.getElementById('skills-wrap');
+  const input = document.getElementById('skill-input');
+  // Remove old tags
+  wrap.querySelectorAll('.skill-tag').forEach(t => t.remove());
+  skillsList.forEach(name => {
+    const tag = document.createElement('span');
+    tag.className = 'skill-tag'; tag.dataset.name = name;
+    tag.innerHTML = `${name} <button type="button" onclick="removeSkill('${name.replace(/'/,"\\'")}')">×</button>`;
+    wrap.insertBefore(tag, input);
+  });
+  document.getElementById('skill-count').textContent = `${skillsList.length} skill${skillsList.length !== 1 ? 's' : ''} added`;
+}
+
+function addSkillKey(e) {
+  if (['Enter', ','].includes(e.key)) {
+    e.preventDefault();
+    const val = e.target.value.trim().replace(/,$/, '');
+    if (val) { addSkillName(val); e.target.value = ''; }
+  }
+}
+
+function addSkillName(name) {
+  name = name.trim();
+  if (!name || skillsList.includes(name) || skillsList.length >= 30) return;
+  skillsList.push(name);
+  renderSkills(skillsList);
+  markDirty();
+}
+
+function removeSkill(name) {
+  skillsList = skillsList.filter(s => s !== name);
+  renderSkills(skillsList);
+  markDirty();
+}
+
+// ── EXPERIENCES ───────────────────────────────────────────────
+function renderExperiences(exps) {
+  experienceList = exps || [];
+  const container = document.getElementById('exp-list');
+  if (!experienceList.length) {
+    container.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--tx-600);font-size:.84rem">No experience added yet.</div>';
+    return;
+  }
+  container.innerHTML = experienceList.map(e => `
+    <div class="exp-item">
+      <div class="exp-title">${e.title || e.job_title}</div>
+      <div class="exp-company">${e.company}</div>
+      <div class="exp-dates">${formatDate(e.start || e.start_date)} – ${e.current || e.is_current ? 'Present' : formatDate(e.end || e.end_date)}</div>
+      ${e.description || e.desc ? `<div class="exp-desc">${e.description || e.desc}</div>` : ''}
+      <div class="exp-actions">
+        <button class="btn btn-danger btn-xs" onclick="deleteExperience('${e.id}')">Remove</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function formatDate(d) {
+  if (!d) return '—';
+  const date = new Date(d);
+  return date.toLocaleDateString('en', { month: 'short', year: 'numeric' });
+}
+
+function openExpModal() {
+  ['exp-title','exp-company','exp-location','exp-start','exp-end','exp-desc'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('exp-current').checked = false;
+  document.getElementById('exp-end').disabled = false;
+  document.getElementById('exp-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeExpModal() {
+  document.getElementById('exp-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+async function saveExperience() {
+  const title   = document.getElementById('exp-title').value.trim();
+  const company = document.getElementById('exp-company').value.trim();
+  const start   = document.getElementById('exp-start').value;
+  if (!title || !company || !start) { Toast.error('Job title, company, and start date are required'); return; }
+
+  const btn = document.getElementById('save-exp-btn');
+  btn.classList.add('loading'); btn.style.position = 'relative';
+  try {
+    await API.candidates.addExperience({
+      job_title: title, company,
+      location:   document.getElementById('exp-location').value.trim() || null,
+      start_date: start + '-01',
+      end_date:   document.getElementById('exp-current').checked ? null : (document.getElementById('exp-end').value ? document.getElementById('exp-end').value + '-01' : null),
+      is_current: document.getElementById('exp-current').checked,
+      description: document.getElementById('exp-desc').value.trim() || null
+    });
+    Toast.success('Experience added!');
+    closeExpModal();
+    await loadProfile();
+  } catch (err) {
+    Toast.error(err.message || 'Failed to save experience');
+  } finally { btn.classList.remove('loading'); }
+}
+
+async function deleteExperience(id) {
+  if (!confirm('Remove this work experience?')) return;
+  try {
+    await API.candidates.deleteExperience(id);
+    Toast.success('Experience removed');
+    await loadProfile();
+  } catch (err) { Toast.error(err.message || 'Failed to delete'); }
+}
+
+// ── UPLOADS ───────────────────────────────────────────────────
+async function uploadCV(input) {
+  if (!input.files?.[0]) return;
+  const btn = document.getElementById('cv-zone');
+  btn.style.opacity = '.6'; btn.style.pointerEvents = 'none';
+  try {
+    const { url, filename } = await API.uploads.cv(input.files[0]);
+    document.getElementById('cv-zone').style.display = 'none';
+    document.getElementById('cv-bar').classList.add('show');
+    document.getElementById('cv-filename').textContent = filename;
+    document.getElementById('cv-status').textContent = '✓ CV uploaded';
+    document.getElementById('cv-status').style.color = 'var(--em-400)';
+    Toast.success('CV uploaded successfully!');
+  } catch (err) { Toast.error(err.message || 'CV upload failed'); }
+  finally { btn.style.opacity = '1'; btn.style.pointerEvents = ''; }
+}
+
+function handleCVDrop(e) {
+  e.preventDefault();
+  document.getElementById('cv-zone').style.borderColor = '';
+  const f = e.dataTransfer?.files?.[0];
+  if (f) {
+    const fakeInput = { files: [f] };
+    uploadCV(fakeInput);
+  }
+}
+
+async function uploadPhoto(input) {
+  if (!input.files?.[0]) return;
+  const circle = document.getElementById('photo-circle');
+  circle.style.opacity = '.6';
+  try {
+    const { url } = await API.uploads.photo(input.files[0]);
+    circle.innerHTML = `<img src="${url}" alt="Profile photo"><div class="ph-photo-overlay">📷 Change</div>`;
+    Toast.success('Photo updated!');
+  } catch (err) { Toast.error(err.message || 'Photo upload failed'); }
+  finally { circle.style.opacity = '1'; }
+}
+
+// ── SAVE ALL ──────────────────────────────────────────────────
+async function saveAll() {
+  const btns = [document.getElementById('save-all-btn'), document.getElementById('save-bar-btn')];
+  btns.forEach(b => { if(b){b.classList.add('loading');b.style.position='relative';} });
+
+  try {
+    const langs = [...document.querySelectorAll('.lang-opt input[type=checkbox]:checked')].map(c => c.value);
+
+    // 1. Save profile
+    await API.candidates.updateProfile({
+      first_name:        document.getElementById('f-first_name').value.trim(),
+      last_name:         document.getElementById('f-last_name').value.trim(),
+      phone:             document.getElementById('f-phone').value.trim() || null,
+      nationality:       document.getElementById('f-nationality').value || null,
+      location:          document.getElementById('f-location').value || null,
+      linkedin_url:      document.getElementById('f-linkedin_url').value.trim() || null,
+      headline:          document.getElementById('f-headline').value.trim() || null,
+      summary:           document.getElementById('f-summary').value.trim() || null,
+      current_title:     document.getElementById('f-current_title').value.trim() || null,
+      current_employer:  document.getElementById('f-current_employer').value.trim() || null,
+      industry:          document.getElementById('f-industry').value || null,
+      years_experience:  parseInt(document.getElementById('f-years_experience').value) || null,
+      highest_qualification: document.getElementById('f-highest_qualification').value || null,
+      field_of_study:    document.getElementById('f-field_of_study').value.trim() || null,
+      institution:       document.getElementById('f-institution').value.trim() || null,
+      graduation_year:   parseInt(document.getElementById('f-graduation_year').value) || null,
+      desired_title:     document.getElementById('f-desired_title').value.trim() || null,
+      desired_salary_min: parseFloat(document.getElementById('f-desired_salary_min').value) || null,
+      desired_salary_max: parseFloat(document.getElementById('f-desired_salary_max').value) || null,
+      preferred_location: document.getElementById('f-preferred_location').value || null,
+      preferred_arrangement: document.getElementById('f-preferred_arrangement').value || 'onsite',
+      availability:      document.getElementById('f-availability').value || 'immediately',
+      open_to_relocation:    document.getElementById('f-open_to_relocation').checked,
+      open_to_international: document.getElementById('f-open_to_international').checked,
+      salary_negotiable:     document.getElementById('f-salary_negotiable').checked,
+      profile_visible:       document.getElementById('f-profile_visible').checked,
+      alerts_email:          document.getElementById('f-alerts_email').checked,
+      alerts_whatsapp:       document.getElementById('f-alerts_whatsapp').checked,
+      languages: langs.map(l => ({ language: l, level: 'fluent' }))
+    });
+
+    // 2. Save skills
+    await API.candidates.updateSkills(skillsList.map(name => ({ name, level: 'intermediate' })));
+
+    isDirty = false;
+    document.getElementById('save-bar').classList.remove('visible');
+    Toast.success('Profile saved successfully! 🎉');
+    await loadProfile();
+  } catch (err) {
+    Toast.error(err.message || 'Failed to save profile. Please try again.');
+  } finally {
+    btns.forEach(b => { if(b){b.classList.remove('loading');} });
+  }
+}
+
+// ── DIRTY TRACKING ────────────────────────────────────────────
+function markDirty() {
+  if (!isDirty) {
+    isDirty = true;
+    document.getElementById('save-bar').classList.add('visible');
+  }
+}
+
+function updateSummaryCount() {
+  const el = document.getElementById('f-summary');
+  const counter = document.getElementById('summary-count');
+  if (el && counter) {
+    el.addEventListener('input', () => {
+      counter.textContent = `${el.value.length} / 1000 characters`;
+    });
+  }
+}
+</script>
+</body>
+</html>

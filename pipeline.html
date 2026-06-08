@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hiring Pipeline | Ineza Employer Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/base.css">
+<style>
+body{background:var(--bg-deep);overflow-x:auto}
+.sidebar{background:var(--bg-surface);border-right:1px solid var(--bd-subtle);position:fixed;top:0;left:0;bottom:0;width:260px;display:flex;flex-direction:column;z-index:300;overflow-y:auto}
+.sb-brand{padding:1.4rem 1.25rem;border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;gap:.65rem}
+.sb-nav{padding:.75rem .65rem;flex:1}
+.sb-section{margin-bottom:1.5rem}
+.sb-section-lbl{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-800);padding:.3rem .65rem;margin-bottom:.35rem}
+.sb-link{display:flex;align-items:center;gap:.65rem;padding:.62rem .8rem;border-radius:var(--r-md);font-size:.86rem;font-weight:500;color:var(--tx-400);transition:all var(--ease);text-decoration:none}
+.sb-link:hover{background:var(--bg-raised);color:var(--tx-100)}
+.sb-link.active{background:rgba(251,191,36,.1);color:var(--gd-400);border:1px solid rgba(251,191,36,.25)}
+.dash-main{margin-left:260px;min-height:100vh;display:flex;flex-direction:column}
+.topbar{padding:.9rem 2rem;background:var(--bg-surface);border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;flex-shrink:0;position:sticky;top:0;z-index:200}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.3rem;border-radius:var(--r-md);font-size:.84rem;font-weight:600;font-family:var(--ff-body);transition:all var(--ease);border:none;cursor:pointer;white-space:nowrap}
+.btn-gold{background:linear-gradient(135deg,#FCD34D,#F59E0B);color:#1a0d00}
+.btn-gold:hover{opacity:.92}
+.btn-secondary{background:var(--bg-raised);color:var(--tx-100);border:1.5px solid var(--bd-subtle)}
+.btn-secondary:hover{border-color:rgba(251,191,36,.3)}
+.btn-primary{background:linear-gradient(135deg,#00E599,#00C97D);color:#020f08}
+.btn-sm{padding:.42rem .9rem;font-size:.8rem;border-radius:var(--r-sm)}
+.btn-xs{padding:.26rem .65rem;font-size:.72rem;border-radius:var(--r-sm)}
+/* PIPELINE TOOLBAR */
+.pipeline-toolbar{padding:.85rem 1.5rem;background:var(--bg-base);border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;flex-shrink:0}
+.pt-filter{background:var(--bg-raised);border:1px solid var(--bd-subtle);color:var(--tx-100);font-family:var(--ff-body);font-size:.82rem;padding:.38rem .7rem;border-radius:var(--r-sm);outline:none;cursor:pointer}
+.pt-filter option{background:var(--bg-raised)}
+.pt-search{background:var(--bg-raised);border:1px solid var(--bd-subtle);color:var(--tx-100);font-family:var(--ff-body);font-size:.84rem;padding:.42rem .85rem;border-radius:var(--r-md);outline:none;width:200px;transition:border-color var(--ease)}
+.pt-search:focus{border-color:rgba(251,191,36,.3)}
+.pt-search::placeholder{color:var(--tx-800)}
+.pt-stats{display:flex;gap:1rem;margin-left:auto;flex-wrap:wrap}
+.pts-item{font-size:.78rem;color:var(--tx-600);display:flex;align-items:center;gap:.35rem}
+.pts-val{font-weight:700;color:var(--tx-100)}
+/* KANBAN BOARD */
+.kanban-board{display:flex;gap:1rem;padding:1.5rem;overflow-x:auto;flex:1;align-items:flex-start;min-height:calc(100vh - 160px)}
+.kanban-col{flex-shrink:0;width:280px;display:flex;flex-direction:column;gap:.5rem}
+.col-header{background:var(--bg-surface);border:1px solid var(--bd-subtle);border-radius:var(--r-lg);padding:.85rem 1rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1}
+.col-name{font-size:.8rem;font-weight:700;color:var(--tx-200);display:flex;align-items:center;gap:.5rem}
+.col-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.col-count{font-size:.72rem;font-weight:800;background:var(--bg-raised);color:var(--tx-400);padding:.12rem .52rem;border-radius:99px}
+.col-add{width:24px;height:24px;border:none;background:var(--bg-raised);border-radius:50%;color:var(--tx-600);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all var(--ease)}
+.col-add:hover{background:var(--bd-em);color:var(--em-400)}
+.col-cards{display:flex;flex-direction:column;gap:.6rem;min-height:80px;border-radius:var(--r-lg);padding:.3rem;transition:background var(--ease)}
+.col-cards.drag-over{background:rgba(251,191,36,.05);border:2px dashed rgba(251,191,36,.2)}
+/* CANDIDATE CARD */
+.cand-card{background:var(--bg-surface);border:1px solid var(--bd-subtle);border-radius:var(--r-lg);padding:1rem;cursor:grab;transition:all var(--ease);user-select:none;position:relative}
+.cand-card:hover{border-color:rgba(251,191,36,.25);box-shadow:0 4px 18px rgba(0,0,0,.35);transform:translateY(-1px)}
+.cand-card.dragging{opacity:.5;cursor:grabbing;transform:rotate(2deg)}
+.cand-card.highlight{border-color:var(--bd-em);background:rgba(0,229,153,.04)}
+.cc-top{display:flex;align-items:center;gap:.75rem;margin-bottom:.65rem}
+.cc-av{width:38px;height:38px;border-radius:50%;background:rgba(0,229,153,.1);border:2px solid var(--bd-em);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem;color:var(--em-400);flex-shrink:0}
+.cc-name{font-size:.88rem;font-weight:700;color:var(--tx-100);margin-bottom:.08rem}
+.cc-role{font-size:.74rem;color:var(--tx-400)}
+.cc-job{font-size:.74rem;font-weight:600;color:var(--gd-400);margin-bottom:.5rem;display:flex;align-items:center;gap:.3rem}
+.cc-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.6rem}
+.cc-tag{font-size:.66rem;font-weight:600;padding:.14rem .52rem;border-radius:99px}
+.ct-em{background:rgba(0,229,153,.1);border:1px solid rgba(0,229,153,.2);color:var(--em-400)}
+.ct-gd{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.2);color:var(--gd-400)}
+.ct-gr{background:var(--bg-raised);border:1px solid var(--bd-subtle);color:var(--tx-400)}
+.cc-footer{display:flex;align-items:center;justify-content:space-between;padding-top:.55rem;border-top:1px solid var(--bd-subtle)}
+.cc-date{font-size:.68rem;color:var(--tx-800)}
+.cc-actions{display:flex;gap:.3rem}
+.cc-btn{width:24px;height:24px;border:none;background:var(--bg-raised);border-radius:var(--r-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--tx-600);transition:all var(--ease)}
+.cc-btn:hover{background:rgba(251,191,36,.1);color:var(--gd-400)}
+.score-chip{font-size:.65rem;font-weight:800;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);border-radius:99px;padding:.1rem .48rem;color:var(--gd-400);position:absolute;top:.6rem;right:.7rem}
+/* DETAIL DRAWER */
+.drawer-ov{position:fixed;inset:0;background:rgba(3,6,13,.7);backdrop-filter:blur(5px);z-index:400;display:none}
+.drawer-ov.open{display:block}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:440px;max-width:96vw;background:var(--bg-surface);border-left:1px solid var(--bd-muted);z-index:401;overflow-y:auto;transform:translateX(100%);transition:transform .32s cubic-bezier(.4,0,.2,1)}
+.drawer.open{transform:translateX(0)}
+.d-head{padding:1.2rem 1.5rem;border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg-surface);z-index:1}
+.d-body{padding:1.5rem}
+.d-footer{padding:1.2rem 1.5rem;border-top:1px solid var(--bd-subtle);display:flex;gap:.6rem;flex-wrap:wrap;position:sticky;bottom:0;background:var(--bg-surface)}
+/* MOVE MENU */
+.move-menu{position:absolute;right:.7rem;top:2rem;background:var(--bg-overlay);border:1px solid var(--bd-muted);border-radius:var(--r-lg);padding:.4rem;min-width:180px;z-index:50;display:none;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.move-menu.show{display:block}
+.mm-item{padding:.55rem .85rem;font-size:.82rem;color:var(--tx-200);border-radius:var(--r-sm);cursor:pointer;transition:background var(--ease);white-space:nowrap;display:flex;align-items:center;gap:.5rem}
+.mm-item:hover{background:var(--bg-raised);color:var(--tx-100)}
+@media(max-width:768px){.dash-main{margin-left:0}.sidebar{display:none}.kanban-board{padding:1rem}.topbar{padding:.75rem 1.2rem}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sb-brand">
+    <a href="../index.html" style="display:flex;align-items:center;gap:.5rem;text-decoration:none">
+      <svg width="28" height="28" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14.5" stroke="url(#lgpp)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="7" ry="14.5" stroke="url(#lgpp)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="14.5" ry="4.5" stroke="url(#lgpp)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="20" ry="6.5" stroke="url(#lgpp)" stroke-width="1.8" stroke-opacity=".65" transform="rotate(-25 20 20)"/><defs><linearGradient id="lgpp" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#FBBF24"/><stop offset="1" stop-color="#F59E0B"/></linearGradient></defs></svg>
+      <div style="margin-left:.4rem"><div style="font-size:.85rem;font-weight:800;letter-spacing:.08em;background:linear-gradient(135deg,#FCD34D,#F59E0B);-webkit-background-clip:text;-webkit-text-fill-color:transparent">INEZA</div><div style="font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-800)">Employer Portal</div></div>
+    </a>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">
+      <div class="sb-section-lbl">Main</div>
+      <a href="dashboard.html" class="sb-link">🏠 Dashboard</a>
+      <a href="post-job.html" class="sb-link">➕ Post a Job</a>
+      <a href="jobs.html" class="sb-link">📋 My Job Postings</a>
+      <a href="candidates.html" class="sb-link">👥 Candidate Pool</a>
+      <a href="pipeline.html" class="sb-link active">🔄 Hiring Pipeline</a>
+      <a href="messages.html" class="sb-link">💬 Messages</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Analytics</div>
+      <a href="analytics.html" class="sb-link">📊 Analytics</a>
+      <a href="billing.html" class="sb-link">💳 Billing</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Company</div>
+      <a href="company-profile.html" class="sb-link">🏢 Company Profile</a>
+      <a href="settings.html" class="sb-link">⚙️ Settings</a>
+      <a href="#" class="sb-link" onclick="API?.auth?.logout()">🚪 Sign Out</a>
+    </div>
+  </nav>
+  <div class="sb-footer">
+    <div style="display:flex;align-items:center;gap:.6rem;padding:.6rem;background:var(--bg-raised);border-radius:var(--r-md);border:1px solid rgba(251,191,36,.2)">
+      <div style="width:32px;height:32px;border-radius:50%;background:rgba(251,191,36,.1);border:2px solid rgba(251,191,36,.4);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem;color:var(--gd-400)">TC</div>
+      <div><span style="font-size:.84rem;font-weight:700;color:var(--tx-100);display:block">TechCorp Rwanda</span><span style="font-size:.66rem;color:var(--gd-400);display:block">🏢 Business Plan</span></div>
+    </div>
+  </div>
+</aside>
+
+<div class="dash-main">
+  <div class="topbar">
+    <div>
+      <div style="font-size:1rem;font-weight:800;color:var(--tx-100)">Hiring Pipeline</div>
+      <div style="font-size:.76rem;color:var(--tx-600)">Drag candidates between stages to update their status</div>
+    </div>
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+      <button class="btn btn-secondary btn-sm" onclick="exportPipeline()">↓ Export</button>
+      <a href="candidates.html" class="btn btn-secondary btn-sm">+ Add Candidate</a>
+      <a href="post-job.html" class="btn btn-gold btn-sm">+ Post New Job</a>
+    </div>
+  </div>
+
+  <div class="pipeline-toolbar">
+    <select class="pt-filter" id="job-filter" onchange="filterByJob()">
+      <option value="">All Jobs</option>
+      <option value="j1">Senior Software Engineer</option>
+      <option value="j2">Product Manager</option>
+      <option value="j3">UX/UI Designer</option>
+      <option value="j4">Data Analyst</option>
+    </select>
+    <input type="text" class="pt-search" placeholder="Search candidates…" oninput="searchCards(this.value)">
+    <div class="pt-stats">
+      <span class="pts-item">Total: <span class="pts-val" id="total-count">15</span></span>
+      <span class="pts-item">Active: <span class="pts-val" id="active-count">12</span></span>
+      <span class="pts-item">Avg. days: <span class="pts-val" id="avg-days">14</span></span>
+      <span class="pts-item">This month: <span class="pts-val" style="color:var(--em-400)">3 hires</span></span>
+    </div>
+  </div>
+
+  <!-- KANBAN BOARD -->
+  <div class="kanban-board" id="kanban-board">
+    <!-- Columns rendered by JS -->
+  </div>
+</div>
+
+<!-- DETAIL DRAWER -->
+<div class="drawer-ov" id="drawer-ov" onclick="closeDrawer()"></div>
+<div class="drawer" id="detail-drawer">
+  <div class="d-head">
+    <div style="font-size:.9rem;font-weight:700;color:var(--tx-100)">Candidate Details</div>
+    <button style="width:28px;height:28px;border-radius:50%;background:var(--bg-raised);border:1px solid var(--bd-subtle);color:var(--tx-400);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="d-body" id="drawer-content"><!-- JS --></div>
+  <div class="d-footer">
+    <button class="btn btn-gold btn-sm" id="d-interview-btn" onclick="scheduleInterview()">🗓 Schedule Interview</button>
+    <button class="btn btn-primary btn-sm" onclick="sendOffer()">🏆 Send Offer</button>
+    <button class="btn btn-secondary btn-sm" onclick="messageCandidate()">💬 Message</button>
+    <button class="btn btn-secondary btn-sm" style="color:var(--danger);border-color:rgba(248,113,113,.3)" onclick="rejectCandidate()">✕ Reject</button>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script src="../js/api.js"></script>
+<script>
+// ── PIPELINE DATA ─────────────────────────────────────────────
+const COLUMNS = [
+  { id:'applied',   name:'Applied',   dot:'#60A5FA', limit:null },
+  { id:'screening', name:'Screening', dot:'#FBBF24', limit:null },
+  { id:'interview', name:'Interview', dot:'#00E599',  limit:null },
+  { id:'technical', name:'Technical', dot:'#A78BFA', limit:null },
+  { id:'offer',     name:'Offer Out', dot:'#34D399', limit:null },
+  { id:'hired',     name:'Hired ✓',  dot:'#00E599',  limit:null }
+];
+
+let candidates = [
+  { id:'c1', name:'Jean-Paul Habimana', initials:'JH', role:'Senior Software Engineer', job:'Senior Software Eng.', col:'interview', score:98, days:6,  skills:['Node.js','Python','AWS'],        vetted:true,  salary:1200000, email:'jp@email.com', phone:'+250 788 111 001', experience:'7 years' },
+  { id:'c2', name:'Alice Mukamana',     initials:'AM', role:'Full Stack Developer',      job:'Senior Software Eng.', col:'screening', score:95, days:3,  skills:['React','TypeScript'],             vetted:true,  salary:900000, email:'am@email.com',  phone:'+250 788 111 002', experience:'5 years' },
+  { id:'c3', name:'David Mutabazi',     initials:'DM', role:'DevOps Engineer',           job:'Senior Software Eng.', col:'applied',   score:91, days:1,  skills:['Docker','Kubernetes'],            vetted:false, salary:1000000, email:'dm@email.com', phone:'+250 788 111 003', experience:'4 years' },
+  { id:'c4', name:'Grace Nyiramana',    initials:'GN', role:'Data Scientist',            job:'Product Manager',      col:'technical', score:93, days:9,  skills:['Python','TensorFlow','SQL'],       vetted:true,  salary:1100000, email:'gn@email.com', phone:'+250 788 111 004', experience:'4 years' },
+  { id:'c5', name:'Patrick Uwimana',    initials:'PU', role:'Backend Engineer',          job:'Senior Software Eng.', col:'screening', score:88, days:2,  skills:['Go','Postgres','Redis'],           vetted:false, salary:900000, email:'pu@email.com',  phone:'+250 788 111 005', experience:'3 years' },
+  { id:'c6', name:'Claudette Ruranga',  initials:'CR', role:'Data Engineer',             job:'Product Manager',      col:'offer',     score:97, days:18, skills:['dbt','Spark','Python'],           vetted:true,  salary:1400000, email:'cr@email.com', phone:'+250 788 111 006', experience:'6 years' },
+  { id:'c7', name:'Emmanuel Habimana',  initials:'EH', role:'Software Architect',        job:'Senior Software Eng.', col:'hired',     score:99, days:12, skills:['System Design','AWS','Node.js'],  vetted:true,  salary:2000000, email:'eh@email.com', phone:'+250 788 111 007', experience:'10 years' },
+  { id:'c8', name:'Sandra Uwimana',     initials:'SU', role:'Senior Developer',          job:'Senior Software Eng.', col:'interview', score:90, days:7,  skills:['React','Node.js','MongoDB'],       vetted:true,  salary:1100000, email:'su@email.com', phone:'+250 788 111 008', experience:'5 years' },
+  { id:'c9', name:'Rodrigue Ngabo',     initials:'RN', role:'Mobile Developer',          job:'Product Manager',      col:'applied',   score:85, days:1,  skills:['React Native','Flutter','iOS'],    vetted:false, salary:950000, email:'rn@email.com',  phone:'+250 788 111 009', experience:'3 years' },
+  { id:'c10',name:'Aline Mukamana',     initials:'AL', role:'Frontend Engineer',         job:'UX/UI Designer',       col:'applied',   score:87, days:2,  skills:['Vue','CSS','Figma'],               vetted:false, salary:850000, email:'al@email.com',  phone:'+250 788 111 010', experience:'3 years' },
+];
+
+let activeCandId = null;
+let dragCandId   = null;
+let dragSourceCol = null;
+
+// ── RENDER ────────────────────────────────────────────────────
+function renderBoard(data = candidates) {
+  const board = document.getElementById('kanban-board');
+  board.innerHTML = COLUMNS.map(col => {
+    const cards = data.filter(c => c.col === col.id);
+    return `
+      <div class="kanban-col" data-col="${col.id}">
+        <div class="col-header">
+          <div class="col-name">
+            <div class="col-dot" style="background:${col.dot}"></div>
+            ${col.name}
+          </div>
+          <div style="display:flex;align-items:center;gap:.4rem">
+            <span class="col-count">${cards.length}</span>
+            <button class="col-add" onclick="Toast.info('Add candidate to ${col.name}')">+</button>
+          </div>
+        </div>
+        <div class="col-cards" id="col-${col.id}"
+          ondragover="onDragOver(event,'${col.id}')"
+          ondragleave="onDragLeave(event)"
+          ondrop="onDrop(event,'${col.id}')">
+          ${cards.map(c => renderCard(c)).join('')}
+          ${cards.length === 0 ? `<div style="text-align:center;padding:1.5rem .5rem;color:var(--tx-800);font-size:.76rem;border:2px dashed var(--bd-subtle);border-radius:var(--r-lg)">Drag candidates here</div>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+
+  // Update stats
+  document.getElementById('total-count').textContent = data.length;
+  document.getElementById('active-count').textContent = data.filter(c => !['hired','rejected'].includes(c.col)).length;
+  document.getElementById('avg-days').textContent = Math.round(data.reduce((s,c) => s+c.days, 0) / (data.length || 1));
+}
+
+function renderCard(c) {
+  return `
+    <div class="cand-card${c.score >= 95 ? ' highlight' : ''}" id="card-${c.id}"
+      draggable="true"
+      ondragstart="onDragStart(event,'${c.id}',this)"
+      ondragend="onDragEnd(event,this)"
+      onclick="openDrawer('${c.id}')">
+      ${c.score ? `<div class="score-chip">⭐ ${c.score}%</div>` : ''}
+      <div class="cc-top">
+        <div class="cc-av">${c.initials}</div>
+        <div>
+          <div class="cc-name">${c.name}</div>
+          <div class="cc-role">${c.role}</div>
+        </div>
+      </div>
+      <div class="cc-job">💼 ${c.job}</div>
+      <div class="cc-tags">
+        ${c.skills.slice(0,3).map(s => `<span class="cc-tag ct-em">${s}</span>`).join('')}
+        ${c.vetted ? `<span class="cc-tag ct-gd">✓ Vetted</span>` : ''}
+      </div>
+      <div class="cc-footer">
+        <span class="cc-date">📅 ${c.days} day${c.days!==1?'s':''} in stage</span>
+        <div class="cc-actions" onclick="event.stopPropagation()">
+          <button class="cc-btn" title="Move stage" onclick="showMoveMenu('${c.id}',this)">→</button>
+          <button class="cc-btn" title="Message" onclick="Toast.info('Opening message to ${c.name}…')">💬</button>
+          <button class="cc-btn" title="Schedule interview" onclick="Toast.success('Interview invite sent to ${c.name}!')">🗓</button>
+        </div>
+      </div>
+      <div class="move-menu" id="menu-${c.id}">
+        ${COLUMNS.filter(col => col.id !== c.col).map(col =>
+          `<div class="mm-item" onclick="moveCandTo('${c.id}','${col.id}')">
+            <span style="width:8px;height:8px;border-radius:50%;background:${col.dot};display:inline-block;flex-shrink:0"></span>
+            ${col.name}
+          </div>`
+        ).join('')}
+      </div>
+    </div>`;
+}
+
+// ── DRAG AND DROP ─────────────────────────────────────────────
+function onDragStart(e, id, el) {
+  dragCandId = id;
+  const c = candidates.find(c => c.id === id);
+  dragSourceCol = c?.col;
+  e.dataTransfer.effectAllowed = 'move';
+  setTimeout(() => el.classList.add('dragging'), 0);
+}
+
+function onDragEnd(e, el) {
+  el.classList.remove('dragging');
+  document.querySelectorAll('.col-cards').forEach(c => c.classList.remove('drag-over'));
+}
+
+function onDragOver(e, colId) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  const colEl = document.getElementById('col-' + colId);
+  if (colEl) colEl.classList.add('drag-over');
+}
+
+function onDragLeave(e) {
+  if (e.currentTarget.classList) e.currentTarget.classList.remove('drag-over');
+}
+
+function onDrop(e, colId) {
+  e.preventDefault();
+  document.querySelectorAll('.col-cards').forEach(c => c.classList.remove('drag-over'));
+  if (dragCandId && dragSourceCol !== colId) {
+    moveCandTo(dragCandId, colId, true);
+  }
+  dragCandId = dragSourceCol = null;
+}
+
+function moveCandTo(id, colId, viaDrop = false) {
+  const c = candidates.find(c => c.id === id);
+  if (!c) return;
+  const oldCol = c.col;
+  c.col  = colId;
+  c.days = 0;
+
+  // Close any open menus
+  document.querySelectorAll('.move-menu.show').forEach(m => m.classList.remove('show'));
+
+  renderBoard();
+  const colName = COLUMNS.find(c => c.id === colId)?.name || colId;
+
+  // Update via API in production
+  if (typeof API !== 'undefined') {
+    const statusMap = { applied:'applied', screening:'under_review', interview:'interview_scheduled', technical:'interview_completed', offer:'offer_extended', hired:'hired' };
+    const appId = c.applicationId;
+    if (appId && statusMap[colId]) {
+      API.applications.updateStatus(appId, { status: statusMap[colId] }).catch(err => console.warn('Status update:', err));
+    }
+  }
+
+  Toast.success(`${c.name} moved to ${colName}`);
+}
+
+function showMoveMenu(id, btn) {
+  // Close all menus first
+  document.querySelectorAll('.move-menu.show').forEach(m => {
+    if (m.id !== 'menu-' + id) m.classList.remove('show');
+  });
+  const menu = document.getElementById('menu-' + id);
+  if (menu) menu.classList.toggle('show');
+  document.addEventListener('click', () => {
+    if (menu) menu.classList.remove('show');
+  }, { once: true });
+}
+
+// ── DRAWER ────────────────────────────────────────────────────
+function openDrawer(id) {
+  activeCandId = id;
+  const c = candidates.find(c => c.id === id);
+  if (!c) return;
+  const col = COLUMNS.find(col => col.id === c.col);
+  document.getElementById('drawer-content').innerHTML = `
+    <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.4rem">
+      <div style="width:60px;height:60px;border-radius:50%;background:rgba(0,229,153,.1);border:3px solid var(--bd-em);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;color:var(--em-400);flex-shrink:0">${c.initials}</div>
+      <div>
+        <div style="font-size:1.1rem;font-weight:800;color:var(--tx-100);margin-bottom:.18rem">${c.name}${c.vetted?' <span style="font-size:.72rem;color:var(--em-400)">✓ Ineza Vetted</span>':''}</div>
+        <div style="font-size:.85rem;color:var(--tx-400);margin-bottom:.3rem">${c.role}</div>
+        <div style="display:flex;gap:.35rem;flex-wrap:wrap">
+          <span style="font-size:.7rem;padding:.15rem .55rem;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.2);border-radius:99px;color:var(--gd-400)">⭐ ${c.score}% match</span>
+          <span style="font-size:.7rem;padding:.15rem .55rem;background:rgba(0,229,153,.06);border:1px solid var(--bd-em);border-radius:99px;color:var(--em-400)">${col?.name || c.col}</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--bg-raised);border:1px solid var(--bd-subtle);border-radius:var(--r-lg);padding:1rem;margin-bottom:1.2rem">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+        <div><div style="font-size:.65rem;color:var(--tx-800);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.15rem">Job Applied For</div><div style="font-size:.84rem;font-weight:600;color:var(--tx-100)">${c.job}</div></div>
+        <div><div style="font-size:.65rem;color:var(--tx-800);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.15rem">Days in Pipeline</div><div style="font-size:.84rem;font-weight:600;color:var(--tx-100)">${c.days} days</div></div>
+        <div><div style="font-size:.65rem;color:var(--tx-800);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.15rem">Experience</div><div style="font-size:.84rem;font-weight:600;color:var(--tx-100)">${c.experience}</div></div>
+        <div><div style="font-size:.65rem;color:var(--tx-800);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.15rem">Salary Expectation</div><div style="font-size:.84rem;font-weight:700;color:var(--em-400)">RWF ${Number(c.salary).toLocaleString()}/mo</div></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.2rem">
+      <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--tx-600);margin-bottom:.65rem">Contact</div>
+      <div style="display:flex;flex-direction:column;gap:.5rem">
+        <a href="mailto:${c.email}" style="font-size:.84rem;color:var(--em-400);text-decoration:none">📧 ${c.email}</a>
+        <a href="tel:${c.phone}" style="font-size:.84rem;color:var(--em-400);text-decoration:none">📞 ${c.phone}</a>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.2rem">
+      <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--tx-600);margin-bottom:.65rem">Skills</div>
+      <div>${c.skills.map(s=>`<span style="display:inline-flex;align-items:center;padding:.22rem .65rem;background:rgba(0,229,153,.1);border:1px solid rgba(0,229,153,.22);border-radius:99px;font-size:.77rem;font-weight:600;color:var(--em-400);margin:.2rem">${s}</span>`).join('')}</div>
+    </div>
+
+    <div>
+      <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--tx-600);margin-bottom:.65rem">Move to Stage</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.4rem">
+        ${COLUMNS.map(col => `
+          <button onclick="moveCandTo('${c.id}','${col.id}');closeDrawer()" 
+            style="padding:.32rem .75rem;font-size:.76rem;font-weight:600;background:${c.col===col.id?'rgba(251,191,36,.12)':'var(--bg-raised)'};border:1px solid ${c.col===col.id?'rgba(251,191,36,.3)':'var(--bd-subtle)'};border-radius:99px;cursor:${c.col===col.id?'default':'pointer'};color:${c.col===col.id?'var(--gd-400)':'var(--tx-400)'};font-family:var(--ff-body);transition:all var(--ease)" 
+            ${c.col===col.id?'disabled':''}>
+            ${col.name}
+          </button>`
+        ).join('')}
+      </div>
+    </div>
+  `;
+  document.getElementById('drawer-ov').classList.add('open');
+  document.getElementById('detail-drawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDrawer() {
+  document.getElementById('drawer-ov').classList.remove('open');
+  document.getElementById('detail-drawer').classList.remove('open');
+  document.body.style.overflow = '';
+  activeCandId = null;
+}
+
+function scheduleInterview() {
+  const c = candidates.find(c => c.id === activeCandId);
+  if (c) { moveCandTo(c.id,'interview'); closeDrawer(); Toast.success(`Interview invite sent to ${c.name}!`); }
+}
+function sendOffer() {
+  const c = candidates.find(c => c.id === activeCandId);
+  if (c) { moveCandTo(c.id,'offer'); closeDrawer(); Toast.success(`Offer sent to ${c.name}!`); }
+}
+function messageCandidate() { closeDrawer(); Toast.info('Opening message composer…'); }
+function rejectCandidate() {
+  const c = candidates.find(c => c.id === activeCandId);
+  if (c && confirm(`Reject ${c.name}? This will notify them.`)) {
+    candidates = candidates.filter(x => x.id !== activeCandId);
+    renderBoard();
+    closeDrawer();
+    Toast.info(`${c.name} marked as rejected`);
+  }
+}
+
+function filterByJob() {
+  const jobId = document.getElementById('job-filter').value;
+  if (!jobId) { renderBoard(); return; }
+  const jobNames = { j1:'Senior Software Eng.', j2:'Product Manager', j3:'UX/UI Designer', j4:'Data Analyst' };
+  renderBoard(candidates.filter(c => c.job === jobNames[jobId]));
+}
+
+function searchCards(q) {
+  if (!q) { renderBoard(); return; }
+  const filtered = candidates.filter(c =>
+    c.name.toLowerCase().includes(q.toLowerCase()) ||
+    c.role.toLowerCase().includes(q.toLowerCase()) ||
+    c.skills.some(s => s.toLowerCase().includes(q.toLowerCase()))
+  );
+  renderBoard(filtered);
+}
+
+function exportPipeline() {
+  Toast.info('Generating pipeline export as CSV…');
+}
+
+// Initial render
+document.addEventListener('DOMContentLoaded', () => { renderBoard(); });
+</script>
+</body>
+</html>

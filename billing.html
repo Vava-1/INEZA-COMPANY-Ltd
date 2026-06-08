@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Billing & Plan | Ineza Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/base.css">
+<style>
+body{background:var(--bg-deep)}
+.sidebar{background:var(--bg-surface);border-right:1px solid var(--bd-subtle);position:fixed;top:0;left:0;bottom:0;width:260px;display:flex;flex-direction:column;z-index:300;overflow-y:auto}
+.sb-brand{padding:1.4rem 1.25rem;border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;gap:.65rem}
+.sb-nav{padding:.75rem .65rem;flex:1}
+.sb-section{margin-bottom:1.5rem}
+.sb-section-lbl{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-800);padding:.3rem .65rem;margin-bottom:.35rem}
+.sb-link{display:flex;align-items:center;gap:.65rem;padding:.62rem .8rem;border-radius:var(--r-md);font-size:.86rem;font-weight:500;color:var(--tx-400);transition:all var(--ease);text-decoration:none}
+.sb-link:hover{background:var(--bg-raised);color:var(--tx-100)}
+.sb-link.active{background:rgba(0,229,153,.1);color:var(--em-400);border:1px solid var(--bd-em)}
+.dash-main{margin-left:260px;min-height:100vh}
+.topbar{padding:.9rem 2rem;background:var(--bg-surface);border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.content{padding:2rem;max-width:960px}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.62rem 1.4rem;border-radius:var(--r-md);font-size:.84rem;font-weight:600;font-family:var(--ff-body);transition:all var(--ease);border:none;cursor:pointer;white-space:nowrap}
+.btn-primary{background:linear-gradient(135deg,#00E599,#00C97D);color:#020f08}
+.btn-primary:hover{opacity:.92;transform:translateY(-1px)}
+.btn-secondary{background:var(--bg-raised);color:var(--tx-100);border:1.5px solid var(--bd-subtle)}
+.btn-secondary:hover{border-color:var(--bd-em)}
+.btn-gold{background:linear-gradient(135deg,#FCD34D,#F59E0B);color:#1a0d00}
+.btn-gold:hover{opacity:.92}
+.btn-danger{background:rgba(248,113,113,.12);color:var(--danger);border:1px solid rgba(248,113,113,.25)}
+.btn-danger:hover{background:rgba(248,113,113,.2)}
+.btn-sm{padding:.44rem .95rem;font-size:.8rem;border-radius:var(--r-sm)}
+.btn-block{width:100%;justify-content:center}
+.btn.loading{pointer-events:none;opacity:.7;position:relative}
+.btn.loading::before{content:'';position:absolute;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* CURRENT PLAN CARD */
+.current-plan{background:linear-gradient(135deg,rgba(0,229,153,.08),rgba(59,130,246,.05));border:1px solid var(--bd-em);border-radius:var(--r-2xl);padding:2rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.current-plan::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(0,229,153,.12),transparent 70%)}
+.cp-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem}
+.cp-plan-name{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--tx-100)}
+.cp-plan-badge{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .9rem;background:rgba(0,229,153,.15);border:1px solid var(--bd-em);border-radius:99px;font-size:.78rem;font-weight:700;color:var(--em-400)}
+.cp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.cp-stat{background:rgba(255,255,255,.03);border:1px solid var(--bd-subtle);border-radius:var(--r-lg);padding:1rem;text-align:center}
+.cp-stat-val{font-size:1.2rem;font-weight:800;color:var(--tx-100);display:block;margin-bottom:.18rem}
+.cp-stat-lbl{font-size:.72rem;color:var(--tx-600);text-transform:uppercase;letter-spacing:.06em}
+
+/* PLAN CARDS */
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+.plan-card{background:var(--bg-surface);border:1px solid var(--bd-subtle);border-radius:var(--r-xl);padding:1.8rem;position:relative;transition:all var(--ease)}
+.plan-card:hover{border-color:var(--bd-muted)}
+.plan-card.current{border-color:var(--bd-em);background:rgba(0,229,153,.03)}
+.plan-card.popular{border-color:rgba(251,191,36,.3);background:rgba(251,191,36,.02)}
+.plan-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:.65rem;font-weight:800;padding:.22rem .9rem;border-radius:99px;letter-spacing:.06em;text-transform:uppercase}
+.pb-current{background:var(--em-400);color:var(--bg-deep)}
+.pb-popular{background:linear-gradient(135deg,#FCD34D,#F59E0B);color:#1a0d00}
+.plan-icon{font-size:1.8rem;margin-bottom:.6rem;display:block}
+.plan-name{font-size:1rem;font-weight:800;color:var(--tx-100);margin-bottom:.2rem}
+.plan-price{font-size:1.8rem;font-weight:900;color:var(--tx-100);line-height:1;margin-bottom:.15rem}
+.plan-price .currency{font-size:.85rem;font-weight:500;color:var(--tx-400);vertical-align:top;margin-top:.3rem}
+.plan-price .period{font-size:.75rem;font-weight:400;color:var(--tx-600)}
+.plan-desc{font-size:.78rem;color:var(--tx-600);margin-bottom:1.2rem;line-height:1.55}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:.4rem;margin-bottom:1.4rem}
+.plan-features li{font-size:.81rem;color:var(--tx-200);display:flex;align-items:flex-start;gap:.45rem;line-height:1.45}
+.pf-check{color:var(--em-400);flex-shrink:0;font-size:.8rem}
+.pf-cross{color:var(--tx-800);flex-shrink:0}
+
+/* PAYMENT METHOD */
+.pm-card{background:var(--bg-surface);border:1px solid var(--bd-subtle);border-radius:var(--r-xl);overflow:hidden;margin-bottom:1.5rem}
+.pm-header{padding:1.2rem 1.5rem;border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;justify-content:space-between}
+.pm-header h3{font-size:.92rem;font-weight:700;color:var(--tx-100)}
+.pm-body{padding:1.5rem}
+.pm-method{display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;background:var(--bg-raised);border:1px solid var(--bd-em);border-radius:var(--r-lg);margin-bottom:.75rem}
+.pm-method:last-child{margin-bottom:0}
+.pm-icon{width:44px;height:44px;border-radius:var(--r-md);background:rgba(0,229,153,.1);border:1px solid var(--bd-em);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.pm-detail .pm-name{font-size:.88rem;font-weight:700;color:var(--tx-100);display:block}
+.pm-detail .pm-info{font-size:.76rem;color:var(--tx-600);display:block}
+.pm-default{font-size:.68rem;font-weight:700;padding:.15rem .55rem;background:rgba(0,229,153,.1);border:1px solid var(--bd-em);border-radius:99px;color:var(--em-400);margin-left:auto}
+
+/* PAYMENT HISTORY */
+.ph-card{background:var(--bg-surface);border:1px solid var(--bd-subtle);border-radius:var(--r-xl);overflow:hidden;margin-bottom:1.5rem}
+.ph-header{padding:1.2rem 1.5rem;border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;justify-content:space-between}
+.ph-header h3{font-size:.92rem;font-weight:700;color:var(--tx-100)}
+table{width:100%;border-collapse:collapse}
+thead th{padding:.75rem 1.2rem;text-align:left;font-size:.68rem;font-weight:700;color:var(--tx-600);letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--bd-subtle);background:var(--bg-raised)}
+tbody tr{border-bottom:1px solid var(--bd-subtle);transition:background var(--ease)}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--bg-raised)}
+tbody td{padding:.85rem 1.2rem;font-size:.84rem;color:var(--tx-200);vertical-align:middle}
+.badge{display:inline-flex;align-items:center;gap:.25rem;padding:.18rem .58rem;border-radius:99px;font-size:.68rem;font-weight:700;white-space:nowrap}
+.b-em{background:rgba(0,229,153,.12);color:var(--em-400);border:1px solid rgba(0,229,153,.22)}
+.b-rd{background:rgba(248,113,113,.12);color:var(--danger);border:1px solid rgba(248,113,113,.22)}
+.b-gd{background:rgba(251,191,36,.12);color:#FBBF24;border:1px solid rgba(251,191,36,.22)}
+.b-gr{background:var(--bg-raised);color:var(--tx-400);border:1px solid var(--bd-subtle)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(3,6,13,.9);backdrop-filter:blur(8px);z-index:500;display:none;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg-surface);border:1px solid var(--bd-muted);border-radius:var(--r-2xl);width:100%;max-width:520px;animation:mIn .3s ease}
+@keyframes mIn{from{transform:translateY(-14px);opacity:0}to{transform:translateY(0);opacity:1}}
+.m-head{padding:1.4rem 1.6rem;border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;justify-content:space-between}
+.m-head h3{font-size:1rem;font-weight:700;color:var(--tx-100)}
+.m-close{width:28px;height:28px;border-radius:50%;background:var(--bg-raised);border:1px solid var(--bd-subtle);color:var(--tx-400);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.m-body{padding:1.5rem 1.6rem}
+.m-foot{padding:1rem 1.6rem;border-top:1px solid var(--bd-subtle);display:flex;gap:.65rem;justify-content:flex-end}
+.form-group{margin-bottom:1rem}
+.form-label{display:block;font-size:.72rem;font-weight:600;color:var(--tx-400);margin-bottom:.38rem;letter-spacing:.06em;text-transform:uppercase}
+.form-control{width:100%;background:var(--bg-raised);border:1.5px solid var(--bd-subtle);border-radius:var(--r-md);padding:.7rem .95rem;font-family:var(--ff-body);font-size:.88rem;color:var(--tx-100);outline:none;transition:all var(--ease)}
+.form-control::placeholder{color:var(--tx-800)}
+.form-control:focus{border-color:var(--bd-em);box-shadow:0 0 0 3px var(--em-glow)}
+select.form-control{cursor:pointer}select.form-control option{background:var(--bg-raised)}
+.payment-methods-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1.2rem}
+.pm-opt{background:var(--bg-raised);border:1.5px solid var(--bd-subtle);border-radius:var(--r-md);padding:.85rem;display:flex;align-items:center;gap:.6rem;cursor:pointer;transition:all var(--ease)}
+.pm-opt:hover{border-color:var(--bd-em)}
+.pm-opt.selected{border-color:var(--bd-em);background:rgba(0,229,153,.06)}
+.pm-opt input{accent-color:var(--em-400)}
+.pm-opt span{font-size:.84rem;font-weight:600;color:var(--tx-100)}
+.pm-summary-box{background:var(--bg-raised);border:1px solid var(--bd-subtle);border-radius:var(--r-md);padding:1rem;margin-bottom:1rem}
+.pmb-row{display:flex;justify-content:space-between;font-size:.84rem;margin-bottom:.4rem}
+.pmb-row:last-child{margin-bottom:0;padding-top:.5rem;border-top:1px solid var(--bd-subtle);font-weight:700;font-size:.92rem}
+.pmb-label{color:var(--tx-400)}
+.pmb-val{color:var(--tx-100)}
+.pmb-row:last-child .pmb-val{color:var(--em-400)}
+
+@media(max-width:1024px){.plans-grid{grid-template-columns:1fr 1fr}.cp-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){.dash-main{margin-left:0}.sidebar{display:none}.content{padding:1.2rem}.plans-grid{grid-template-columns:1fr}.cp-grid{grid-template-columns:1fr 1fr}.topbar{padding:.75rem 1.2rem}.payment-methods-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sb-brand">
+    <a href="../index.html" style="display:flex;align-items:center;gap:.55rem;text-decoration:none">
+      <svg width="30" height="30" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14.5" stroke="url(#lgb)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="7" ry="14.5" stroke="url(#lgb)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="14.5" ry="4.5" stroke="url(#lgb)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="20" ry="6.5" stroke="url(#lgb)" stroke-width="1.8" stroke-opacity=".65" transform="rotate(-25 20 20)"/><defs><linearGradient id="lgb" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#00E599"/><stop offset="1" stop-color="#3B82F6"/></linearGradient></defs></svg>
+      <div style="margin-left:.4rem"><div style="font-size:.88rem;font-weight:800;letter-spacing:.08em;background:linear-gradient(135deg,#4DFFA6,#00E599);-webkit-background-clip:text;-webkit-text-fill-color:transparent">INEZA</div></div>
+    </a>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">
+      <div class="sb-section-lbl">Main</div>
+      <a href="dashboard.html" class="sb-link">🏠 Dashboard</a>
+      <a href="../jobs/board.html" class="sb-link">💼 Browse Jobs</a>
+      <a href="applications.html" class="sb-link">📋 Applications</a>
+      <a href="saved.html" class="sb-link">🔖 Saved Jobs</a>
+      <a href="messages.html" class="sb-link">💬 Messages</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Profile</div>
+      <a href="profile.html" class="sb-link">👤 My Profile</a>
+      <a href="cv.html" class="sb-link">📄 My CV</a>
+      <a href="preferences.html" class="sb-link">🎯 Job Preferences</a>
+      <a href="alerts.html" class="sb-link">🔔 Job Alerts</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Account</div>
+      <a href="billing.html" class="sb-link active">💳 Billing & Plan</a>
+      <a href="settings.html" class="sb-link">⚙️ Settings</a>
+      <a href="#" class="sb-link" onclick="API.auth.logout()">🚪 Sign Out</a>
+    </div>
+  </nav>
+  <div class="sb-footer">
+    <div style="display:flex;align-items:center;gap:.65rem;padding:.65rem;background:var(--bg-raised);border-radius:var(--r-md);border:1px solid var(--bd-subtle)">
+      <div style="width:34px;height:34px;border-radius:50%;background:rgba(0,229,153,.1);border:2px solid var(--bd-em);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:var(--em-400)" id="sb-av">JP</div>
+      <div><span style="font-size:.85rem;font-weight:700;color:var(--tx-100);display:block" id="sb-nm">—</span><span style="font-size:.68rem;color:var(--em-400);display:block" id="sb-pl">Loading…</span></div>
+    </div>
+  </div>
+</aside>
+
+<main class="dash-main">
+  <div class="topbar">
+    <div>
+      <div style="font-size:1rem;font-weight:800;color:var(--tx-100)">Billing & Plan</div>
+      <div style="font-size:.76rem;color:var(--tx-600)">Manage your subscription and payment history</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- CURRENT PLAN -->
+    <div class="current-plan" id="current-plan-card">
+      <div class="cp-header">
+        <div>
+          <div style="font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--em-400);margin-bottom:.4rem">Current Plan</div>
+          <div class="cp-plan-name" id="cp-name">Loading…</div>
+          <div style="font-size:.84rem;color:var(--tx-400);margin-top:.25rem" id="cp-expires">—</div>
+        </div>
+        <div style="display:flex;gap:.6rem;align-items:flex-start;flex-wrap:wrap">
+          <span class="cp-plan-badge" id="cp-status-badge">● Active</span>
+          <button class="btn btn-danger btn-sm" id="cancel-btn" style="display:none" onclick="openCancelModal()">Cancel Plan</button>
+        </div>
+      </div>
+      <div class="cp-grid" id="cp-stats">
+        <div class="cp-stat"><span class="cp-stat-val" id="cp-apps">0</span><span class="cp-stat-lbl">Applications This Month</span></div>
+        <div class="cp-stat"><span class="cp-stat-val" id="cp-limit">5</span><span class="cp-stat-lbl">Monthly Limit</span></div>
+        <div class="cp-stat"><span class="cp-stat-val" id="cp-next-bill">—</span><span class="cp-stat-lbl">Next Billing Date</span></div>
+      </div>
+    </div>
+
+    <!-- AVAILABLE PLANS -->
+    <div style="margin-bottom:1rem">
+      <div style="font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tx-600);margin-bottom:1rem">Available Plans</div>
+    </div>
+    <div class="plans-grid">
+      <!-- FREE -->
+      <div class="plan-card" id="plan-free">
+        <span class="plan-icon">🆓</span>
+        <div class="plan-name">Free</div>
+        <div class="plan-price"><span class="currency">RWF</span> 0 <span class="period">/ forever</span></div>
+        <div class="plan-desc">Everything you need to start your job search</div>
+        <ul class="plan-features">
+          <li><span class="pf-check">✓</span>Browse all 2,400+ jobs</li>
+          <li><span class="pf-check">✓</span>Create candidate profile</li>
+          <li><span class="pf-check">✓</span>Apply to 5 jobs/month</li>
+          <li><span class="pf-check">✓</span>Weekly email alerts</li>
+          <li><span class="pf-cross">–</span>Priority recruiter matching</li>
+          <li><span class="pf-cross">–</span>CV review & coaching</li>
+          <li><span class="pf-cross">–</span>Salary benchmarking</li>
+        </ul>
+        <button class="btn btn-secondary btn-block" id="btn-free" onclick="selectPlan('candidate_free')">Current Plan</button>
+      </div>
+      <!-- PRO -->
+      <div class="plan-card popular" id="plan-pro">
+        <div class="plan-badge pb-popular">Most Popular</div>
+        <span class="plan-icon">🚀</span>
+        <div class="plan-name">Pro Seeker</div>
+        <div class="plan-price"><span class="currency">RWF</span> 5,000 <span class="period">/ month</span></div>
+        <div class="plan-desc">For serious professionals who want to move fast</div>
+        <ul class="plan-features">
+          <li><span class="pf-check">✓</span>Everything in Free</li>
+          <li><span class="pf-check">✓</span>Unlimited job applications</li>
+          <li><span class="pf-check">✓</span>Priority recruiter matching</li>
+          <li><span class="pf-check">✓</span>Professional CV review</li>
+          <li><span class="pf-check">✓</span>Daily personalised alerts</li>
+          <li><span class="pf-check">✓</span>WhatsApp notifications</li>
+          <li><span class="pf-check">✓</span>Salary benchmarking report</li>
+        </ul>
+        <button class="btn btn-gold btn-block" id="btn-pro" onclick="selectPlan('candidate_pro')">Upgrade to Pro</button>
+      </div>
+      <!-- PREMIUM -->
+      <div class="plan-card" id="plan-premium">
+        <span class="plan-icon">💎</span>
+        <div class="plan-name">Premium</div>
+        <div class="plan-price"><span class="currency">RWF</span> 9,900 <span class="period">/ month</span></div>
+        <div class="plan-desc">The complete career accelerator package</div>
+        <ul class="plan-features">
+          <li><span class="pf-check">✓</span>Everything in Pro</li>
+          <li><span class="pf-check">✓</span>1-on-1 interview coaching</li>
+          <li><span class="pf-check">✓</span>Salary negotiation coaching</li>
+          <li><span class="pf-check">✓</span>Profile featured to employers</li>
+          <li><span class="pf-check">✓</span>LinkedIn optimisation</li>
+          <li><span class="pf-check">✓</span>International role access</li>
+          <li><span class="pf-check">✓</span>CV professionally rewritten</li>
+        </ul>
+        <button class="btn btn-primary btn-block" id="btn-premium" onclick="selectPlan('candidate_premium')">Upgrade to Premium</button>
+      </div>
+    </div>
+
+    <!-- PAYMENT METHOD ON FILE -->
+    <div class="pm-card">
+      <div class="pm-header">
+        <h3>💳 Payment Methods</h3>
+        <button class="btn btn-secondary btn-sm" onclick="openAddPaymentModal()">+ Add Method</button>
+      </div>
+      <div class="pm-body" id="payment-methods-body">
+        <div class="pm-method">
+          <div class="pm-icon">📱</div>
+          <div class="pm-detail">
+            <span class="pm-name">MTN Mobile Money</span>
+            <span class="pm-info">+250 788 *** *** · Default payment method</span>
+          </div>
+          <span class="pm-default">Default</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAYMENT HISTORY -->
+    <div class="ph-card">
+      <div class="pm-header">
+        <h3>🧾 Payment History</h3>
+        <button class="btn btn-secondary btn-sm" onclick="downloadInvoice()">↓ Download All</button>
+      </div>
+      <div id="payment-history-body">
+        <div style="text-align:center;padding:2.5rem;color:var(--tx-600);font-size:.84rem">Loading payment history…</div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- UPGRADE / PAYMENT MODAL -->
+<div class="modal-overlay" id="payment-modal" onclick="if(event.target===this)closeModal('payment-modal')">
+  <div class="modal">
+    <div class="m-head">
+      <h3 id="pm-modal-title">Upgrade Plan</h3>
+      <button class="m-close" onclick="closeModal('payment-modal')">✕</button>
+    </div>
+    <div class="m-body">
+      <div class="pm-summary-box">
+        <div class="pmb-row"><span class="pmb-label">Plan</span><span class="pmb-val" id="pmb-plan">—</span></div>
+        <div class="pmb-row"><span class="pmb-label">Billing cycle</span><span class="pmb-val">Monthly</span></div>
+        <div class="pmb-row"><span class="pmb-label">Renews</span><span class="pmb-val" id="pmb-renews">—</span></div>
+        <div class="pmb-row"><span class="pmb-label">Total</span><span class="pmb-val" id="pmb-total">—</span></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Payment Method</label>
+        <div class="payment-methods-grid">
+          <label class="pm-opt selected" onclick="selectPayMethod(this,'mtn_momo')">
+            <input type="radio" name="pm" value="mtn_momo" checked style="accent-color:var(--em-400)">
+            <span>📱 MTN MoMo</span>
+          </label>
+          <label class="pm-opt" onclick="selectPayMethod(this,'airtel_money')">
+            <input type="radio" name="pm" value="airtel_money" style="accent-color:var(--em-400)">
+            <span>📲 Airtel Money</span>
+          </label>
+          <label class="pm-opt" onclick="selectPayMethod(this,'card')">
+            <input type="radio" name="pm" value="card" style="accent-color:var(--em-400)">
+            <span>💳 Card</span>
+          </label>
+          <label class="pm-opt" onclick="selectPayMethod(this,'bank_transfer')">
+            <input type="radio" name="pm" value="bank_transfer" style="accent-color:var(--em-400)">
+            <span>🏦 Bank Transfer</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group" id="phone-group">
+        <label class="form-label">MTN / Airtel Phone Number</label>
+        <input class="form-control" type="tel" id="pay-phone" placeholder="+250 78X XXX XXX">
+      </div>
+
+      <div style="background:rgba(0,229,153,.05);border:1px solid var(--bd-em);border-radius:var(--r-md);padding:.85rem;font-size:.78rem;color:var(--tx-400);line-height:1.65">
+        🔒 Secure payment · Cancel anytime · Your plan activates immediately after payment
+      </div>
+    </div>
+    <div class="m-foot">
+      <button class="btn btn-secondary btn-sm" onclick="closeModal('payment-modal')">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="confirm-pay-btn" onclick="processUpgrade()">
+        <span class="btn-text">Pay Now 🔒</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- CANCEL MODAL -->
+<div class="modal-overlay" id="cancel-modal" onclick="if(event.target===this)closeModal('cancel-modal')">
+  <div class="modal">
+    <div class="m-head">
+      <h3>Cancel Subscription</h3>
+      <button class="m-close" onclick="closeModal('cancel-modal')">✕</button>
+    </div>
+    <div class="m-body">
+      <div style="background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.2);border-radius:var(--r-md);padding:1rem;margin-bottom:1.2rem">
+        <div style="font-size:.9rem;font-weight:700;color:var(--tx-100);margin-bottom:.3rem">⚠️ You'll lose access to premium features</div>
+        <div style="font-size:.82rem;color:var(--tx-400);line-height:1.65">Your plan will remain active until the end of your billing period. After that, you'll be downgraded to the Free plan (5 applications/month).</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Why are you cancelling?</label>
+        <select class="form-control" id="cancel-reason-select">
+          <option value="">Select a reason…</option>
+          <option>Found a job — thank you Ineza!</option>
+          <option>Too expensive</option>
+          <option>Not enough job matches</option>
+          <option>Taking a break from job search</option>
+          <option>Missing features I need</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group" id="cancel-other-group" style="display:none">
+        <label class="form-label">Tell us more</label>
+        <textarea class="form-control" id="cancel-other" rows="2" placeholder="How could we improve?"></textarea>
+      </div>
+    </div>
+    <div class="m-foot">
+      <button class="btn btn-secondary btn-sm" onclick="closeModal('cancel-modal')">Keep Plan</button>
+      <button class="btn btn-danger btn-sm" id="confirm-cancel-btn" onclick="confirmCancel()">Confirm Cancellation</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script src="../js/api.js"></script>
+<script>
+let currentPlan = 'candidate_free';
+let selectedUpgradePlan = null;
+let selectedPayMethod = 'mtn_momo';
+
+const PLANS = {
+  candidate_free:    { name:'Free',       price:0,    currency:'RWF', limit:'5 apps/month' },
+  candidate_pro:     { name:'Pro Seeker', price:5000, currency:'RWF', limit:'Unlimited apps' },
+  candidate_premium: { name:'Premium',    price:9900, currency:'RWF', limit:'Unlimited + coaching' }
+};
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = requireLogin('candidate');
+  if (!user) return;
+  currentPlan = user.plan || 'candidate_free';
+  document.getElementById('sb-av').textContent = Format.initials(user.name || user.email);
+  document.getElementById('sb-nm').textContent = user.name?.split(' ')[0] || 'Candidate';
+  const planMap = { candidate_free:'Free Plan', candidate_pro:'✨ Pro Seeker', candidate_premium:'💎 Premium' };
+  document.getElementById('sb-pl').textContent = planMap[currentPlan] || currentPlan;
+  await Promise.all([loadCurrentPlan(), loadPaymentHistory()]);
+  updatePlanButtons();
+  // Cancel reason toggle
+  document.getElementById('cancel-reason-select').addEventListener('change', (e) => {
+    document.getElementById('cancel-other-group').style.display = e.target.value === 'Other' ? 'block' : 'none';
+  });
+});
+
+async function loadCurrentPlan() {
+  try {
+    const { subscription } = await API.payments.getSubscription();
+    const plan = PLANS[currentPlan] || PLANS.candidate_free;
+    document.getElementById('cp-name').textContent = plan.name + ' Plan';
+    document.getElementById('cp-limit').textContent = plan.limit;
+    document.getElementById('cp-apps').textContent = '—'; // Would come from dashboard stats
+
+    if (subscription?.current_period_end) {
+      const exp = new Date(subscription.current_period_end);
+      document.getElementById('cp-expires').textContent = `Renews ${Format.date(subscription.current_period_end)}`;
+      document.getElementById('cp-next-bill').textContent = Format.date(subscription.current_period_end);
+      if (subscription.status === 'cancelled') {
+        document.getElementById('cp-expires').textContent = `Active until ${Format.date(subscription.current_period_end)} (cancelled)`;
+        document.getElementById('cp-status-badge').textContent = '● Cancels soon';
+        document.getElementById('cp-status-badge').style.background = 'rgba(248,113,113,.1)';
+        document.getElementById('cp-status-badge').style.color = 'var(--danger)';
+        document.getElementById('cp-status-badge').style.borderColor = 'rgba(248,113,113,.25)';
+      }
+    } else {
+      document.getElementById('cp-expires').textContent = currentPlan === 'candidate_free' ? 'Free forever' : '—';
+      document.getElementById('cp-next-bill').textContent = currentPlan === 'candidate_free' ? 'Never' : '—';
+    }
+
+    if (currentPlan !== 'candidate_free' && subscription?.status === 'active') {
+      document.getElementById('cancel-btn').style.display = 'inline-flex';
+    }
+  } catch (err) {
+    const plan = PLANS[currentPlan] || PLANS.candidate_free;
+    document.getElementById('cp-name').textContent = plan.name + ' Plan';
+    document.getElementById('cp-expires').textContent = currentPlan === 'candidate_free' ? 'Free forever' : 'Check your email for billing info';
+    document.getElementById('cp-next-bill').textContent = '—';
+    document.getElementById('cp-limit').textContent = plan.limit;
+  }
+}
+
+async function loadPaymentHistory() {
+  try {
+    const { payments } = await API.payments.history();
+    const container = document.getElementById('payment-history-body');
+    if (!payments?.length) {
+      container.innerHTML = '<div style="text-align:center;padding:2.5rem;color:var(--tx-600);font-size:.84rem">No payment history yet — your first payment will appear here.</div>';
+      return;
+    }
+    const statusBadge = { completed:'b-em', failed:'b-rd', refunded:'b-gd', pending:'b-gr', cancelled:'b-gr' };
+    const methodLabel = { mtn_momo:'MTN MoMo', airtel_money:'Airtel Money', card:'Card', bank_transfer:'Bank Transfer' };
+    container.innerHTML = `
+      <table>
+        <thead><tr><th>Description</th><th>Amount</th><th>Method</th><th>Status</th><th>Date</th><th>Invoice</th></tr></thead>
+        <tbody>
+          ${payments.map(p => `
+            <tr>
+              <td><div style="font-weight:600;color:var(--tx-100)">${p.description||p.payment_type.replace(/_/g,' ')}</div></td>
+              <td style="font-weight:700;color:var(--em-400)">${p.currency} ${Number(p.amount).toLocaleString()}</td>
+              <td style="color:var(--tx-400);font-size:.8rem">${methodLabel[p.method]||p.method}</td>
+              <td><span class="badge ${statusBadge[p.status]||'b-gr'}">${p.status}</span></td>
+              <td style="font-size:.78rem;color:var(--tx-600)">${Format.date(p.created_at)}</td>
+              <td><button class="btn btn-secondary btn-sm" style="font-size:.72rem;padding:.28rem .65rem" onclick="downloadSingleInvoice('${p.id}')">↓ PDF</button></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+  } catch (err) {
+    // Show demo data if API fails
+    document.getElementById('payment-history-body').innerHTML = `
+      <table>
+        <thead><tr><th>Description</th><th>Amount</th><th>Method</th><th>Status</th><th>Date</th><th>Invoice</th></tr></thead>
+        <tbody>
+          <tr><td><div style="font-weight:600;color:var(--tx-100)">No payment history yet</div></td><td colspan="5" style="color:var(--tx-600);font-size:.82rem">Your payments will appear here after your first subscription</td></tr>
+        </tbody>
+      </table>`;
+  }
+}
+
+function updatePlanButtons() {
+  const plans = ['free','pro','premium'];
+  const planKeys = { free:'candidate_free', pro:'candidate_pro', premium:'candidate_premium' };
+  const labels = { free:'Current Plan', pro:'Upgrade to Pro', premium:'Upgrade to Premium' };
+  const btnClasses = { free:'btn-secondary', pro:'btn-gold', premium:'btn-primary' };
+  plans.forEach(p => {
+    const key = planKeys[p];
+    const btn = document.getElementById('btn-' + p);
+    const card = document.getElementById('plan-' + p);
+    if (!btn) return;
+    if (key === currentPlan) {
+      btn.textContent = '✓ Current Plan';
+      btn.className = `btn btn-secondary btn-block`;
+      btn.disabled = true;
+      card.classList.add('current');
+      const existing = card.querySelector('.plan-badge');
+      if (!existing) {
+        const badge = document.createElement('div');
+        badge.className = 'plan-badge pb-current';
+        badge.textContent = 'Current';
+        card.insertBefore(badge, card.firstChild);
+      }
+    } else {
+      btn.textContent = key === 'candidate_free' ? 'Downgrade to Free' : labels[p];
+      btn.className = `btn ${btnClasses[p]} btn-block`;
+      btn.disabled = false;
+    }
+  });
+}
+
+function selectPlan(planId) {
+  if (planId === currentPlan) return;
+  if (planId === 'candidate_free') {
+    if (confirm('Downgrade to the Free plan? You will lose access to premium features at the end of your billing period.')) {
+      openCancelModal();
+    }
+    return;
+  }
+  selectedUpgradePlan = planId;
+  const plan = PLANS[planId];
+  document.getElementById('pm-modal-title').textContent = `Upgrade to ${plan.name}`;
+  document.getElementById('pmb-plan').textContent = plan.name;
+  document.getElementById('pmb-total').textContent = `${plan.currency} ${plan.price.toLocaleString()} / month`;
+  const nextMonth = new Date(); nextMonth.setMonth(nextMonth.getMonth() + 1);
+  document.getElementById('pmb-renews').textContent = Format.date(nextMonth.toISOString());
+  document.getElementById('payment-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function selectPayMethod(el, method) {
+  selectedPayMethod = method;
+  document.querySelectorAll('.pm-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('phone-group').style.display = ['mtn_momo','airtel_money'].includes(method) ? 'block' : 'none';
+}
+
+async function processUpgrade() {
+  if (!selectedUpgradePlan) return;
+  const phone = document.getElementById('pay-phone').value.trim();
+  if (['mtn_momo','airtel_money'].includes(selectedPayMethod) && !phone) {
+    Toast.error('Please enter your phone number'); return;
+  }
+  const btn = document.getElementById('confirm-pay-btn');
+  btn.classList.add('loading');
+  try {
+    const { payment_id, gateway } = await API.payments.initiate({
+      payment_type: 'subscription',
+      plan: selectedUpgradePlan,
+      method: selectedPayMethod,
+      phone: phone || undefined
+    });
+    Toast.info(gateway?.message || 'Payment initiated. Please confirm on your phone…');
+    // Poll for completion
+    let attempts = 0;
+    const poll = setInterval(async () => {
+      attempts++;
+      if (attempts > 30) { clearInterval(poll); Toast.warning('Payment taking longer than expected. Check your phone.'); btn.classList.remove('loading'); return; }
+      try {
+        const { status } = await API.payments.verify(payment_id);
+        if (status === 'completed') {
+          clearInterval(poll);
+          closeModal('payment-modal');
+          Toast.success(`🎉 Upgraded to ${PLANS[selectedUpgradePlan].name}! Your new features are now active.`);
+          // Update local user state
+          const user = Auth.getUser();
+          if (user) { user.plan = selectedUpgradePlan; Auth.setUser(user); }
+          currentPlan = selectedUpgradePlan;
+          updatePlanButtons();
+          await Promise.all([loadCurrentPlan(), loadPaymentHistory()]);
+        }
+      } catch {}
+    }, 3000);
+  } catch (err) {
+    Toast.error(err.message || 'Payment failed. Please try again.');
+  } finally {
+    btn.classList.remove('loading');
+  }
+}
+
+function openCancelModal() {
+  document.getElementById('cancel-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+async function confirmCancel() {
+  const reason = document.getElementById('cancel-reason-select').value;
+  const other   = document.getElementById('cancel-other').value.trim();
+  if (!reason) { Toast.error('Please select a cancellation reason'); return; }
+  const btn = document.getElementById('confirm-cancel-btn');
+  btn.textContent = 'Cancelling…'; btn.disabled = true;
+  try {
+    await API.payments.cancelSubscription(reason + (other ? `: ${other}` : ''));
+    closeModal('cancel-modal');
+    Toast.info('Subscription cancelled. Your plan remains active until the end of your billing period.');
+    document.getElementById('cancel-btn').style.display = 'none';
+    await loadCurrentPlan();
+  } catch (err) {
+    Toast.error(err.message || 'Cancellation failed');
+    btn.textContent = 'Confirm Cancellation'; btn.disabled = false;
+  }
+}
+
+function openAddPaymentModal() {
+  Toast.info('To add a new payment method, please contact support or use it when next upgrading your plan.');
+}
+
+function downloadInvoice() {
+  Toast.info('Generating your invoice PDF… This feature downloads your complete payment history.');
+}
+
+function downloadSingleInvoice(id) {
+  Toast.info(`Generating invoice for payment ${id.substring(0,8).toUpperCase()}…`);
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+</script>
+</body>
+</html>

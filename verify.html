@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify Email | Ineza Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/base.css">
+<style>
+body{background:var(--bg-deep);min-height:100vh;display:flex;flex-direction:column}
+.nav{padding:.75rem 2rem;background:rgba(7,12,24,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;gap:.7rem}
+.wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem 1.5rem}
+.card{background:var(--bg-surface);border:1px solid var(--bd-muted);border-radius:var(--r-2xl);padding:3rem 2.5rem;width:100%;max-width:460px;text-align:center}
+.card-icon{font-size:3.5rem;margin-bottom:1.2rem;display:block}
+.card h1{font-size:1.6rem;font-weight:800;color:var(--tx-100);margin-bottom:.5rem}
+.card p{font-size:.88rem;color:var(--tx-400);line-height:1.72;margin-bottom:1.8rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;padding:.8rem 2rem;border-radius:var(--r-md);font-size:.92rem;font-weight:700;font-family:var(--ff-body);border:none;cursor:pointer;transition:all var(--ease);text-decoration:none}
+.btn-primary{background:linear-gradient(135deg,#00E599,#00C97D);color:#020f08}
+.btn-primary:hover{opacity:.92}
+.btn-secondary{background:var(--bg-raised);color:var(--tx-100);border:1.5px solid var(--bd-subtle)}
+.btn-secondary:hover{border-color:var(--bd-em)}
+.btn.loading{pointer-events:none;opacity:.7;position:relative}
+.btn.loading::before{content:'';position:absolute;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.progress-bar{height:4px;background:var(--bg-raised);border-radius:99px;overflow:hidden;margin-bottom:2rem}
+.pb-fill{height:100%;border-radius:99px;background:var(--grad-em);animation:progress 2.5s ease forwards}
+@keyframes progress{from{width:0}to{width:100%}}
+.divider{height:1px;background:var(--bd-subtle);margin:1.5rem 0}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="../index.html" style="display:flex;align-items:center;gap:.55rem;text-decoration:none">
+    <svg width="28" height="28" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14.5" stroke="url(#lgv)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="7" ry="14.5" stroke="url(#lgv)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="14.5" ry="4.5" stroke="url(#lgv)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="20" ry="6.5" stroke="url(#lgv)" stroke-width="1.8" stroke-opacity=".65" transform="rotate(-25 20 20)"/><defs><linearGradient id="lgv" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#00E599"/><stop offset="1" stop-color="#3B82F6"/></linearGradient></defs></svg>
+    <div style="margin-left:.4rem"><div style="font-size:.88rem;font-weight:800;letter-spacing:.08em;background:linear-gradient(135deg,#4DFFA6,#00E599);-webkit-background-clip:text;-webkit-text-fill-color:transparent">INEZA</div></div>
+  </a>
+</nav>
+<div class="wrap">
+  <div class="card">
+    <!-- VERIFYING STATE -->
+    <div id="state-verifying">
+      <span class="card-icon">⏳</span>
+      <h1>Verifying Your Email…</h1>
+      <p>Please wait while we verify your email address.</p>
+      <div class="progress-bar"><div class="pb-fill"></div></div>
+    </div>
+    <!-- SUCCESS STATE -->
+    <div id="state-success" style="display:none">
+      <span class="card-icon">🎉</span>
+      <h1>Email Verified!</h1>
+      <p>Your email has been verified successfully. Welcome to Ineza — Rwanda's most trusted employment platform.</p>
+      <a href="signin.html" class="btn btn-primary">Go to Sign In →</a>
+      <div class="divider"></div>
+      <p style="font-size:.8rem;color:var(--tx-600)">Your dedicated recruiter will be in touch within 24 hours.</p>
+    </div>
+    <!-- ERROR STATE -->
+    <div id="state-error" style="display:none">
+      <span class="card-icon">⚠️</span>
+      <h1>Verification Failed</h1>
+      <p id="error-msg">This verification link is invalid or has expired. Please request a new one.</p>
+      <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">
+        <a href="signin.html" class="btn btn-primary">Sign In</a>
+        <a href="signup.html" class="btn btn-secondary">Register Again</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script src="../js/api.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const token = new URLSearchParams(window.location.search).get('token');
+  if (!token) {
+    showError('No verification token found. Please use the link from your email.');
+    return;
+  }
+  try {
+    await new Promise(r => setTimeout(r, 2400)); // Show progress animation
+    await API.auth.verifyEmail(token);
+    document.getElementById('state-verifying').style.display = 'none';
+    document.getElementById('state-success').style.display   = 'block';
+    Toast.success('Email verified! Welcome to Ineza.');
+  } catch (err) {
+    showError(err.message || 'Invalid or expired verification link.');
+  }
+});
+function showError(msg) {
+  document.getElementById('state-verifying').style.display = 'none';
+  document.getElementById('state-error').style.display     = 'block';
+  document.getElementById('error-msg').textContent         = msg;
+}
+</script>
+</body>
+</html>

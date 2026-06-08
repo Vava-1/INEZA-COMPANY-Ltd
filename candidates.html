@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Candidate Pool | Ineza Employer Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/base.css">
+<style>
+body{background:var(--bg-deep)}
+.sidebar{background:var(--bg-surface);border-right:1px solid var(--bd-subtle);position:fixed;top:0;left:0;bottom:0;width:260px;display:flex;flex-direction:column;z-index:300;overflow-y:auto}
+.sb-brand{padding:1.4rem 1.25rem;border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;gap:.65rem}
+.sb-nav{padding:.75rem .65rem;flex:1}
+.sb-section{margin-bottom:1.5rem}
+.sb-section-lbl{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-800);padding:.3rem .65rem;margin-bottom:.35rem}
+.sb-link{display:flex;align-items:center;gap:.65rem;padding:.62rem .8rem;border-radius:var(--r-md);font-size:.86rem;font-weight:500;color:var(--tx-400);transition:all var(--ease);text-decoration:none}
+.sb-link:hover{background:var(--bg-raised);color:var(--tx-100)}
+.sb-link.active{background:rgba(251,191,36,.1);color:var(--gd-400);border:1px solid rgba(251,191,36,.25)}
+.dash-main{margin-left:260px;min-height:100vh}
+.topbar{padding:.9rem 2rem;background:var(--bg-surface);border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.62rem 1.4rem;border-radius:var(--r-md);font-size:.84rem;font-weight:600;font-family:var(--ff-body);transition:all var(--ease);border:none;cursor:pointer;white-space:nowrap}
+.btn-primary{background:linear-gradient(135deg,#00E599,#00C97D);color:#020f08}
+.btn-primary:hover{opacity:.92}
+.btn-secondary{background:var(--bg-raised);color:var(--tx-100);border:1.5px solid var(--bd-subtle)}
+.btn-secondary:hover{border-color:var(--bd-em)}
+.btn-gold{background:linear-gradient(135deg,#FCD34D,#F59E0B);color:#1a0d00}
+.btn-gold:hover{opacity:.92}
+.btn-sm{padding:.44rem .95rem;font-size:.8rem;border-radius:var(--r-sm)}
+.btn-xs{padding:.28rem .65rem;font-size:.72rem;border-radius:var(--r-sm)}
+/* LAYOUT */
+.page-layout{display:grid;grid-template-columns:280px 1fr;gap:1.5rem;padding:1.75rem 2rem;align-items:start}
+/* SIDEBAR FILTERS */
+.filter-sidebar{background:var(--bg-surface);border:1px solid var(--bd-subtle);border-radius:var(--r-xl);padding:1.4rem;position:sticky;top:72px}
+.fs-title{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--tx-400);margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between}
+.fs-clear{font-size:.72rem;color:var(--gd-400);background:none;border:none;cursor:pointer;font-family:var(--ff-body)}
+.filter-group{margin-bottom:1.2rem}
+.fg-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--tx-600);margin-bottom:.65rem}
+.check-item{display:flex;align-items:center;gap:.55rem;padding:.3rem 0;cursor:pointer}
+.check-item input{accent-color:var(--gd-400);width:14px;height:14px;cursor:pointer;flex-shrink:0}
+.check-item span{font-size:.83rem;color:var(--tx-200);flex:1}
+.check-item .cc{font-size:.7rem;color:var(--tx-800)}
+.filter-sep{height:1px;background:var(--bd-subtle);margin:1rem 0}
+.apply-filters{width:100%;padding:.65rem;background:linear-gradient(135deg,#FCD34D,#F59E0B);color:#1a0d00;border:none;border-radius:var(--r-md);font-family:var(--ff-body);font-size:.86rem;font-weight:700;cursor:pointer;margin-top:.75rem;transition:all var(--ease)}
+.apply-filters:hover{opacity:.92}
+/* SEARCH BAR */
+.search-bar{background:var(--bg-surface);border:1.5px solid var(--bd-muted);border-radius:var(--r-xl);padding:.4rem;display:flex;gap:.35rem;margin-bottom:1.5rem}
+.search-bar input,.search-bar select{background:none;border:none;outline:none;font-family:var(--ff-body);font-size:.9rem;color:var(--tx-100);padding:.52rem .85rem;flex:1}
+.search-bar input::placeholder{color:var(--tx-800)}
+.search-bar select{border-left:1px solid var(--bd-subtle);color:var(--tx-400);cursor:pointer;min-width:145px}
+.search-bar select option{background:var(--bg-surface)}
+.search-bar .btn{flex-shrink:0;padding:.58rem 1.3rem}
+/* RESULTS HEADER */
+.results-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.1rem;flex-wrap:wrap}
+.sort-bar{display:flex;align-items:center;gap:.55rem}
+.sort-bar select{background:var(--bg-surface);border:1px solid var(--bd-subtle);color:var(--tx-100);font-family:var(--ff-body);font-size:.82rem;padding:.38rem .7rem;border-radius:var(--r-sm);outline:none;cursor:pointer}
+/* CANDIDATE CARDS */
+.cand-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+.cand-card{background:var(--bg-surface);border:1px solid var(--bd-subtle);border-radius:var(--r-xl);padding:1.4rem;transition:all var(--ease);cursor:pointer;position:relative;overflow:hidden}
+.cand-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#FCD34D,#F59E0B);transform:scaleX(0);transition:transform var(--ease);transform-origin:left}
+.cand-card:hover::before{transform:scaleX(1)}
+.cand-card:hover{border-color:rgba(251,191,36,.3);transform:translateY(-2px);box-shadow:0 4px 28px rgba(251,191,36,.08)}
+.cc-top{display:flex;gap:.9rem;align-items:flex-start;margin-bottom:.85rem}
+.cc-avatar{width:52px;height:52px;border-radius:50%;background:rgba(0,229,153,.1);border:2px solid var(--bd-em);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;color:var(--em-400);flex-shrink:0}
+.cc-name{font-size:.97rem;font-weight:700;color:var(--tx-100);margin-bottom:.12rem}
+.cc-title{font-size:.82rem;color:var(--tx-400);margin-bottom:.2rem}
+.cc-loc{font-size:.76rem;color:var(--tx-600);display:flex;align-items:center;gap:.3rem}
+.cc-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.75rem}
+.cc-tag{font-size:.68rem;font-weight:600;padding:.16rem .52rem;border-radius:99px;background:var(--bg-raised);border:1px solid var(--bd-subtle);color:var(--tx-400)}
+.cc-tag.em{background:rgba(0,229,153,.1);border-color:var(--bd-em);color:var(--em-400)}
+.cc-score{position:absolute;top:.9rem;right:1rem;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.25);border-radius:99px;font-size:.7rem;font-weight:800;padding:.18rem .6rem;color:var(--gd-400)}
+.cc-footer{display:flex;align-items:center;justify-content:space-between;padding-top:.75rem;border-top:1px solid var(--bd-subtle)}
+.cc-exp{font-size:.76rem;color:var(--tx-600)}
+.cc-actions{display:flex;gap:.35rem}
+/* CANDIDATE DETAIL DRAWER */
+.drawer-overlay{position:fixed;inset:0;background:rgba(3,6,13,.7);backdrop-filter:blur(6px);z-index:400;display:none}
+.drawer-overlay.open{display:block}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:480px;max-width:95vw;background:var(--bg-surface);border-left:1px solid var(--bd-muted);z-index:401;overflow-y:auto;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1)}
+.drawer.open{transform:translateX(0)}
+.drawer-header{padding:1.4rem 1.6rem;border-bottom:1px solid var(--bd-subtle);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg-surface);z-index:1}
+.drawer-close{width:32px;height:32px;border-radius:50%;background:var(--bg-raised);border:1px solid var(--bd-subtle);color:var(--tx-400);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:all var(--ease)}
+.drawer-close:hover{border-color:var(--bd-em);color:var(--tx-100)}
+.drawer-body{padding:1.6rem}
+.d-profile-top{display:flex;gap:1.2rem;align-items:flex-start;margin-bottom:1.5rem}
+.d-avatar{width:72px;height:72px;border-radius:50%;background:rgba(0,229,153,.1);border:3px solid var(--bd-em);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.4rem;color:var(--em-400);flex-shrink:0}
+.d-name{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:var(--tx-100);margin-bottom:.2rem}
+.d-headline{font-size:.88rem;color:var(--tx-400);margin-bottom:.35rem}
+.d-meta{display:flex;gap:.6rem;flex-wrap:wrap}
+.d-meta-item{font-size:.78rem;color:var(--tx-600);display:flex;align-items:center;gap:.3rem}
+.d-section{margin-bottom:1.4rem}
+.d-section-title{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--tx-600);margin-bottom:.75rem}
+.d-skill{display:inline-flex;align-items:center;gap:.3rem;padding:.22rem .65rem;background:rgba(0,229,153,.1);border:1px solid rgba(0,229,153,.22);border-radius:99px;font-size:.77rem;font-weight:600;color:var(--em-400);margin:.2rem}
+.d-action-bar{display:flex;gap:.65rem;flex-wrap:wrap;padding:1.2rem 1.6rem;border-top:1px solid var(--bd-subtle);background:var(--bg-surface);position:sticky;bottom:0}
+/* PAGINATION */
+.pagination{display:flex;align-items:center;justify-content:center;gap:.4rem;margin-top:2rem;padding-bottom:1rem}
+.pg-btn{width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:var(--bg-surface);border:1px solid var(--bd-subtle);border-radius:var(--r-sm);font-size:.82rem;font-weight:600;color:var(--tx-400);cursor:pointer;transition:all var(--ease)}
+.pg-btn:hover{border-color:rgba(251,191,36,.3);color:var(--gd-400)}
+.pg-btn.active{background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.3);color:var(--gd-400)}
+/* BADGE */
+.badge{display:inline-flex;align-items:center;padding:.18rem .58rem;border-radius:99px;font-size:.68rem;font-weight:700;white-space:nowrap}
+.b-em{background:rgba(0,229,153,.12);color:var(--em-400);border:1px solid rgba(0,229,153,.22)}
+.b-gd{background:rgba(251,191,36,.12);color:#FBBF24;border:1px solid rgba(251,191,36,.22)}
+.b-gr{background:var(--bg-raised);color:var(--tx-400);border:1px solid var(--bd-subtle)}
+@media(max-width:1200px){.cand-grid{grid-template-columns:1fr}}
+@media(max-width:1024px){.page-layout{grid-template-columns:1fr}.filter-sidebar{display:none}}
+@media(max-width:768px){.dash-main{margin-left:0}.sidebar{display:none}.page-layout{padding:1.2rem}.topbar{padding:.75rem 1.2rem}.drawer{width:100%;max-width:100%}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sb-brand">
+    <a href="../index.html" style="display:flex;align-items:center;gap:.55rem;text-decoration:none">
+      <svg width="28" height="28" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14.5" stroke="url(#lgec)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="7" ry="14.5" stroke="url(#lgec)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="14.5" ry="4.5" stroke="url(#lgec)" stroke-width="1.4"/><ellipse cx="20" cy="20" rx="20" ry="6.5" stroke="url(#lgec)" stroke-width="1.8" stroke-opacity=".65" transform="rotate(-25 20 20)"/><defs><linearGradient id="lgec" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#FBBF24"/><stop offset="1" stop-color="#F59E0B"/></linearGradient></defs></svg>
+      <div style="margin-left:.4rem"><div style="font-size:.85rem;font-weight:800;letter-spacing:.08em;background:linear-gradient(135deg,#FCD34D,#F59E0B);-webkit-background-clip:text;-webkit-text-fill-color:transparent">INEZA</div><div style="font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-800)">Employer Portal</div></div>
+    </a>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">
+      <div class="sb-section-lbl">Main</div>
+      <a href="dashboard.html" class="sb-link">🏠 Dashboard</a>
+      <a href="post-job.html" class="sb-link">➕ Post a Job</a>
+      <a href="jobs.html" class="sb-link">📋 My Job Postings</a>
+      <a href="candidates.html" class="sb-link active">👥 Candidate Pool</a>
+      <a href="pipeline.html" class="sb-link">🔄 Hiring Pipeline</a>
+      <a href="messages.html" class="sb-link">💬 Messages</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Analytics</div>
+      <a href="analytics.html" class="sb-link">📊 Analytics</a>
+      <a href="reports.html" class="sb-link">📈 Reports</a>
+      <a href="billing.html" class="sb-link">💳 Billing</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Company</div>
+      <a href="company-profile.html" class="sb-link">🏢 Company Profile</a>
+      <a href="settings.html" class="sb-link">⚙️ Settings</a>
+      <a href="#" class="sb-link" onclick="API.auth.logout()">🚪 Sign Out</a>
+    </div>
+  </nav>
+  <div class="sb-footer">
+    <div style="display:flex;align-items:center;gap:.6rem;padding:.6rem;background:var(--bg-raised);border-radius:var(--r-md);border:1px solid rgba(251,191,36,.2)">
+      <div style="width:32px;height:32px;border-radius:50%;background:rgba(251,191,36,.1);border:2px solid rgba(251,191,36,.4);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem;color:var(--gd-400)" id="sb-av">TK</div>
+      <div><span style="font-size:.84rem;font-weight:700;color:var(--tx-100);display:block" id="sb-nm">—</span><span style="font-size:.66rem;color:var(--gd-400);display:block" id="sb-pl">Business Plan</span></div>
+    </div>
+  </div>
+</aside>
+
+<main class="dash-main">
+  <div class="topbar">
+    <div>
+      <div style="font-size:1rem;font-weight:800;color:var(--tx-100)">Candidate Pool</div>
+      <div style="font-size:.76rem;color:var(--tx-600)" id="result-subtitle">Searching 15,000+ pre-screened professionals…</div>
+    </div>
+    <div style="display:flex;gap:.6rem">
+      <a href="post-job.html" class="btn btn-gold btn-sm">+ Post a Job</a>
+    </div>
+  </div>
+
+  <div class="page-layout">
+    <!-- FILTER SIDEBAR -->
+    <aside class="filter-sidebar">
+      <div class="fs-title">Filters <button class="fs-clear" onclick="clearAllFilters()">Clear All</button></div>
+
+      <div class="filter-group">
+        <div class="fg-label">Industry</div>
+        <label class="check-item"><input type="checkbox" checked><span>Technology & ICT</span><span class="cc">420</span></label>
+        <label class="check-item"><input type="checkbox" checked><span>Finance & Banking</span><span class="cc">310</span></label>
+        <label class="check-item"><input type="checkbox"><span>Healthcare</span><span class="cc">280</span></label>
+        <label class="check-item"><input type="checkbox"><span>Engineering</span><span class="cc">245</span></label>
+        <label class="check-item"><input type="checkbox"><span>Agriculture</span><span class="cc">190</span></label>
+        <label class="check-item"><input type="checkbox"><span>Tourism & Hospitality</span><span class="cc">175</span></label>
+        <label class="check-item"><input type="checkbox"><span>Education</span><span class="cc">142</span></label>
+      </div>
+      <div class="filter-sep"></div>
+
+      <div class="filter-group">
+        <div class="fg-label">Experience Level</div>
+        <label class="check-item"><input type="checkbox"><span>Entry Level (0–2 yrs)</span><span class="cc">310</span></label>
+        <label class="check-item"><input type="checkbox" checked><span>Mid Level (3–5 yrs)</span><span class="cc">890</span></label>
+        <label class="check-item"><input type="checkbox" checked><span>Senior (5–10 yrs)</span><span class="cc">720</span></label>
+        <label class="check-item"><input type="checkbox"><span>Executive (10+ yrs)</span><span class="cc">140</span></label>
+      </div>
+      <div class="filter-sep"></div>
+
+      <div class="filter-group">
+        <div class="fg-label">Location</div>
+        <label class="check-item"><input type="checkbox" checked><span>Kigali</span><span class="cc">1,850</span></label>
+        <label class="check-item"><input type="checkbox"><span>Other Rwanda</span><span class="cc">380</span></label>
+        <label class="check-item"><input type="checkbox"><span>Open to Relocation</span><span class="cc">640</span></label>
+        <label class="check-item"><input type="checkbox"><span>International / Diaspora</span><span class="cc">290</span></label>
+      </div>
+      <div class="filter-sep"></div>
+
+      <div class="filter-group">
+        <div class="fg-label">Availability</div>
+        <label class="check-item"><input type="checkbox" checked><span>Immediately available</span><span class="cc">820</span></label>
+        <label class="check-item"><input type="checkbox" checked><span>1 month notice</span><span class="cc">1,200</span></label>
+        <label class="check-item"><input type="checkbox"><span>2–3 month notice</span><span class="cc">650</span></label>
+      </div>
+      <div class="filter-sep"></div>
+
+      <div class="filter-group">
+        <div class="fg-label">Qualifications</div>
+        <label class="check-item"><input type="checkbox"><span>Bachelor's Degree</span><span class="cc">3,200</span></label>
+        <label class="check-item"><input type="checkbox"><span>Master's / MBA</span><span class="cc">1,450</span></label>
+        <label class="check-item"><input type="checkbox"><span>PhD / Doctorate</span><span class="cc">280</span></label>
+        <label class="check-item"><input type="checkbox"><span>Professional Cert (CPA etc)</span><span class="cc">760</span></label>
+      </div>
+
+      <button class="apply-filters" onclick="runSearch()">Apply Filters</button>
+    </aside>
+
+    <!-- RESULTS -->
+    <div>
+      <!-- SEARCH BAR -->
+      <div class="search-bar">
+        <input type="text" id="cand-search" placeholder="Search by skill, title, or keyword…" onkeydown="if(e.key==='Enter')runSearch()">
+        <select id="cand-location">
+          <option value="">All Locations</option>
+          <option>Kigali</option>
+          <option>Northern Province</option>
+          <option>Southern Province</option>
+          <option>Eastern Province</option>
+          <option>Western Province</option>
+          <option>Remote / International</option>
+        </select>
+        <select id="cand-industry">
+          <option value="">All Industries</option>
+          <option>Technology & ICT</option>
+          <option>Finance & Banking</option>
+          <option>Healthcare</option>
+          <option>Engineering</option>
+        </select>
+        <button class="btn btn-gold" onclick="runSearch()">Search</button>
+      </div>
+
+      <!-- RESULTS HEADER -->
+      <div class="results-header">
+        <span style="font-size:.88rem;color:var(--tx-400)">Showing <strong id="result-count" style="color:var(--tx-100)">15,000+</strong> candidates</span>
+        <div class="sort-bar">
+          <span style="font-size:.78rem;color:var(--tx-600)">Sort by:</span>
+          <select onchange="renderCandidates()">
+            <option>Best Match</option>
+            <option>Most Recent</option>
+            <option>Experience: High to Low</option>
+            <option>Profile Score</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- CANDIDATE GRID -->
+      <div class="cand-grid" id="cand-grid">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div class="pagination">
+        <div class="pg-btn">‹</div>
+        <div class="pg-btn active">1</div>
+        <div class="pg-btn">2</div>
+        <div class="pg-btn">3</div>
+        <div class="pg-btn">4</div>
+        <div class="pg-btn">5</div>
+        <span style="font-size:.8rem;color:var(--tx-800);padding:0 .4rem">…</span>
+        <div class="pg-btn">150</div>
+        <div class="pg-btn">›</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- CANDIDATE DETAIL DRAWER -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="cand-drawer">
+  <div class="drawer-header">
+    <div style="font-size:.88rem;font-weight:700;color:var(--tx-100)">Candidate Profile</div>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-body" id="drawer-body">
+    <!-- Populated by JS -->
+  </div>
+  <div class="d-action-bar" id="drawer-actions">
+    <button class="btn btn-gold" onclick="inviteCandidate()">📩 Invite to Apply</button>
+    <button class="btn btn-primary btn-sm" onclick="downloadCV()">📄 Download CV</button>
+    <button class="btn btn-secondary btn-sm" onclick="messageCandidate()">💬 Message</button>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script src="../js/api.js"></script>
+<script>
+// Demo candidate data (in production comes from API)
+const DEMO_CANDIDATES = [
+  { id:'c1', initials:'JH', name:'Jean-Paul Habimana', headline:'Senior Software Engineer · Node.js · AWS · 7 yrs', title:'Senior Software Engineer', company:'Andela Rwanda', location:'Kigali, Rwanda', industry:'Technology & ICT', experience:'7 years', education:"BSc Computer Science · University of Rwanda", availability:'Immediately available', skills:['Node.js','Python','AWS','PostgreSQL','React','Docker'], salary_min:1200000, score:98, verified:true, summary:'Experienced backend engineer specialising in distributed systems and fintech platforms. Led teams of up to 8 engineers at Andela Rwanda. Strong track record in system design and delivery.' },
+  { id:'c2', initials:'AM', name:'Alice Mukamana', headline:'Full Stack Developer · React · TypeScript · 5 yrs', title:'Full Stack Developer', company:'Kigali Innovation City', location:'Kigali, Rwanda', industry:'Technology & ICT', experience:'5 years', education:'BSc Software Engineering · INES-Ruhengeri', availability:'1 month notice', skills:['React','TypeScript','Node.js','MongoDB','GraphQL'], salary_min:900000, score:95, verified:true, summary:'Passionate full-stack engineer with expertise in React ecosystems and cloud-native applications. Contributed to award-winning EdTech products at Kigali Innovation City.' },
+  { id:'c3', initials:'PM', name:'Patrick Nzeyimana', headline:'Finance Director · CPA · ACCA · Banking 12 yrs', title:'Finance Director', company:'Bank of Kigali', location:'Kigali, Rwanda', industry:'Finance & Banking', experience:'12 years', education:'MBA Finance · Strathmore University', availability:'3 months notice', skills:['Financial Modelling','IFRS','Risk Management','Basel III','Treasury'], salary_min:2000000, score:96, verified:true, summary:'Senior finance professional with 12 years in commercial banking and investment finance. Current Head of Treasury at Bank of Kigali. CPA-K and ACCA qualified.' },
+  { id:'c4', initials:'GN', name:'Grace Nyiramana', headline:'Data Scientist · ML · Python · 4 yrs', title:'Data Scientist', company:'MTN Rwanda', location:'Kigali, Rwanda', industry:'Technology & ICT', experience:'4 years', education:'MSc Data Science · University of Edinburgh', availability:'Immediately available', skills:['Python','TensorFlow','SQL','Power BI','Azure ML','Spark'], salary_min:1000000, score:93, verified:true, summary:'Data scientist with expertise in predictive modelling and NLP for telecoms. Currently building ML-powered fraud detection systems at MTN Rwanda.' },
+  { id:'c5', initials:'DM', name:'David Mutabazi', headline:'Civil Engineer · PMP · 8 yrs large-scale projects', title:'Senior Civil Engineer', company:'Rwanda Building Authority', location:'Kigali, Rwanda', industry:'Engineering', experience:'8 years', education:'BEng Civil Engineering · KIST', availability:'2 months notice', skills:['AutoCAD','Revit','Project Management','Structural Analysis','Site Management'], salary_min:1100000, score:90, verified:true, summary:'Experienced civil engineer who has managed RWF 5 billion+ construction projects across Kigali. PMP certified with expertise in structural design and site supervision.' },
+  { id:'c6', initials:'SU', name:'Sandra Uwimana', headline:'HR Director · Talent Strategy · 10 yrs', title:'HR Director', company:'Equity Bank Rwanda', location:'Kigali, Rwanda', industry:'Finance & Banking', experience:'10 years', education:'MSc Human Resources · Makerere University', availability:'3 months notice', skills:['Talent Acquisition','OD&D','HRIS','Compensation Design','Labour Law'], salary_min:1500000, score:94, verified:true, summary:'Strategic HR leader with a decade of experience across East African financial services. Currently oversees 1,200-person HR function at Equity Bank Rwanda.' },
+];
+
+let currentCandidate = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  const user = requireLogin('employer');
+  if (!user) return;
+  document.getElementById('sb-av').textContent = Format.initials(user.name || 'TK');
+  document.getElementById('sb-nm').textContent = user.name?.split(' ')[0] || 'Employer';
+  renderCandidates();
+});
+
+function renderCandidates(candidates = DEMO_CANDIDATES) {
+  const grid = document.getElementById('cand-grid');
+  document.getElementById('result-count').textContent = '15,000+';
+  document.getElementById('result-subtitle').textContent = `Showing ${candidates.length} of 15,000+ pre-screened professionals`;
+
+  grid.innerHTML = candidates.map(c => `
+    <div class="cand-card" onclick="openDrawer('${c.id}')">
+      ${c.score ? `<div class="cc-score">⭐ ${c.score}% match</div>` : ''}
+      <div class="cc-top">
+        <div class="cc-avatar">${c.initials}</div>
+        <div style="flex:1;min-width:0">
+          <div class="cc-name">${c.name} ${c.verified?'<span style="color:var(--em-400);font-size:.75rem">✓ Vetted</span>':''}</div>
+          <div class="cc-title">${c.title}</div>
+          <div class="cc-loc">📍 ${c.location}</div>
+        </div>
+      </div>
+      <div class="cc-tags">
+        ${c.skills.slice(0,4).map(s=>`<span class="cc-tag em">${s}</span>`).join('')}
+        ${c.skills.length > 4 ? `<span class="cc-tag">+${c.skills.length-4} more</span>` : ''}
+      </div>
+      <div class="cc-footer">
+        <span class="cc-exp">💼 ${c.experience} · ${c.industry}</span>
+        <div class="cc-actions" onclick="event.stopPropagation()">
+          <button class="btn btn-secondary btn-xs" onclick="shortlistCandidate('${c.id}','${c.name.replace(/'/,"\\'")}',this)">⭐ Shortlist</button>
+          <button class="btn btn-gold btn-xs" onclick="inviteDirect('${c.id}','${c.name.replace(/'/,"\\'")}')">Invite →</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openDrawer(id) {
+  currentCandidate = DEMO_CANDIDATES.find(c => c.id === id);
+  if (!currentCandidate) return;
+  const c = currentCandidate;
+  document.getElementById('drawer-body').innerHTML = `
+    <div class="d-profile-top">
+      <div class="d-avatar">${c.initials}</div>
+      <div>
+        <div class="d-name">${c.name}</div>
+        <div class="d-headline">${c.headline}</div>
+        <div class="d-meta">
+          <span class="d-meta-item">📍 ${c.location}</span>
+          <span class="d-meta-item">💼 ${c.experience}</span>
+          <span class="d-meta-item">⚡ ${c.availability}</span>
+        </div>
+      </div>
+    </div>
+
+    ${c.score ? `
+    <div style="background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);border-radius:var(--r-lg);padding:.9rem 1.1rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:.75rem">
+      <div style="font-size:1.6rem;font-weight:900;color:var(--gd-400)">${c.score}%</div>
+      <div><div style="font-size:.84rem;font-weight:700;color:var(--tx-100);margin-bottom:.08rem">Ineza Match Score</div><div style="font-size:.74rem;color:var(--tx-600)">Based on skills, experience, and salary alignment</div></div>
+    </div>` : ''}
+
+    <div class="d-section">
+      <div class="d-section-title">Professional Summary</div>
+      <p style="font-size:.86rem;color:var(--tx-400);line-height:1.75">${c.summary}</p>
+    </div>
+
+    <div class="d-section">
+      <div class="d-section-title">Key Skills</div>
+      <div>${c.skills.map(s=>`<span class="d-skill">${s}</span>`).join('')}</div>
+    </div>
+
+    <div class="d-section">
+      <div class="d-section-title">Current Role</div>
+      <div style="background:var(--bg-raised);border:1px solid var(--bd-subtle);border-radius:var(--r-lg);padding:.9rem 1.1rem">
+        <div style="font-size:.9rem;font-weight:700;color:var(--tx-100)">${c.title}</div>
+        <div style="font-size:.8rem;color:var(--tx-400)">${c.company}</div>
+      </div>
+    </div>
+
+    <div class="d-section">
+      <div class="d-section-title">Education</div>
+      <div style="font-size:.86rem;color:var(--tx-200)">${c.education}</div>
+    </div>
+
+    <div class="d-section">
+      <div class="d-section-title">Preferences</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+        <div style="background:var(--bg-raised);border-radius:var(--r-sm);padding:.65rem"><div style="font-size:.66rem;color:var(--tx-800);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.15rem">Min Salary</div><div style="font-size:.88rem;font-weight:700;color:var(--em-400)">RWF ${Number(c.salary_min).toLocaleString()}/mo</div></div>
+        <div style="background:var(--bg-raised);border-radius:var(--r-sm);padding:.65rem"><div style="font-size:.66rem;color:var(--tx-800);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.15rem">Availability</div><div style="font-size:.82rem;font-weight:600;color:var(--tx-100)">${c.availability}</div></div>
+      </div>
+    </div>
+
+    <div style="background:rgba(0,229,153,.04);border:1px solid var(--bd-em);border-radius:var(--r-lg);padding:1rem;font-size:.8rem;color:var(--tx-400);line-height:1.6">
+      🛡️ <strong style="color:var(--em-400)">Ineza Vetted</strong> — This candidate has been background-checked and reference-verified by the Ineza team. Full CV available after invitation.
+    </div>
+  `;
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.getElementById('cand-drawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDrawer() {
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.getElementById('cand-drawer').classList.remove('open');
+  document.body.style.overflow = '';
+  currentCandidate = null;
+}
+
+function shortlistCandidate(id, name, btn) {
+  btn.textContent = '✓ Shortlisted';
+  btn.className   = 'btn btn-primary btn-xs';
+  btn.disabled    = true;
+  Toast.success(`${name} added to your shortlist!`);
+}
+
+function inviteDirect(id, name) {
+  Toast.success(`Interview invitation sent to ${name}! They will receive it via email and WhatsApp.`);
+}
+
+function inviteCandidate() {
+  if (currentCandidate) inviteDirect(currentCandidate.id, currentCandidate.name);
+  closeDrawer();
+}
+
+function downloadCV() {
+  Toast.info('Full CV available after sending an interview invitation. This protects candidate privacy until they accept.');
+}
+
+function messageCandidate() {
+  Toast.info('Opening message composer…');
+  closeDrawer();
+  setTimeout(() => window.location.href = 'messages.html', 800);
+}
+
+function runSearch() {
+  const q = document.getElementById('cand-search').value.toLowerCase();
+  if (!q) { renderCandidates(); return; }
+  const filtered = DEMO_CANDIDATES.filter(c =>
+    c.name.toLowerCase().includes(q) ||
+    c.title.toLowerCase().includes(q) ||
+    c.skills.some(s => s.toLowerCase().includes(q)) ||
+    c.industry.toLowerCase().includes(q)
+  );
+  renderCandidates(filtered);
+  Toast.info(`Found ${filtered.length} candidates matching "${q}"`);
+}
+
+function clearAllFilters() {
+  document.querySelectorAll('.filter-sidebar input[type=checkbox]').forEach(c => c.checked = false);
+  renderCandidates();
+  Toast.info('All filters cleared');
+}
+</script>
+</body>
+</html>
